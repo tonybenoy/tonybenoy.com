@@ -1,0 +1,119 @@
+	.bg-1 {
+		background-color: black;
+		color: green;
+	}
+
+	.bg-2 {
+		background-color: #00CC66;
+		color: white;
+	}
+
+	.fa {
+		padding: 20px;
+		font-size: 30px;
+		width: 50px;
+		text-align: center;
+		text-decoration: none;
+	}
+
+	.content {
+		display: table-cell;
+		vertical-align: middle;
+		
+	}
+
+	.fa:hover {
+		opacity: 0.7;
+	}
+
+	.blink_text {
+
+		animation: 1s blinker linear infinite;
+		-webkit-animation: 1s blinker linear infinite;
+		-moz-animation: 1s blinker linear infinite;
+		color: #00ff03;
+	}
+
+	@-moz-keyframes blinker {
+		0% {
+			opacity: 1.0;
+		}
+
+		50% {
+			opacity: 0.0;
+		}
+
+		100% {
+			opacity: 1.0;
+		}
+	}
+
+	@-webkit-keyframes blinker {
+		0% {
+			opacity: 1.0;
+		}
+
+		50% {
+			opacity: 0.0;
+		}
+
+		100% {
+			opacity: 1.0;
+		}
+	}
+
+	@keyframes blinker {
+		0% {
+			opacity: 1.0;
+		}
+
+		50% {
+			opacity: 0.0;
+		}
+
+		100% {
+			opacity: 1.0;
+		}
+	}
+
+	.container-fluid {
+		border: 0px;
+		padding: 0;
+		bottom: 0;
+		top: 0;
+		height: 100vh;
+	}
+
+	.centered {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		/* bring your own prefixes */
+		transform: translate(-50%, -50%);
+	}
+
+	.vertical-center {
+		min-height: 100%;
+		/* Fallback for browsers do NOT support vh unit */
+		min-height: 100vh;
+		/* These two lines are counted as one :-)       */
+		display: flex;
+		align-items: center;
+	}
+
+	.jumbotron {
+		border: 0px;
+		padding: 0;
+		bottom: 0;
+		top: 0;
+		margin: auto;
+		height: 100vh;
+	}
+
+	section {
+		width: 100%;
+		display: table;
+		height: 100vh;
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
