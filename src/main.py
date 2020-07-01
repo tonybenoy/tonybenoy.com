@@ -6,8 +6,8 @@ from starlette.responses import RedirectResponse
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="src/static"), name="static")
-templates = Jinja2Templates(directory="src/templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/")
@@ -24,8 +24,13 @@ async def contact(request: Request):
     )
 
 
+@app.get("/favicon.ico")
+async def favicon():
+    return RedirectResponse(url="/static/img/favicon.ico")
+
+
 @app.get("/myssh")
-async def myssh(request: Request):
+async def myssh():
     return RedirectResponse(url="/static/files/tony.sh")
 
 
