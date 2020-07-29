@@ -8,4 +8,4 @@ RUN pip install -r /app/requirements.txt
 COPY src/ /src
 WORKDIR /src
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000"]
