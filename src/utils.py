@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3 import Connection
 from pathlib import Path
 from os import path
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/templates")
 
 
 SVG_TEMPLATE = """<?xml version="1.0"?>

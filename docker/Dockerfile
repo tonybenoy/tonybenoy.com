@@ -1,11 +1,11 @@
-FROM python:3.8.3-slim
+FROM python:latest
 RUN apt update -y
-
+RUN apt upgrade -y
 
 ADD ./src/requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
 COPY src/ /src
-WORKDIR /src/
+# WORKDIR /src/
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000"]
+CMD ["gunicorn", "src.main:app", "-w 4", "-k uvicorn.workers.UvicornWorker", "--preload"]
