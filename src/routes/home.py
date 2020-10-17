@@ -14,11 +14,9 @@ async def index(request: Request):
     )
 
 
-@home.get("/contact")
-async def contact(request: Request):
-    return templates.TemplateResponse(
-        "contact.html", {"request": request, "title": "Contact Me"}
-    )
+@home.get("/test")
+async def test():
+    return {"result": "It works!"}
 
 
 @home.get("/favicon.ico")

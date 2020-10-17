@@ -2,32 +2,9 @@
 {% block content %}
 <h1>HI!</h1>
 <h2>List of stuff I do.</h2>
-
 <ul>
-    <li><a href="clan/PU8J2RQ">FWA</a> </li>
-    <li><a href="https://github.com/tonybenoy/Telegram-Server-Monitor-Bot">Telegram-Server-Monitor-Bot</a></li>
-    <li><a href="https://github.com/tonybenoy/RedisChat">RedisChat</a></li>
-    <li><a href="https://github.com/tonybenoy/Odoo-BitBucket">Odoo-BitBucket</a></li>
-    <li><a href="https://github.com/tonybenoy/go-aur-wrapper">go-aur-wrapper</a></li>
-    <li><a href="https://pypi.org/project/cocapi/">Clash of Clans API Wrapper</a></li>
-    <li><a href="https://github.com/tonybenoy/RaspberryPi_Bluetooth_Tracker">RaspberryPi Bluetooth Tracker</a></li>
-    <li><a
-            href="https://github.com/tonybenoy/Arch-Official-Repository-Package-Query">Arch-Official-Repository-Package-Query</a>
-    </li>
-    <li><a href="https://github.com/tonybenoy/Arch-User-Repository-Package-Query">Arch-User-Repository-Package-Query</a>
-    </li>
-    <li><a href="https://github.com/tonybenoy/RedisChat">RedisChat</a></li>
-    <li><a href="https://github.com/tonybenoy/OdooModuleUninstaller">OdooModuleUninstaller</a></li>
-    <li><a href="https://github.com/tonybenoy/FtpFileShare">FtpFileShare</a></li>
-    <li><a href="https://github.com/tonybenoy/RaspberryPi_Asset_Tracker">RaspberryPi_Asset_Tracker</a></li>
-    <li><a href="https://github.com/tonybenoy/UsernameTool">UsernameTool</a></li>
-    <li><a href="https://github.com/tonybenoy/PomodoroForGnome">PomodoroForGnome</a></li>
-    <li><a href="https://github.com/tonybenoy/UsernameFinder">UsernameFinder</a></li>
-    <li><a href="https://github.com/tonybenoy/Raspberry_Pi_Disable_Ports">Raspberry_Pi_Disable_Ports</a></li>
-    <li><a href="https://github.com/tonybenoy/Raspberry-Pi-Kiosk">Raspberry-Pi-Kiosk</a></li>
-
+    {% for repo in repos %}
+    <li><a href={{ repo.html_url }}">{{ repo.name }}</a></li>
+    {% endfor %}
 </ul>
-<h3>
-    You'll find most of the source code on Github
-</h3>
 {% endblock %}
