@@ -1,0 +1,20 @@
+{% extends "basef.html" %} {% block content %}
+
+<h1>Hi, {{post}}!</h1>
+<p>Welcome to the clan. Answer the following questions to finish initiation</p>
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.mindon.label }}
+        <br> {{ form.mindon(size=10) }}
+        <br> {{form.donwar.label}}
+        <br> {% for subfield in form.donwar %}
+        <tr>
+            <td>{{ subfield }}</td>
+            <td>{{ subfield.label }}</td>
+        </tr>
+        {% endfor %}
+    </p>
+    <p>{{form.submits()}}</p>
+</form>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "basef.html" %}
+{% block content %}
+    <h1>Hi Clanmate !</h1>
+    <table style="width:100%">
+        <tr>
+        <th><b>Current Rank</b></th>
+        <th><b>Tag</b></th>
+        <th><b>Name</b></th>
+        <th><b>Role</b></th>
+        {% if posts[1].clantag == "PU8J2RQ" %}
+        <th><b>Initiated</b></th>
+        {% endif %}
+        <th><b>Level</b></th>
+        <th><b>Trophies</b></th>
+        <th><b>Donations</b></th>
+        <th><b>Donations Received</b></th>
+        <th><b>Donation Ratio</b></th>
+
+  </tr>
+  {% for post in posts %}
+  <tr>
+        <td>{{post.clanRank}}</td>
+        <td> <a href={{post.url}}><font color ="#00ff03"> {{post.tag}}</font></a></td>
+        <td><a href={{post.cocurl}}><font color ="#00ff03"> {{post.name}}</font></a></td>
+        <td>{{post.role}}</td>
+        {% if post.clantag == "PU8J2RQ" %}
+        {%if post.init == "New Member" %}
+	<td><font color ="red">{{post.init}}</font></td>
+	{%else%}
+	<td>{{post.init}}</td>
+        {% endif %}
+	{% endif %}
+        <td>{{post.expLevel}}</td>
+        <td>{{post.trophies}}</td>
+        <td>{{post.donations}}</td>
+        <td>{{post.donationsReceived}}</td>
+        {% if post.donation_ratio == "Maintained" %}
+            <td>{{post.donation_ratio}}</td>
+        {%else%}
+            <td> <font color="red">{{post.donation_ratio}}</font> </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

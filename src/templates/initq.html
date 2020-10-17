@@ -1,0 +1,11 @@
+{% extends "basef.html" %}
+
+{% block content %}
+{% if post == "1" %}
+<h1>You have been initiated. Welcome to the clan</h1><br>
+<h1>TO view you initiation status please go <a href="/clan/PU8J2RQ">here</a></h1>
+{%else%}
+<h1>You have answered incorrectly.</h1><br>
+<h1>Try again<a href="/init">here</a></h1>
+{% endif %}
+{% endblock %}
