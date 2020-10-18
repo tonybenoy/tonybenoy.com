@@ -12,5 +12,5 @@ async def apps_view(request: Request):
     async with httpx.AsyncClient() as client:
         repos = await client.get(url=url)
     return templates.TemplateResponse(
-        "apps.html", {"request": request, "title": "My apps", "repos": repos}
+        "apps.html", {"request": request, "title": "My apps", "repos": repos.json()}
     )

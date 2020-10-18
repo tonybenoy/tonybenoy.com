@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>HI!</h1>
-<h2>List of stuff I do.</h2>
-<ul>
-    {% for repo in repos %}
-    <li><a href={{ repo.html_url }}">{{ repo.name }}</a></li>
-    {% endfor %}
-</ul>
+<section id="sec1 content ">
+    <div class="row">
+        <div class="col-sm-12 container-fluid ">
+            <div class="jumbotron bg-1 text-center ">
+                <div style="position:relative; top:12.5%; bottom: 12.5%">
+                    <h2>List of stuff I do.</h2>
+                    <ul>
+                        {% for repo in repos %}
+                        <li><a href={{ repo.html_url }}">{{ repo.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    More here <a href="https://github.com/tonybenoy?tab=repositories"">Github</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
