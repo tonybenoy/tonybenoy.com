@@ -8,4 +8,4 @@ RUN pip install -r /app/requirements.txt
 COPY src/ /src
 # WORKDIR /src/
 
-CMD ["gunicorn", "src.main:app", "-w 4", "-k uvicorn.workers.UvicornWorker", "--preload"]
+CMD ["gunicorn", "src.main:app", "-w 1", "-k uvicorn.workers.UvicornWorker", "--preload"]
