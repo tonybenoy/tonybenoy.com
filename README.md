@@ -7,5 +7,5 @@ docker build -f docker/Dockerfile -t  website .
 ```
 
 ```
-docker run  --net=host -p 4000:4000 -it website
+docker run  --net=host -p 8000:8000 -it website
 ```
