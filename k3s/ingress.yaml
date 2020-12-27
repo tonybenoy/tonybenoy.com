@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: fastapi-ingress
+  namespace: tonybenoy
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+    - secretName: tonybenoy-com-tls
+      hosts:
+        - tonybenoy.com
+  rules:
+    - host: tonybenoy.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: fastapi-service
+              servicePort: 80
