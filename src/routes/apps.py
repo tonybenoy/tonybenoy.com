@@ -3,9 +3,11 @@ import httpx
 from fastapi import APIRouter
 from src.utils import templates, get_repo_data_for_user
 from datetime import timedelta
-from src.main import r
+import redis
 
 apps = APIRouter()
+
+r = redis.StrictRedis(host="localhost", port=6379, db=0)
 
 
 @apps.get("/app")
