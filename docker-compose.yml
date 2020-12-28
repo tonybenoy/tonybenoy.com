@@ -1,0 +1,34 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+    #   - "80:80"
+    #   - "443:443"
+      - mode: host
+        protocol: tcp
+        published: 80
+        target: 80
+      - mode: host
+        protocol: tcp
+        published: 443
+        target: 443
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  fastapi:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: registry.localhost:5000/tonybenoy
+    ports:
+     - "8000:8000"
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
