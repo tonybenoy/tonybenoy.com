@@ -3,6 +3,8 @@ import sqlite3
 from sqlite3 import Connection
 from pathlib import Path
 from os import path
+import httpx
+from typing import List, Dict
 
 templates = Jinja2Templates(directory="src/templates")
 
@@ -64,3 +66,27 @@ def update_count() -> int:
     db_conn.commit()
     db_conn.close()
     return count
+
+
+def get_repo_data_for_user(
+    url: str = "https://api.github.com/users/tonybenoy/repos", response: List = []
+) -> List[Dict[str, str]]:
+    resp = httpx.get(url)
+    repos = resp.json()
+    link = resp.headers["link"]
+    links = parse(link)
+    for repo in repos:
+        if not repo["fork"]:
+            response.append(
+                {
+                    "clone_url": repo["clone_url"],
+                    "forks": repo["forks"],
+                    "name": repo["name"],
+                    "language": repo["language"],
+                    "stargazers_count": repo["stargazers_count"],
+                }
+            )
+
+    if "next" in links:
+        response = get_repo_data_for_user(url=links["next"]["url"], response=response)
+    return response
