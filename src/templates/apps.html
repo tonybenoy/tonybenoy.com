@@ -5,13 +5,15 @@
         <div class="col-sm-12 container-fluid ">
             <div class="jumbotron bg-1 text-center ">
                 <div style="position:relative; top:12.5%; bottom: 12.5%">
-                    <h2>List of stuff I do.</h2>
+                    <h2>Stuff I do.</h2>
                     <ul>
                         {% for repo in repos %}
-                        <li><a href={{ repo.html_url }}">{{ repo.name }}</a></li>
+                        <li><a href={{ html_url }}>{{ name }}</a>
+                        </li>
                         {% endfor %}
                     </ul>
-                    More here <a href="https://github.com/tonybenoy?tab=repositories"">Github</a>
+
+                    More here <a href="https://github.com/tonybenoy?tab=repositories">Github</a>
                 </div>
             </div>
         </div>

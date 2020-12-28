@@ -110,6 +110,7 @@ def get_repo_data_for_user(
                     "name": repo["name"],
                     "language": repo["language"],
                     "stargazers_count": repo["stargazers_count"],
+                    "html_url": repo["html_url"],
                 }
             )
 
