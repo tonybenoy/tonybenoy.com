@@ -10,7 +10,7 @@ apps = APIRouter()
 
 @apps.get("/app")
 async def apps_view(request: Request):
-    r = redis.Redis()
+    r = redis.Redis(host="redis_db")
     resp = r.get("cached_val")
     if not resp:
         url = "https://api.github.com/users/tonybenoy/repos?sort=pushed"
