@@ -8,11 +8,10 @@
                     <h2>Stuff I do.</h2>
                     <ul>
                         {% for repo in repos %}
-                        <li><a href={{ html_url }}>{{ name }}</a>
+                        <li><a href={{ repo.html_url }}>{{ repo.name }}</a>
                         </li>
                         {% endfor %}
                     </ul>
-
                     More here <a href="https://github.com/tonybenoy?tab=repositories">Github</a>
                 </div>
             </div>

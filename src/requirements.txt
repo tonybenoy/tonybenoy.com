@@ -17,3 +17,4 @@ starlette==0.13.6
 uvicorn==0.12.1
 uvloop==0.14.0
 redis==3.5.3
+debugpy==1.2.1

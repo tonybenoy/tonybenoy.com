@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+# import debugpy
+# debugpy.listen(6000)
+# debugpy.wait_for_client()
+
+
 from src.routes.home import home
 from src.routes.apps import apps
 
