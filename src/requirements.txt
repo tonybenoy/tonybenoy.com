@@ -10,7 +10,7 @@ httpx==0.16.1
 idna==2.10
 Jinja2==2.11.3
 MarkupSafe==1.1.1
-pydantic==1.6.1
+pydantic==1.6.2
 rfc3986==1.4.0
 sniffio==1.2.0
 starlette==0.13.6
