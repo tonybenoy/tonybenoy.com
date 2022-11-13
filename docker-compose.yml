@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx:
-    image: nginx:1.15-alpine
+    image: nginx:alpine
     ports:
     #   - "80:80"
     #   - "443:443"
@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    image: registry.localhost:7000/tonybenoy
+    image: registry.localhost:5000/tonybenoy
     ports:
      - "8000:8000"
 
