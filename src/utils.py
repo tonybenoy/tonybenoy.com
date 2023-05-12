@@ -1,12 +1,13 @@
-from fastapi.templating import Jinja2Templates
 import sqlite3
-from sqlite3 import Connection
-from pathlib import Path
 from os import path
-import httpx
-from typing import List, Dict
+from pathlib import Path
 from re import compile
+from sqlite3 import Connection
+from typing import Dict, List
 from urllib.parse import parse_qsl, urlsplit
+
+import httpx
+from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="src/templates")
 

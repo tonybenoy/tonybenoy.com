@@ -1,9 +1,10 @@
-from fastapi import Request
-import redis
 import json
-from fastapi import APIRouter
-from src.utils import templates, get_repo_data_for_user
 from datetime import timedelta
+
+import redis
+from fastapi import APIRouter, Request
+
+from src.utils import get_repo_data_for_user, templates
 
 apps = APIRouter()
 
