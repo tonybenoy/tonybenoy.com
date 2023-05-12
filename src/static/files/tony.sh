@@ -1,4 +1,4 @@
-if [ -d "~/.ssh" ] 
+if [ - ~/.ssh] 
 then
     echo "File Exists"
 else
