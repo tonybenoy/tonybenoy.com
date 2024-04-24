@@ -1,8 +1,4 @@
-import sqlite3
-from os import path
-from pathlib import Path
 from re import compile
-from sqlite3 import Connection
 from typing import Dict, List
 from urllib.parse import parse_qsl, urlsplit
 
@@ -118,3 +114,7 @@ def get_repo_data_for_user(
     if "next" in links:
         response = get_repo_data_for_user(url=links["next"]["url"], response=response)
     return response
+
+
+def sort_repos(repos: List[Dict[str, str]], count=6) -> List[Dict[str, str]]:
+    return sorted(repos, key=lambda x: x["stargazers_count"], reverse=True)[:count]

@@ -11,7 +11,7 @@ home = APIRouter()
 @home.get("/index")
 async def index(request: Request):
     return templates.TemplateResponse(
-        "index.html", {"request": request, "title": "Tony"}
+        "index.html", {"request": request, "title": "Tony", "active_page": "home"}
     )
 
 
