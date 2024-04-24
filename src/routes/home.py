@@ -36,12 +36,12 @@ async def get_my_ip(request: Request):
     return {"ip": client_ip, "my_ua": client_ua}
 
 
-@home.get("/counter.svg")
-async def count_app():
-    count = update_count()
-    sizes = calculate_svg_sizes(count)
-    svg = get_svg(count, sizes["width"], sizes["recWidth"], sizes["textX"]).encode(
-        "utf-8"
-    )
-    headers = {"Cache-Control": "no-cache"}
-    return Response(content=svg, media_type="image/svg+xml", headers=headers)
+# @home.get("/counter.svg")
+# async def count_app():
+#     count = update_count()
+#     sizes = calculate_svg_sizes(count)
+#     svg = get_svg(count, sizes["width"], sizes["recWidth"], sizes["textX"]).encode(
+#         "utf-8"
+#     )
+#     headers = {"Cache-Control": "no-cache"}
+#     return Response(content=svg, media_type="image/svg+xml", headers=headers)
