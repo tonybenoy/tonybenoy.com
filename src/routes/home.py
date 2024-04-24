@@ -1,7 +1,7 @@
-from src.utils import templates, get_svg, calculate_svg_sizes, update_count
+from fastapi import APIRouter, Request, Response
 from starlette.responses import RedirectResponse
-from fastapi import Request, Response
-from fastapi import APIRouter
+
+from src.utils import calculate_svg_sizes, get_svg, templates, update_count
 
 home = APIRouter()
 
