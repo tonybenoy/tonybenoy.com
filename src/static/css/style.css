@@ -3,11 +3,6 @@
 		color: green;
 	}
 
-	.bg-2 {
-		background-color: #00CC66;
-		color: white;
-	}
-
 	.fa {
 		padding: 20px;
 		font-size: 30px;
@@ -19,7 +14,7 @@
 	.content {
 		display: table-cell;
 		vertical-align: middle;
-		
+
 	}
 
 	.fa:hover {
@@ -84,23 +79,6 @@
 		height: 100vh;
 	}
 
-	.centered {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		/* bring your own prefixes */
-		transform: translate(-50%, -50%);
-	}
-
-	.vertical-center {
-		min-height: 100%;
-		/* Fallback for browsers do NOT support vh unit */
-		min-height: 100vh;
-		/* These two lines are counted as one :-)       */
-		display: flex;
-		align-items: center;
-	}
-
 	.jumbotron {
 		border: 0px;
 		padding: 0;
@@ -113,7 +91,4 @@
 	section {
 		width: 100%;
 		display: table;
-		height: 100vh;
-		padding-top: 20px;
-		padding-bottom: 20px;
 	}
