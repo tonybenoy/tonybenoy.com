@@ -1,22 +1,27 @@
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies and uv
 RUN apt-get update && apt-get install -y \
+    curl \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add uv to PATH
+ENV PATH="/root/.local/bin:$PATH"
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements and install Python dependencies
-COPY ./src/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Copy project files
+COPY src/pyproject.toml src/uv.lock /app/
+COPY src/ /app/
 
-# Copy source code
-COPY src/ /app/src/
+# Install dependencies with uv
+RUN uv sync --frozen --no-dev
 
 # Expose port
 EXPOSE 8000
 
 # Run the application
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "src.main:app", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--preload"]
+CMD ["uv", "run", "gunicorn", "-b", "0.0.0.0:8000", "main:app", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--preload"]

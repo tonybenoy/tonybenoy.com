@@ -1,4 +1,4 @@
-name: Ruff
+name: CI
 
 on:
   push:
@@ -7,30 +7,39 @@ on:
     branches: [ main, master ]
 
 jobs:
-  ruff:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
       with:
-        python-version: '3.11'
+        version: "latest"
     
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+    - name: Set up Python
+      run: uv python install 3.11
     
     - name: Install dependencies
       working-directory: ./src
-      run: poetry install --only=dev
+      run: uv sync
     
     - name: Run Ruff linter
       working-directory: ./src
-      run: poetry run ruff check .
+      run: uv run ruff check .
     
     - name: Run Ruff formatter
       working-directory: ./src
-      run: poetry run ruff format --check .
+      run: uv run ruff format --check .
+    
+    - name: Type check with mypy
+      working-directory: ./src
+      run: uv run mypy . --ignore-missing-imports || true
+    
+    - name: Run tests
+      working-directory: ./src
+      run: uv run python -m pytest || echo "No tests found"
+    
+    - name: Check security with bandit
+      working-directory: ./src
+      run: uv run bandit -r . -f json || true

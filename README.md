@@ -15,18 +15,28 @@ Personal website built with FastAPI and served via Docker with nginx reverse pro
 
 **Install dependencies:**
 ```bash
-cd src && poetry install
+cd src && uv sync
 ```
 
 **Run development server:**
 ```bash
-cd src && poetry run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+cd src && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Linting and formatting:**
 ```bash
-cd src && poetry run ruff check .
-cd src && poetry run ruff format .
+cd src && uv run ruff check .
+cd src && uv run ruff format .
+```
+
+**Type checking:**
+```bash
+cd src && uv run mypy . --ignore-missing-imports
+```
+
+**Security scanning:**
+```bash
+cd src && uv run bandit -r .
 ```
 
 ## Docker
