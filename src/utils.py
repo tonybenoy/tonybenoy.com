@@ -1,5 +1,5 @@
+import logging
 from re import compile
-from typing import Dict, List
 from urllib.parse import parse_qsl, urlsplit
 
 import httpx
@@ -8,70 +8,19 @@ from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="src/templates")
 
 
-# SVG_TEMPLATE = """<?xml version="1.0"?>
-#                 <svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="20">
-#                 <rect width="30" height="20" fill="#555"/>
-#                 <rect x="30" width="{recWidth}" height="20" fill="#4c1"/>
-#                 <rect rx="3" width="80" height="20" fill="transparent"/>
-#                     <g fill="#fff" text-anchor="middle"
-#                     font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
-#                         <text x="15" y="14">Visits</text>
-#                         <text x="{textX}" y="14">{count}</text>
-#                     </g>
-#                 </svg>
-#                 """
+# Configure logging
+logger = logging.getLogger(__name__)
 
-
-# def get_svg(count: int, width: int, rec_width: int, text_x: int):
-#     return SVG_TEMPLATE.format(
-#         count=count, width=width, recWidth=rec_width, textX=text_x
-#     )
-
-
-# def calculate_svg_sizes(count: int):
-#     text = str(count)
-#     sizes = {"width": 80, "recWidth": 50, "textX": 55}
-#     if len(text) > 5:
-#         sizes["width"] += 6 * (len(text) - 5)
-#         sizes["recWidth"] += 6 * (len(text) - 5)
-#         sizes["textX"] += 3 * (len(text) - 5)
-
-#     return sizes
-
-
-# def get_db_conn() -> Connection:
-#     if not path.exists("./db"):
-#         Path("./db").mkdir(mode=0o777, parents=True, exist_ok=False)
-#     conn = sqlite3.connect("./db/counter.db")
-#     c = conn.cursor()
-#     c.execute("""SELECT name FROM sqlite_master WHERE name='counter'""")
-#     if not c.fetchone():
-#         c.execute(
-#             """CREATE TABLE counter
-#              (count long,id int)"""
-#         )
-#         c.execute("""INSERT INTO counter values(1,1)""")
-#     conn.commit()
-#     return conn
-
-
-# def update_count() -> int:
-#     db_conn = get_db_conn()
-#     c = db_conn.cursor()
-#     c.execute("""SELECT count FROM counter WHERE id = 1;""")
-#     cur_count = c.fetchone()
-#     count = 0 if not cur_count else cur_count[0] + 1
-#     c.execute("""UPDATE counter  SET count = ? WHERE id=1;""", (count,))
-#     db_conn.commit()
-#     db_conn.close()
-#     return count
+# Configuration
+GITHUB_API_BASE = "https://api.github.com"
+DEFAULT_TIMEOUT = 30.0
 
 
 rlink = compile(r'<(.*?)>(.*?)rel="([A-z\s]*)"(.*?)(?:$|(?:,))')
 assignations = compile(r'([A-z]*?)="(.*?)"')
 
 
-def parse(link_header: str) -> Dict[str, Dict[str, str]]:
+def parse(link_header: str) -> dict[str, dict[str, str]]:
     # shamelessly copied from https://github.com/FlorianLouvetRN/linkheader_parser/blob/master/linkheader_parser/parser.py
     links = {}
     for match in rlink.finditer(link_header):
@@ -91,30 +40,88 @@ def parse(link_header: str) -> Dict[str, Dict[str, str]]:
     return links
 
 
-def get_repo_data_for_user(
-    url: str = "https://api.github.com/users/tonybenoy/repos", response: List = []
-) -> List[Dict[str, str]]:
-    resp = httpx.get(url)
-    repos = resp.json()
-    link = resp.headers["link"]
-    links = parse(link)
-    for repo in repos:
-        if not repo["fork"]:
-            response.append(
-                {
-                    "clone_url": repo["clone_url"],
-                    "forks": repo["forks"],
-                    "name": repo["name"],
-                    "language": repo["language"],
-                    "stargazers_count": repo["stargazers_count"],
-                    "html_url": repo["html_url"],
-                }
-            )
+async def get_repo_data_for_user(
+    url: str = "https://api.github.com/users/tonybenoy/repos",
+    response: list | None = None,
+    github_token: str | None = None,
+) -> list[dict[str, str]]:
+    """
+    Fetch GitHub repository data for a user with proper error handling.
 
-    if "next" in links:
-        response = get_repo_data_for_user(url=links["next"]["url"], response=response)
+    Args:
+        url: GitHub API URL to fetch repos from
+        response: Existing response list (for pagination)
+        github_token: Optional GitHub token for higher rate limits
+
+    Returns:
+        List of repository data dictionaries
+
+    Raises:
+        httpx.HTTPError: For HTTP-related errors
+        ValueError: For invalid response data
+    """
+    if response is None:
+        response = []
+
+    headers = {}
+    if github_token:
+        headers["Authorization"] = f"token {github_token}"
+
+    timeout = httpx.Timeout(DEFAULT_TIMEOUT)
+
+    try:
+        async with httpx.AsyncClient(timeout=timeout, headers=headers) as client:
+            resp = await client.get(url)
+            resp.raise_for_status()
+
+            repos = resp.json()
+            if not isinstance(repos, list):
+                logger.error(
+                    f"Unexpected response format from GitHub API: {type(repos)}"
+                )
+                return response
+
+            link = resp.headers.get("link", "")
+            links = parse(link) if link else {}
+
+            for repo in repos:
+                if not repo.get("fork", True):  # Skip forks
+                    try:
+                        response.append(
+                            {
+                                "clone_url": repo.get("clone_url", ""),
+                                "forks": repo.get("forks", 0),
+                                "name": repo.get("name", "Unknown"),
+                                "language": repo.get("language") or "Not specified",
+                                "stargazers_count": repo.get("stargazers_count", 0),
+                                "html_url": repo.get("html_url", ""),
+                                "description": repo.get("description", ""),
+                                "updated_at": repo.get("updated_at", ""),
+                            }
+                        )
+                    except KeyError as e:
+                        logger.warning(f"Missing expected field in repo data: {e}")
+                        continue
+
+            if "next" in links:
+                response = await get_repo_data_for_user(
+                    url=links["next"]["url"],
+                    response=response,
+                    github_token=github_token,
+                )
+
+    except httpx.TimeoutException:
+        logger.error(f"Timeout while fetching data from {url}")
+        raise
+    except httpx.HTTPStatusError as e:
+        logger.error(f"HTTP error {e.response.status_code} while fetching {url}")
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error while fetching repo data: {e}")
+        raise
+
     return response
 
 
-def sort_repos(repos: List[Dict[str, str]], count=6) -> List[Dict[str, str]]:
+def sort_repos(repos: list[dict[str, str]], count: int = 6) -> list[dict[str, str]]:
     return sorted(repos, key=lambda x: x["stargazers_count"], reverse=True)[:count]

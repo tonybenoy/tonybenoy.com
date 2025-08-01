@@ -49,7 +49,70 @@ docker run --net=host -p 8000:8000 -it website
 
 **Production deployment:**
 ```bash
+# Automated deployment with health checks and rollback capability
+./scripts/deploy.sh
+
+# Or manual deployment
 docker-compose up -d
+```
+
+## Monitoring & Maintenance
+
+**Health checks:**
+```bash
+./scripts/monitor.sh
+```
+
+**Service logs:**
+```bash
+docker-compose logs -f [service_name]
+```
+
+**Service status:**
+```bash
+docker-compose ps
+```
+
+## Backup & Recovery
+
+**Create backup:**
+```bash
+# Full backup (default)
+./scripts/backup.sh full
+
+# Data only backup
+./scripts/backup.sh data
+
+# Configuration only backup
+./scripts/backup.sh config
+```
+
+**List backups:**
+```bash
+./scripts/backup.sh list
+```
+
+**Restore from backup:**
+```bash
+./scripts/restore.sh <backup_date> [full|data|config]
+```
+
+## Log Management
+
+**Manual log rotation:**
+```bash
+./scripts/log-rotate.sh rotate
+```
+
+**Check log status:**
+```bash
+./scripts/log-rotate.sh status
+```
+
+**Setup automated maintenance:**
+```bash
+# Install cron jobs for automated backups and log rotation
+sudo ./scripts/setup-cron.sh setup
 ```
 
 ## Key Files

@@ -1,38 +1,156 @@
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
+  nginx-conf:
+    driver: local
+  certbot-conf:
+    driver: local
+  certbot-www:
+    driver: local
+  app-logs:
+    driver: local
+  nginx-logs:
+    driver: local
+
 services:
   nginx:
-    image: nginx:alpine
+    image: nginx:1.25-alpine
+    container_name: tonybenoy-nginx
+    restart: unless-stopped
     ports:
-      #   - "80:80"
-      #   - "443:443"
-      - mode: host
-        protocol: tcp
-        published: 80
-        target: 80
-      - mode: host
-        protocol: tcp
-        published: 443
-        target: 443
+      - "80:80"
+      - "${HTTPS_PORT:-443}:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - ./nginx/${NGINX_CONFIG:-app-dev.conf}:/etc/nginx/conf.d/default.conf:ro
+      - certbot-conf:/etc/letsencrypt:ro
+      - certbot-www:/var/www/certbot:ro
+      - nginx-logs:/var/log/nginx
+    networks:
+      - app-network
+    depends_on:
+      - fastapi
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
   fastapi:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    image: registry.localhost:5000/tonybenoy
-    ports:
-      - "8000:8000"
+      target: production
+    image: tonybenoy-com:latest
+    container_name: tonybenoy-app
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis_db
+      - REDIS_PORT=6379
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - GITHUB_USERNAME=${GITHUB_USERNAME:-tonybenoy}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["*"]}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-["*"]}
+      - APP_ENV=${APP_ENV:-local}
+    volumes:
+      - app-logs:/app/logs
+    networks:
+      - app-network
+    depends_on:
+      redis_db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/test', timeout=10)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  redis_db:
+    image: redis:7.2-alpine
+    container_name: tonybenoy-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
   certbot:
-    image: certbot/certbot
+    image: certbot/certbot:latest
+    container_name: tonybenoy-certbot
+    restart: unless-stopped
     volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - certbot-conf:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    networks:
+      - app-network
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-  redis_db:
-    image: redis:latest
-    ports:
-      - target: 6379
-        published: 6379
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+        compress: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 64M

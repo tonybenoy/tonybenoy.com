@@ -131,3 +131,26 @@ dmypy.json
 
 # Claude Code instructions file
 CLAUDE.md
+
+# Environment files
+.env*
+!.env.example
+
+# Docker volumes
+certbot/
+redis-data/
+app-logs/
+
+# Application logs
+logs/
+*.log
+
+# Runtime
+*.pid
+*.lock
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
