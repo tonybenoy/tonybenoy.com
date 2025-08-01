@@ -4,20 +4,20 @@
 <section id="sec1" class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
+            <div class="col-sm-12">
                 <div class="jumbotron bg-1">
                     <h2 class="text-center">Stuff I Do</h2>
                     <p class="text-center">Here are some of the projects I'm working on:</p>
                     <div class="row">
                         {% for repo in repos %}
-                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h3 class="card-title">{{ repo.name }}</h3>
-                                    <p class="card-text">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3>{{ repo.name }}</h3>
+                                    <p>
                                         <strong>Language:</strong> {{ repo.language }}<br>
-                                        <i class="fas fa-star"></i> {{ repo.stargazers_count }}<br>
-                                        <i class="fas fa-code-branch"></i> {{ repo.forks }}
+                                        <i class="fa fa-star"></i> {{ repo.stargazers_count }}<br>
+                                        <i class="fa fa-code-fork"></i> {{ repo.forks }}
                                     </p>
                                     <a href="{{ repo.html_url }}" class="btn btn-primary">View Project</a>
                                 </div>
@@ -25,7 +25,7 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="text-center mt-4">
+                    <div class="text-center" style="margin-top: 20px;">
                         <a href="https://github.com/tonybenoy?tab=repositories" class="btn btn-secondary">More on
                             GitHub</a>
                     </div>

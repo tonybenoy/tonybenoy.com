@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from re import compile
 from urllib.parse import parse_qsl, urlsplit
 
@@ -6,6 +7,7 @@ import httpx
 from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="src/templates")
+templates.env.globals["current_year"] = datetime.now().year
 
 
 # Configure logging

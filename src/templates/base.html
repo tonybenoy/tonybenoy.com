@@ -20,35 +20,38 @@
 <body>
 	<div class="row">
 		<nav class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">Tony Benoy</a>
+				</div>
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						{% if active_page == "home" %}
 						<li class="active">
-							<a href="https://tonybenoy.com/">Home
-								<span class="blick_text">_</span>
+							<a href="/">Home
+								<span class="blink_text">_</span>
 							</a>
 						</li>
 						{% else %}
 						<li>
-							<a href="https://tonybenoy.com/">Home</a>
+							<a href="/">Home</a>
 						</li>
 						{% endif %}
 
 						{% if active_page == "other" %}
 						<li class="active">
-							<a href="https://tonybenoy.com/app">Other Stuff
-								<span class="blick_text">_</span>
+							<a href="/app">Other Stuff
+								<span class="blink_text">_</span>
 							</a>
 						</li>
 						{% else %}
 						<li>
-							<a href="https://tonybenoy.com/app">Other Stuff</a>
+							<a href="/app">Other Stuff</a>
 						</li>
 
 						{% endif %}
@@ -64,7 +67,7 @@
 <footer>
 	<div class="navbar navbar-inner  navbar-fixed-bottom">
 		<div class="row">
-			<p class="text-center">© Tony Benoy 2024</p>
+			<p class="text-center">© Tony Benoy {{ current_year }}</p>
 		</div>
 	</div>
 </footer>
