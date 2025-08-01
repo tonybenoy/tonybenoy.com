@@ -60,7 +60,7 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": "2025-01-01T00:00:00Z",  # Dynamic in real implementation
-        "version": "2.0.0"
+        "version": "2.0.0",
     }
 
 
@@ -77,15 +77,12 @@ async def metrics(request: Request):
             "uptime": time.time(),  # Would track actual uptime
             "memory_usage": psutil.virtual_memory().percent,
             "cpu_usage": psutil.cpu_percent(),
-            "disk_usage": psutil.disk_usage('/').percent,
+            "disk_usage": psutil.disk_usage("/").percent,
             "requests_total": "N/A",  # Would implement proper metrics
-            "status": "ok"
+            "status": "ok",
         }
     except ImportError:
-        return {
-            "status": "ok",
-            "message": "Detailed metrics not available"
-        }
+        return {"status": "ok", "message": "Detailed metrics not available"}
 
 
 # @home.get("/counter.svg")
