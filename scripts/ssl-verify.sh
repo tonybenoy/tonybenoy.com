@@ -302,21 +302,18 @@ EOF
     print_status "Waiting for services to start..."
     sleep 15
     
-    # Verify HTTP is working and ACME challenge path is accessible
-    print_status "Step 2: Verifying HTTP access and ACME challenge path..."
-    if ! test_acme_challenge; then
-        print_error "ACME challenge test failed. Check your domain DNS and firewall settings."
-        return 1
-    fi
+    # Skip ACME challenge test for standalone mode - certbot will handle its own verification
+    print_status "Step 2: Skipping ACME challenge test (using standalone mode)..."
     
     # Stop services to obtain certificates
     print_status "Step 3: Stopping services to obtain SSL certificates..."
     docker-compose stop nginx
     
     # Obtain certificates using standalone mode
-    print_status "Step 4: Obtaining SSL certificates..."
+    print_status "Step 4: Obtaining SSL certificates (STAGING MODE)..."
     if docker-compose run --rm certbot certonly \
         --standalone \
+        --staging \
         --email "${email}" \
         --agree-tos \
         --no-eff-email \

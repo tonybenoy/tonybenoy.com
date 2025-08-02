@@ -63,4 +63,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE 8000
 
 # Run the application using the virtual environment's gunicorn
-CMD ["/app/.venv/bin/gunicorn", "-b", "0.0.0.0:8000", "app.main:app", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--preload", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["sh", "-c", "cd /app && /app/.venv/bin/gunicorn -b 0.0.0.0:8000 app.main:app -w 2 -k uvicorn.workers.UvicornWorker --preload --access-logfile - --error-logfile -"]
