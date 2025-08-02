@@ -1,4 +1,5 @@
 import logging
+import pathlib
 import time
 from contextlib import asynccontextmanager
 
@@ -89,7 +90,21 @@ async def log_requests(request: Request, call_next):
 
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="src/static"), name="static")
+# Determine the correct path based on environment
+current_dir = pathlib.Path.cwd()
+if (current_dir / "static").exists():
+    static_dir = "static"
+elif (current_dir / "src" / "static").exists():
+    static_dir = "src/static"
+else:
+    # Fallback: check relative to this file's location
+    file_dir = pathlib.Path(__file__).parent
+    if (file_dir / "static").exists():
+        static_dir = str(file_dir / "static")
+    else:
+        static_dir = "src/static"  # Default fallback
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Include routers
 app.include_router(home, tags=["home"])

@@ -74,6 +74,7 @@ services:
       - APP_ENV=${APP_ENV:-local}
     volumes:
       - app-logs:/app/logs
+      - ${CODE_MOUNT:-/tmp/empty}:/app/src
     networks:
       - app-network
     depends_on:

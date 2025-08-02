@@ -1,4 +1,5 @@
 import logging
+import pathlib
 from datetime import datetime
 from re import compile
 from urllib.parse import parse_qsl, urlsplit
@@ -6,7 +7,21 @@ from urllib.parse import parse_qsl, urlsplit
 import httpx
 from fastapi.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory="src/templates")
+# Determine the correct path based on environment
+current_dir = pathlib.Path.cwd()
+if (current_dir / "templates").exists():
+    templates_dir = "templates"
+elif (current_dir / "src" / "templates").exists():
+    templates_dir = "src/templates"
+else:
+    # Fallback: check relative to this file's location
+    file_dir = pathlib.Path(__file__).parent
+    if (file_dir / "templates").exists():
+        templates_dir = str(file_dir / "templates")
+    else:
+        templates_dir = "src/templates"  # Default fallback
+
+templates = Jinja2Templates(directory=templates_dir)
 templates.env.globals["current_year"] = datetime.now().year
 
 
