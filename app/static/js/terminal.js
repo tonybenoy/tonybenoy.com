@@ -3,8 +3,11 @@ class WebTerminal {
         this.history = [];
         this.historyIndex = -1;
         this.currentPath = '/';
-        this.isMinimized = !isFullPage;
+        this.isMinimized = false;
         this.isFullPage = isFullPage;
+        this.isHidden = true; // Terminal starts completely hidden
+        this.autoHidden = false;
+        this.hideTimeout = null;
         this.commands = {
             help: () => this.showHelp(),
             ls: () => this.listPages(),
@@ -43,15 +46,41 @@ class WebTerminal {
     }
 
     init() {
+        // Double-check we're not on the terminal page
+        const currentPath = window.location.pathname;
+        if (currentPath === '/terminal' || currentPath.includes('/terminal')) {
+            return;
+        }
+        
         this.createTerminal();
         this.bindEvents();
         this.addOutput('Welcome to Tony\'s Interactive Terminal! Type "help" for available commands.', 'success');
         this.setCurrentPath();
+        this.setupAutoHide();
+    }
+
+    setupAutoHide() {
+        // Hide terminal when clicking anywhere outside of it (when expanded)
+        document.addEventListener('click', (e) => {
+            // Don't hide if clicking on the terminal itself or floating button
+            const terminal = document.getElementById('web-terminal');
+            const floatingBtn = document.getElementById('floating-terminal-btn');
+            
+            if (!terminal || this.isFullPage) return;
+            
+            // Check if click is outside terminal and floating button
+            const isClickInsideTerminal = terminal.contains(e.target);
+            const isClickOnFloatingBtn = floatingBtn && floatingBtn.contains(e.target);
+            
+            if (!isClickInsideTerminal && !isClickOnFloatingBtn && !this.isHidden) {
+                this.autoHideTerminal();
+            }
+        });
     }
 
     createTerminal() {
         const terminal = document.createElement('div');
-        terminal.className = 'terminal-container terminal-minimized';
+        terminal.className = 'terminal-container terminal-hidden';
         terminal.id = 'web-terminal';
 
         terminal.innerHTML = `
@@ -72,6 +101,11 @@ class WebTerminal {
         `;
 
         document.body.appendChild(terminal);
+        
+        // Add floating hide button
+        if (!this.isFullPage) {
+            this.createFloatingHideButton();
+        }
     }
 
     bindEvents() {
@@ -119,26 +153,120 @@ class WebTerminal {
     }
 
     toggleTerminal() {
-        const terminal = document.getElementById('web-terminal');
-        const maximizeBtn = document.getElementById('terminal-maximize');
-
-        this.isMinimized = !this.isMinimized;
-
-        if (this.isMinimized) {
-            terminal.classList.add('terminal-minimized');
-            maximizeBtn.innerHTML = '▲';
-            maximizeBtn.title = 'Maximize';
+        if (this.isHidden) {
+            this.showTerminal();
         } else {
-            terminal.classList.remove('terminal-minimized');
-            maximizeBtn.innerHTML = '▼';
-            maximizeBtn.title = 'Minimize';
-            document.getElementById('terminal-input').focus();
+            this.autoHideTerminal();
         }
     }
 
     closeTerminal() {
         const terminal = document.getElementById('web-terminal');
         terminal.style.display = 'none';
+    }
+    
+    autoHideTerminal() {
+        if (!this.isHidden) {
+            this.isHidden = true;
+            this.isMinimized = false;
+            this.autoHidden = true;
+            const terminal = document.getElementById('web-terminal');
+            
+            if (terminal) {
+                terminal.classList.add('terminal-hidden');
+                terminal.classList.remove('terminal-minimized', 'terminal-auto-hidden');
+            }
+            
+            // Show floating button
+            this.showFloatingButton();
+        }
+    }
+    
+    createFloatingHideButton() {
+        // Create floating button container
+        const floatingContainer = document.createElement('div');
+        floatingContainer.id = 'floating-terminal-container';
+        floatingContainer.className = 'floating-terminal-container';
+        
+        // Create the button
+        const floatingBtn = document.createElement('button');
+        floatingBtn.id = 'floating-terminal-btn';
+        floatingBtn.className = 'floating-terminal-button';
+        floatingBtn.innerHTML = '📟';
+        floatingBtn.title = 'Open Interactive Terminal';
+        
+        // Create hint bubble
+        const hintBubble = document.createElement('div');
+        hintBubble.id = 'terminal-hint-bubble';
+        hintBubble.className = 'terminal-hint-bubble';
+        hintBubble.innerHTML = 'Interactive Terminal Available!';
+        
+        floatingBtn.addEventListener('click', () => {
+            this.showTerminal();
+            this.hideHintBubble();
+        });
+        
+        // Show hint bubble initially, then hide after a few seconds
+        setTimeout(() => {
+            this.showHintBubble();
+            setTimeout(() => {
+                this.hideHintBubble();
+            }, 4000);
+        }, 2000);
+        
+        floatingContainer.appendChild(floatingBtn);
+        floatingContainer.appendChild(hintBubble);
+        document.body.appendChild(floatingContainer);
+    }
+    
+    showFloatingButton() {
+        const floatingContainer = document.getElementById('floating-terminal-container');
+        if (floatingContainer) {
+            floatingContainer.style.display = 'block';
+        }
+    }
+    
+    hideFloatingButton() {
+        const floatingContainer = document.getElementById('floating-terminal-container');
+        if (floatingContainer) {
+            floatingContainer.style.display = 'none';
+        }
+    }
+    
+    showHintBubble() {
+        const hintBubble = document.getElementById('terminal-hint-bubble');
+        if (hintBubble) {
+            hintBubble.classList.add('show');
+        }
+    }
+    
+    hideHintBubble() {
+        const hintBubble = document.getElementById('terminal-hint-bubble');
+        if (hintBubble) {
+            hintBubble.classList.remove('show');
+        }
+    }
+    
+    showTerminal() {
+        this.isMinimized = false;
+        this.isHidden = false;
+        this.autoHidden = false;
+        const terminal = document.getElementById('web-terminal');
+        const maximizeBtn = document.getElementById('terminal-maximize');
+        
+        if (terminal) {
+            terminal.classList.remove('terminal-hidden', 'terminal-minimized', 'terminal-auto-hidden');
+        }
+        if (maximizeBtn) {
+            maximizeBtn.innerHTML = '▼';
+            maximizeBtn.title = 'Minimize';
+        }
+        
+        this.hideFloatingButton();
+        const input = document.getElementById('terminal-input');
+        if (input) {
+            input.focus();
+        }
     }
 
     executeCommand(commandLine) {
@@ -418,7 +546,118 @@ Use 'cd contact' to see contact form and details.`;
 // Initialize terminal when page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Only create embedded terminal if not on full terminal page
-    if (!window.location.pathname.includes('/terminal')) {
+    const currentPath = window.location.pathname;
+    const isTerminalPage = currentPath === '/terminal' || currentPath.includes('/terminal');
+    
+    
+    if (!isTerminalPage) {
         window.terminal = new WebTerminal();
+        
+        // Add CSS for animations and floating button
+        const style = document.createElement('style');
+        style.textContent = `
+            .terminal-container {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .terminal-hidden {
+                transform: translateY(100%);
+                opacity: 0;
+                pointer-events: none;
+            }
+            
+            .floating-terminal-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 10000;
+                display: block;
+            }
+            
+            .floating-terminal-button {
+                background: #1a1a1a;
+                color: #00ff00;
+                border: 2px solid #00ff00;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: pulse 2s infinite;
+                position: relative;
+            }
+            
+            .floating-terminal-button:hover {
+                background: #00ff00;
+                color: #1a1a1a;
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(0, 255, 0, 0.5);
+            }
+            
+            .terminal-hint-bubble {
+                position: absolute;
+                bottom: 60px;
+                right: 0;
+                background: #000;
+                color: #00ff00;
+                border: 1px solid #00ff00;
+                border-radius: 8px;
+                padding: 8px 12px;
+                font-size: 12px;
+                font-family: 'Courier New', monospace;
+                white-space: nowrap;
+                box-shadow: 0 2px 8px rgba(0, 255, 0, 0.3);
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.3s ease;
+                pointer-events: none;
+                z-index: 10001;
+            }
+            
+            .terminal-hint-bubble.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            .terminal-hint-bubble::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                right: 20px;
+                border: 6px solid transparent;
+                border-top-color: #00ff00;
+            }
+            
+            @keyframes pulse {
+                0% { box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3); }
+                50% { box-shadow: 0 4px 20px rgba(0, 255, 0, 0.6); }
+                100% { box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3); }
+            }
+            
+            @media (max-width: 768px) {
+                .floating-terminal-container {
+                    bottom: 15px;
+                    right: 15px;
+                }
+                
+                .floating-terminal-button {
+                    width: 45px;
+                    height: 45px;
+                    font-size: 18px;
+                }
+                
+                .terminal-hint-bubble {
+                    font-size: 11px;
+                    padding: 6px 10px;
+                    bottom: 55px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     }
 });
