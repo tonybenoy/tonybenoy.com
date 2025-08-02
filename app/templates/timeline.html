@@ -6,46 +6,79 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-8">
                 <div class="hero-section bg-1 p-4 p-md-5 rounded">
-                    <h2 class="text-center mb-4">Timeline</h2>
+                    <h2 class="text-center mb-4">Professional Timeline</h2>
                     <p class="text-center lead mb-5">
-                        My professional journey
+                        My journey through technology and business
                         <span class="blink_text">_</span>
                     </p>
                     
                     <!-- Work Experience Section -->
                     <div class="mb-5">
-                        <h3 class="mb-4 text-center">Work Experience</h3>
-                        <div class="timeline">
+                        <h3 class="section-title mb-5 text-center">
+                            <i class="fas fa-briefcase me-2"></i>
+                            Work Experience
+                        </h3>
+                        
+                        <div class="modern-timeline">
+                            <div class="timeline-line"></div>
                             {% for job in work_experience %}
-                            <div class="timeline-item card mb-4">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-8">
-                                            <h5 class="card-title mb-2">{{ job.title }}</h5>
-                                            {% if job.company_url %}
-                                            <h6 class="company-name mb-2">
-                                                <a href="{{ job.company_url }}" target="_blank" class="company-link">
-                                                    {{ job.company }}
-                                                    <i class="fas fa-external-link-alt ms-1"></i>
-                                                </a>
-                                            </h6>
-                                            {% else %}
-                                            <h6 class="company-name mb-2">{{ job.company }}</h6>
-                                            {% endif %}
-                                            <p class="timeline-date mb-1">{{ job.period }}</p>
-                                            <p class="timeline-location text-muted mb-0">{{ job.location }}</p>
+                            <div class="timeline-entry" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                                <div class="timeline-marker {{ job.type }}">
+                                    <i class="{{ job.icon }}"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-card">
+                                        <div class="card-header">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-8">
+                                                    <h4 class="job-title">{{ job.title }}</h4>
+                                                    {% if job.company_url %}
+                                                    <h5 class="company-name">
+                                                        <a href="{{ job.company_url }}" target="_blank" class="company-link">
+                                                            {{ job.company }}
+                                                            <i class="fas fa-external-link-alt ms-1"></i>
+                                                        </a>
+                                                    </h5>
+                                                    {% else %}
+                                                    <h5 class="company-name">{{ job.company }}</h5>
+                                                    {% endif %}
+                                                    <div class="job-meta">
+                                                        <span class="timeline-date">
+                                                            <i class="fas fa-calendar-alt me-1"></i>
+                                                            {{ job.period }}
+                                                        </span>
+                                                        <span class="timeline-location">
+                                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                                            {{ job.location }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                {% if job.logo %}
+                                                <div class="col-lg-4 text-center">
+                                                    <div class="company-logo-wrapper">
+                                                        {% if job.company_url %}
+                                                        <a href="{{ job.company_url }}" target="_blank">
+                                                            <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
+                                                        </a>
+                                                        {% else %}
+                                                        <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                        {% if job.logo %}
-                                        <div class="col-lg-4 text-center">
-                                            {% if job.company_url %}
-                                            <a href="{{ job.company_url }}" target="_blank">
-                                                <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
-                                            </a>
-                                            {% else %}
-                                            <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
-                                            {% endif %}
+                                        <div class="card-body">
+                                            <p class="job-description">{{ job.description }}</p>
+                                            <div class="technologies">
+                                                <h6 class="tech-title">Technologies & Skills:</h6>
+                                                <div class="tech-tags">
+                                                    {% for tech in job.technologies %}
+                                                    <span class="tech-tag">{{ tech }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
                                         </div>
-                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -55,41 +88,76 @@
 
                     <!-- Education Section -->
                     <div class="mb-4">
-                        <h3 class="mb-4 text-center">Education</h3>
-                        <div class="timeline">
+                        <h3 class="section-title mb-5 text-center">
+                            <i class="fas fa-university me-2"></i>
+                            Education
+                        </h3>
+                        <div class="education-timeline">
+                            <div class="timeline-line"></div>
                             {% for edu in education %}
-                            <div class="timeline-item card mb-4">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-8">
-                                            <h5 class="card-title mb-2">{{ edu.degree }}</h5>
-                                            {% if edu.institution_url %}
-                                            <h6 class="institution-name mb-2">
-                                                <a href="{{ edu.institution_url }}" target="_blank" class="company-link">
-                                                    {{ edu.institution }}
-                                                    <i class="fas fa-external-link-alt ms-1"></i>
-                                                </a>
-                                            </h6>
-                                            {% else %}
-                                            <h6 class="institution-name mb-2">{{ edu.institution }}</h6>
-                                            {% endif %}
-                                            <p class="timeline-date mb-1">{{ edu.period }}</p>
-                                            <p class="timeline-location text-muted mb-1">{{ edu.location }}</p>
-                                            {% if edu.gpa %}
-                                            <p class="timeline-gpa text-muted mb-0">{{ edu.gpa }}</p>
-                                            {% endif %}
+                            <div class="timeline-entry education-entry" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                                <div class="timeline-marker {{ edu.type }}">
+                                    <i class="{{ edu.icon }}"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-card">
+                                        <div class="card-header">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-8">
+                                                    <h4 class="degree-title">{{ edu.degree }}</h4>
+                                                    {% if edu.institution_url %}
+                                                    <h5 class="institution-name">
+                                                        <a href="{{ edu.institution_url }}" target="_blank" class="company-link">
+                                                            {{ edu.institution }}
+                                                            <i class="fas fa-external-link-alt ms-1"></i>
+                                                        </a>
+                                                    </h5>
+                                                    {% else %}
+                                                    <h5 class="institution-name">{{ edu.institution }}</h5>
+                                                    {% endif %}
+                                                    <div class="edu-meta">
+                                                        <span class="timeline-date">
+                                                            <i class="fas fa-calendar-alt me-1"></i>
+                                                            {{ edu.period }}
+                                                        </span>
+                                                        <span class="timeline-location">
+                                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                                            {{ edu.location }}
+                                                        </span>
+                                                        {% if edu.gpa %}
+                                                        <span class="timeline-gpa">
+                                                            <i class="fas fa-star me-1"></i>
+                                                            {{ edu.gpa }}
+                                                        </span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% if edu.logo %}
+                                                <div class="col-lg-4 text-center">
+                                                    <div class="company-logo-wrapper">
+                                                        {% if edu.institution_url %}
+                                                        <a href="{{ edu.institution_url }}" target="_blank">
+                                                            <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
+                                                        </a>
+                                                        {% else %}
+                                                        <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                        {% if edu.logo %}
-                                        <div class="col-lg-4 text-center">
-                                            {% if edu.institution_url %}
-                                            <a href="{{ edu.institution_url }}" target="_blank">
-                                                <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
-                                            </a>
-                                            {% else %}
-                                            <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
-                                            {% endif %}
+                                        <div class="card-body">
+                                            <p class="edu-description">{{ edu.description }}</p>
+                                            <div class="focus-areas">
+                                                <h6 class="focus-title">Focus Areas:</h6>
+                                                <div class="focus-tags">
+                                                    {% for focus in edu.focus %}
+                                                    <span class="focus-tag">{{ focus }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
                                         </div>
-                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -103,201 +171,466 @@
 </main>
 
 <style>
-/* Timeline specific styles */
-.timeline {
+/* Modern Timeline Styles */
+.modern-timeline, .education-timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 30px;
+    top: 50px;
+    height: calc(100% - 100px);
+    width: 4px;
+    background: linear-gradient(180deg, #00ff41, rgba(0, 255, 65, 0.3));
+    border-radius: 2px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+body.light-theme .timeline-line {
+    background: linear-gradient(180deg, #2aa198, rgba(42, 161, 152, 0.3));
+    box-shadow: 0 0 20px rgba(42, 161, 152, 0.3);
+}
+
+.timeline-entry {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-left: 80px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-entry.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -49px;
+    top: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #000;
+    border: 4px solid #00ff41;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+    z-index: 10;
+    transition: all 0.3s ease;
+    background-clip: padding-box;
+}
+
+.timeline-marker.leadership {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    border-color: #ffd700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.timeline-marker.entrepreneurship {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    border-color: #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+}
+
+.timeline-marker.engineering {
+    background: linear-gradient(135deg, #4ecdc4, #7fdbda);
+    border-color: #4ecdc4;
+    box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+}
+
+.timeline-marker.masters {
+    background: linear-gradient(135deg, #9b59b6, #bb7ec0);
+    border-color: #9b59b6;
+    box-shadow: 0 0 30px rgba(155, 89, 182, 0.5);
+}
+
+.timeline-marker.exchange {
+    background: linear-gradient(135deg, #3498db, #5dade2);
+    border-color: #3498db;
+    box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+}
+
+.timeline-marker.bachelors {
+    background: linear-gradient(135deg, #e67e22, #f39c12);
+    border-color: #e67e22;
+    box-shadow: 0 0 30px rgba(230, 126, 34, 0.5);
+}
+
+.timeline-marker:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(0, 255, 65, 0.8);
+}
+
+/* Light theme marker adjustments */
+body.light-theme .timeline-marker {
+    border-color: #2aa198;
+    box-shadow: 0 0 30px rgba(42, 161, 152, 0.5);
+}
+
+body.light-theme .timeline-marker:hover {
+    box-shadow: 0 0 40px rgba(42, 161, 152, 0.8);
+}
+
+.timeline-content {
     position: relative;
 }
 
-.timeline-item {
+.timeline-card {
+    background: rgba(0, 20, 40, 0.8);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    border-radius: 15px;
+    overflow: hidden;
     transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease-out forwards;
-    opacity: 0;
+    backdrop-filter: blur(10px);
 }
 
-.timeline-item:nth-child(1) { animation-delay: 0.1s; }
-.timeline-item:nth-child(2) { animation-delay: 0.2s; }
-.timeline-item:nth-child(3) { animation-delay: 0.3s; }
-.timeline-item:nth-child(4) { animation-delay: 0.4s; }
-.timeline-item:nth-child(5) { animation-delay: 0.5s; }
+.timeline-card:hover {
+    transform: translateY(-5px);
+    border-color: #00ff41;
+    box-shadow: 0 20px 40px rgba(0, 255, 65, 0.2);
+}
 
-.company-link, .institution-link {
+body.light-theme .timeline-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(42, 161, 152, 0.3);
+}
+
+body.light-theme .timeline-card:hover {
+    border-color: #2aa198;
+    box-shadow: 0 20px 40px rgba(42, 161, 152, 0.2);
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+body.light-theme .card-header {
+    border-bottom-color: rgba(42, 161, 152, 0.2);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.job-title, .degree-title {
     color: #00ff41;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-family: 'Fira Code', monospace;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
 }
 
-.company-link:hover, .institution-link:hover {
-    color: #00cc33;
-    text-decoration: underline;
+body.light-theme .job-title,
+body.light-theme .degree-title {
+    color: #2aa198;
 }
 
 .company-name, .institution-name {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.company-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.company-link:hover {
     color: #00ff41;
-    font-family: 'Fira Code', monospace;
-    font-weight: 600;
+    text-decoration: underline;
+}
+
+body.light-theme .company-link:hover {
+    color: #2aa198;
+}
+
+.job-meta, .edu-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
 }
 
 .timeline-date {
     color: #00ff41;
-    font-family: 'Fira Code', monospace;
     font-weight: 500;
-    font-size: 0.9rem;
 }
 
-.timeline-location, .timeline-gpa {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.85rem;
+.timeline-location {
+    color: #999;
 }
 
-.company-logo {
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    filter: brightness(1.1) contrast(1.1);
-    animation: logoPulse 3s ease-in-out infinite;
-    /* Enhanced neumorphic shadow with glow */
-    box-shadow: 
-        4px 4px 12px rgba(0, 0, 0, 0.8),
-        -4px -4px 12px rgba(60, 60, 60, 0.15),
-        inset 1px 1px 2px rgba(255, 255, 255, 0.1),
-        0 0 20px rgba(0, 255, 65, 0.1);
-    /* Subtle border glow */
-    border: 1px solid rgba(0, 255, 65, 0.2);
-    backdrop-filter: blur(5px);
-}
-
-.company-logo:hover {
-    transform: scale(1.2) rotate(2deg) translateY(-5px);
-    filter: brightness(1.3) contrast(1.2) saturate(1.2);
-    /* Dramatic hover effect */
-    box-shadow: 
-        8px 8px 20px rgba(0, 0, 0, 0.9),
-        -8px -8px 20px rgba(80, 80, 80, 0.2),
-        inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(0, 255, 65, 0.4),
-        0 0 60px rgba(0, 255, 65, 0.15);
-    border: 2px solid rgba(0, 255, 65, 0.6);
-}
-
-/* Add pulse animation */
-@keyframes logoPulse {
-    0%, 100% { 
-        box-shadow: 
-            4px 4px 12px rgba(0, 0, 0, 0.8),
-            -4px -4px 12px rgba(60, 60, 60, 0.15),
-            inset 1px 1px 2px rgba(255, 255, 255, 0.1),
-            0 0 20px rgba(0, 255, 65, 0.1);
-    }
-    50% { 
-        box-shadow: 
-            4px 4px 12px rgba(0, 0, 0, 0.8),
-            -4px -4px 12px rgba(60, 60, 60, 0.15),
-            inset 1px 1px 2px rgba(255, 255, 255, 0.1),
-            0 0 25px rgba(0, 255, 65, 0.2);
-    }
-}
-
-
-/* Light theme overrides */
-body.light-theme .company-link, 
-body.light-theme .institution-link {
-    color: #2aa198 !important;
-}
-
-body.light-theme .company-link:hover, 
-body.light-theme .institution-link:hover {
-    color: #268e85 !important;
-}
-
-body.light-theme .company-name, 
-body.light-theme .institution-name {
-    color: #2aa198 !important;
+.timeline-gpa {
+    color: #ffd700;
+    font-weight: 500;
 }
 
 body.light-theme .timeline-date {
-    color: #2aa198 !important;
+    color: #2aa198;
 }
 
-body.light-theme .timeline-location, 
-body.light-theme .timeline-gpa {
-    color: #586e75 !important;
+body.light-theme .timeline-location {
+    color: #666;
+}
+
+.company-logo-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.company-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(0, 255, 65, 0.3);
+    transition: all 0.3s ease;
+}
+
+.company-logo:hover {
+    transform: scale(1.05) rotate(5deg);
+    border-color: #00ff41;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 255, 65, 0.3);
 }
 
 body.light-theme .company-logo {
-    border: 1px solid rgba(42, 161, 152, 0.3);
-    filter: brightness(1.05) contrast(1.05);
-    animation: logoPulseLight 3s ease-in-out infinite !important;
-    /* Enhanced light theme neumorphic shadow */
-    box-shadow: 
-        4px 4px 12px rgba(0, 0, 0, 0.15),
-        -4px -4px 12px rgba(255, 255, 255, 0.9),
-        inset 1px 1px 2px rgba(255, 255, 255, 0.8),
-        0 0 20px rgba(42, 161, 152, 0.1) !important;
+    background: rgba(42, 161, 152, 0.1);
+    border-color: rgba(42, 161, 152, 0.3);
 }
 
 body.light-theme .company-logo:hover {
-    filter: brightness(1.2) contrast(1.15) saturate(1.1);
-    border: 2px solid rgba(42, 161, 152, 0.6);
-    box-shadow: 
-        8px 8px 20px rgba(0, 0, 0, 0.2),
-        -8px -8px 20px rgba(255, 255, 255, 0.9),
-        inset 2px 2px 4px rgba(255, 255, 255, 0.9),
-        0 0 30px rgba(42, 161, 152, 0.3),
-        0 0 60px rgba(42, 161, 152, 0.1) !important;
+    border-color: #2aa198;
+    background: rgba(42, 161, 152, 0.15);
+    box-shadow: 0 10px 30px rgba(42, 161, 152, 0.3);
 }
 
-/* Light theme pulse animation */
-@keyframes logoPulseLight {
-    0%, 100% { 
-        box-shadow: 
-            4px 4px 12px rgba(0, 0, 0, 0.15),
-            -4px -4px 12px rgba(255, 255, 255, 0.9),
-            inset 1px 1px 2px rgba(255, 255, 255, 0.8),
-            0 0 20px rgba(42, 161, 152, 0.1);
-    }
-    50% { 
-        box-shadow: 
-            4px 4px 12px rgba(0, 0, 0, 0.15),
-            -4px -4px 12px rgba(255, 255, 255, 0.9),
-            inset 1px 1px 2px rgba(255, 255, 255, 0.8),
-            0 0 25px rgba(42, 161, 152, 0.15);
-    }
+.job-description, .edu-description {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #e0e0e0;
 }
 
+body.light-theme .job-description,
+body.light-theme .edu-description {
+    color: #444;
+}
+
+.technologies, .focus-areas {
+    margin-top: 1rem;
+}
+
+.tech-title, .focus-title {
+    font-size: 0.9rem;
+    color: #00ff41;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+body.light-theme .tech-title,
+body.light-theme .focus-title {
+    color: #2aa198;
+}
+
+.tech-tags, .focus-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tech-tag, .focus-tag {
+    background: rgba(0, 255, 65, 0.1);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    color: #00ff41;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tech-tag:hover, .focus-tag:hover {
+    background: rgba(0, 255, 65, 0.2);
+    border-color: #00ff41;
+    transform: translateY(-2px);
+}
+
+body.light-theme .tech-tag,
+body.light-theme .focus-tag {
+    background: rgba(42, 161, 152, 0.1);
+    border-color: rgba(42, 161, 152, 0.3);
+    color: #2aa198;
+}
+
+body.light-theme .tech-tag:hover,
+body.light-theme .focus-tag:hover {
+    background: rgba(42, 161, 152, 0.2);
+    border-color: #2aa198;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #00ff41;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+body.light-theme .section-title {
+    color: #2aa198;
+    text-shadow: 0 0 20px rgba(42, 161, 152, 0.3);
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .timeline-item .row {
-        text-align: center;
+    .timeline-line {
+        left: 25px;
     }
     
-    .company-logo {
-        margin-top: 1rem;
-        width: 55px;
-        height: 55px;
-        padding: 6px;
+    .timeline-entry {
+        padding-left: 70px;
     }
     
-    .company-logo:hover {
-        transform: scale(1.15) rotate(1deg) translateY(-3px);
+    .timeline-marker {
+        left: -44px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .job-meta, .edu-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 }
 
-/* Add staggered animation delays for timeline items */
-.timeline-item:nth-child(1) .company-logo { animation-delay: 0.2s; }
-.timeline-item:nth-child(2) .company-logo { animation-delay: 0.4s; }
-.timeline-item:nth-child(3) .company-logo { animation-delay: 0.6s; }
-.timeline-item:nth-child(4) .company-logo { animation-delay: 0.8s; }
-.timeline-item:nth-child(5) .company-logo { animation-delay: 1.0s; }
-.timeline-item:nth-child(6) .company-logo { animation-delay: 1.2s; }
-.timeline-item:nth-child(7) .company-logo { animation-delay: 1.4s; }
-.timeline-item:nth-child(8) .company-logo { animation-delay: 1.6s; }
+/* Scroll animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.timeline-entry.visible {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Pulse animation for markers */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(0, 255, 65, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0);
+    }
+}
+
+.timeline-marker {
+    animation: pulse 2s infinite;
+}
+
+body.light-theme .timeline-marker {
+    animation: pulse-light 2s infinite;
+}
+
+@keyframes pulse-light {
+    0% {
+        box-shadow: 0 0 0 0 rgba(42, 161, 152, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(42, 161, 152, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(42, 161, 152, 0);
+    }
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Scroll-triggered animations for work experience
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.2
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe work experience entries
+    const workEntries = document.querySelectorAll('.modern-timeline .timeline-entry');
+    workEntries.forEach(entry => {
+        observer.observe(entry);
+    });
+    
+    // Observe education entries
+    const educationEntries = document.querySelectorAll('.education-timeline .timeline-entry');
+    educationEntries.forEach(entry => {
+        observer.observe(entry);
+    });
+    
+    // Add staggered animation delay
+    workEntries.forEach((entry, index) => {
+        entry.style.animationDelay = `${index * 0.2}s`;
+    });
+    
+    educationEntries.forEach((entry, index) => {
+        entry.style.animationDelay = `${index * 0.2}s`;
+    });
+    
+    // Smooth scrolling for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Remove parallax effect that was causing line overflow
+    
+    // Add hover effects for better interactivity
+    const timelineCards = document.querySelectorAll('.timeline-card');
+    timelineCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+});
+</script>
 
 {% endblock %}

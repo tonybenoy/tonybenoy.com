@@ -107,3 +107,18 @@ app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 # Include routers
 app.include_router(home, tags=["home"])
 app.include_router(apps, tags=["applications"])
+
+
+@app.get("/llms.txt", response_class=Response)
+async def get_llms_txt():
+    """Serve llms.txt file for LLM context."""
+    try:
+        llms_file = pathlib.Path(__file__).parent.parent / "llms.txt"
+        with open(llms_file, "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="text/plain")
+    except FileNotFoundError:
+        return Response(
+            content="# Tony Benoy\n\nPersonal website of Tony Benoy, Software Engineer",
+            media_type="text/plain",
+        )

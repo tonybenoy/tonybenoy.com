@@ -71,7 +71,7 @@ async def apps_view(request: Request):
         request,
         "apps.html",
         {
-            "title": "My Apps",
+            "title": "My Projects",
             "repos": repos,
             "active_page": "apps",
             "repo_count": len(repos),

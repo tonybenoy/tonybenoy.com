@@ -681,6 +681,7 @@ body.light-theme .profile-img:hover {
 .btn-primary {
 	background: linear-gradient(145deg, #1a1a1a, #0f0f0f) !important;
 	border: none !important;
+	color: #00ff41 !important;
 	box-shadow: 
 		4px 4px 8px rgba(0, 0, 0, 0.6),
 		-4px -4px 8px rgba(40, 40, 40, 0.1) !important;
@@ -688,6 +689,7 @@ body.light-theme .profile-img:hover {
 }
 
 .btn-primary:hover {
+	color: #00ff41 !important;
 	box-shadow: 
 		inset 4px 4px 8px rgba(0, 0, 0, 0.7),
 		inset -4px -4px 8px rgba(40, 40, 40, 0.1) !important;

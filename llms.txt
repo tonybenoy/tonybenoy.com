@@ -1,0 +1,69 @@
+# Tony Benoy
+
+> Chief Technology Officer and Founder with expertise in fintech, blockchain, and scalable system architecture.
+
+Tony Benoy is an experienced technology leader currently based in Tallinn, Estonia, with a proven track record of building and scaling technology platforms across multiple industries including fintech, blockchain analytics, and enterprise software.
+
+## Current Positions
+
+**Chief Technology Officer** at Proffyhub OÜ (July 2024 - Present)
+- Leading technical strategy for shift working marketplace platform
+- Architecting end-to-end systems with Estonian government integrations
+- Building AWS infrastructure with Terraform and CI/CD pipelines
+
+**Founder** at Sunyata OÜ (November 2022 - Present)  
+- Strategic tech consulting for fintech, blockchain, and SaaS startups
+- Leading MVP development for real estate tokenization platform
+- Specializing in crypto fraud analytics and investigation tools
+
+## Professional Experience
+
+**Senior Software Engineer** at Merkle Science (2021-2022)
+- Built crypto fraud investigation platform with predictive caching systems
+- Designed OSINT integration engine for off-chain metadata
+- Migrated large-scale graph workloads from ClickHouse to TigerGraph
+
+**Member Technical Staff** at Redcarpetup (2019-2021)
+- Developed fully automated KYC verification system
+- Led architectural transition from monolithic Flask to microservices FastAPI
+- Integrated AI-driven credit scoring models
+
+**Co-Founder & CTO** at Techneith (2017-2019)
+- Bootstrapped profitable ERP firm generating $10K/month revenue
+- Became official Odoo Ready Partner
+- Created first Power BI connector for Odoo platform
+
+## Technical Expertise
+
+**Core Technologies**: Python, TypeScript, Rust, Go, FastAPI, Django, NestJS, NextJS
+**Infrastructure**: AWS, GCP, Docker, Kubernetes, Terraform, CI/CD pipelines  
+**Databases**: PostgreSQL, Neo4j, ClickHouse, MongoDB, Redis
+**Specializations**: Microservices architecture, graph databases, predictive caching, blockchain analytics
+
+## Education
+
+**Master of Business Administration** - Estonian Business School (2024) | GPA: 4.44/5
+**Erasmus Exchange** - Norwegian School of Economics (2023) | Business Analytics & Financial Modeling  
+**Bachelor of Technology** - Computer Science & Engineering (2017)
+
+## Key Achievements
+
+- Reduced graph load times by 90% through predictive caching systems
+- Improved transaction graph performance by 10x with database optimization
+- Cut application processing time from days to minutes with automated KYC
+- Reduced API response times by 4x through microservices migration
+- Built profitable ERP business from bootstrap to $10K/month revenue
+
+## Website Sections
+
+- [Home](https://tonybenoy.com/): Professional overview and introduction
+- [Projects](https://tonybenoy.com/app): GitHub repositories and technical projects
+- [Timeline](https://tonybenoy.com/timeline): Detailed professional journey with animated interface
+- [Terminal](https://tonybenoy.com/terminal): Interactive command-line exploration
+- [Contact](https://tonybenoy.com/contact): Professional networking and opportunities
+
+## Interactive Features
+
+The website features a unique terminal interface accessible via floating button or dedicated page. Users can explore Tony's background using Unix-style commands like `about`, `skills`, `experience`, and `projects`, reflecting his technical background and attention to developer experience.
+
+Tony specializes in technology strategy, execution leadership, engineering management, and scaling high-performance teams in fintech and blockchain environments.

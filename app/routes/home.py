@@ -112,15 +112,40 @@ async def timeline_page(request: Request):
             "period": "Jul. 2024 – Present",
             "location": "Tallinn, Estonia",
             "company_url": "https://proffy.ee",
-            "logo": "/static/img/logos/proffyhub.png"
+            "logo": "/static/img/logos/proffyhub.png",
+            "description": "Leading technical strategy and product development for Proffy.ee, Estonia's flexible work platform. Building scalable job marketplace connecting employers with workers seeking part-time and gig opportunities, while developing features for schedule flexibility and skill development.",
+            "technologies": [
+                "TypeScript",
+                "NestJS",
+                "PostgreSQL",
+                "Next.js",
+                "React",
+                "Technical Leadership",
+                "Marketplace Platforms",
+                "Product Strategy",
+                "AWS Cloud",
+            ],
+            "type": "leadership",
+            "icon": "fas fa-crown",
         },
         {
             "title": "Founder",
             "company": "Sunyata OÜ",
             "period": "Nov. 2022 – Present",
             "location": "Tallinn, Estonia",
-            "company_url": None,
-            "logo": "/static/img/logos/sunyata.png"
+            "company_url": "https://github.com/Sunyata-OU",
+            "logo": "/static/img/logos/sunyata.png",
+            "description": "Founded and operating an independent software development company in Estonia. Focusing on cutting-edge technology solutions and open-source contributions while building sustainable business practices.",
+            "technologies": [
+                "Full-Stack Engineering",
+                "Cloud Architecture",
+                "DevOps & CI/CD",
+                "Open Source Contributions",
+                "Team Leadership",
+                "Business Strategy",
+            ],
+            "type": "entrepreneurship",
+            "icon": "fas fa-rocket",
         },
         {
             "title": "Senior Software Engineer",
@@ -128,7 +153,20 @@ async def timeline_page(request: Request):
             "period": "Aug. 2021 – Apr. 2022",
             "location": "Bengaluru, India",
             "company_url": "https://merklescience.com",
-            "logo": "/static/img/logos/merkle-science.png"
+            "logo": "/static/img/logos/merkle-science.png",
+            "description": "Developed blockchain analytics and cryptocurrency compliance solutions for financial institutions and government agencies. Built predictive risk monitoring systems and transaction analysis tools for crypto crime detection.",
+            "technologies": [
+                "Python",
+                "Blockchain Analytics",
+                "Data Engineering",
+                "Kubernetes",
+                "Google Cloud Platform",
+                "Regulatory Compliance",
+                "Risk Management",
+                "Cryptocurrency Security",
+            ],
+            "type": "engineering",
+            "icon": "fas fa-shield-alt",
         },
         {
             "title": "Member Technical Staff",
@@ -136,7 +174,21 @@ async def timeline_page(request: Request):
             "period": "May. 2019 – Apr. 2021",
             "location": "Delhi, India",
             "company_url": "https://www.ycombinator.com/companies/redcarpetup",
-            "logo": "/static/img/logos/redcarpetup.png"
+            "logo": "/static/img/logos/redcarpetup.png",
+            "description": "Core engineering team member at Y Combinator-backed fintech startup. Built scalable lending platform infrastructure, implemented risk assessment algorithms, and developed customer-facing financial products.",
+            "technologies": [
+                "Python",
+                "Django Framework",
+                "PostgreSQL",
+                "Redis",
+                "AWS Cloud",
+                "Machine Learning",
+                "Financial Technology",
+                "REST APIs",
+                "Microservices Architecture",
+            ],
+            "type": "engineering",
+            "icon": "fas fa-chart-line",
         },
         {
             "title": "Co-Founder & Chief Technology Officer",
@@ -144,8 +196,19 @@ async def timeline_page(request: Request):
             "period": "Oct. 2017 – Apr. 2019",
             "location": "Delhi, India",
             "company_url": "https://techneith.com/",
-            "logo": "/static/img/logos/techneith.png"
-        }
+            "logo": "/static/img/logos/techneith.png",
+            "description": "Co-founded technology consulting company, leading technical vision and team building. Delivered end-to-end software solutions for startups and enterprises while establishing engineering best practices and company culture.",
+            "technologies": [
+                "Full-Stack Engineering",
+                "Team Leadership",
+                "Strategic Planning",
+                "Client Relations",
+                "System Architecture",
+                "Startup Operations",
+            ],
+            "type": "leadership",
+            "icon": "fas fa-users",
+        },
     ]
 
     # Education data from CV
@@ -157,7 +220,16 @@ async def timeline_page(request: Request):
             "location": "Tallinn, Estonia",
             "gpa": "GPA 4.44/5",
             "institution_url": "https://ebs.ee",
-            "logo": "/static/img/logos/ebs.png"
+            "logo": "/static/img/logos/ebs.png",
+            "description": "Completed comprehensive MBA program focusing on strategic management, digital transformation, and entrepreneurship. Achieved distinction with 4.44/5 GPA while building international business network.",
+            "focus": [
+                "Strategic Management",
+                "Digital Transformation",
+                "Entrepreneurship",
+                "International Business",
+            ],
+            "type": "masters",
+            "icon": "fas fa-graduation-cap",
         },
         {
             "degree": "Erasmus Exchange (Business Analytics and Financial Modeling)",
@@ -166,7 +238,16 @@ async def timeline_page(request: Request):
             "location": "Bergen, Norway",
             "gpa": None,
             "institution_url": "https://nhh.no",
-            "logo": "/static/img/logos/nhh.png"
+            "logo": "/static/img/logos/nhh.png",
+            "description": "Intensive exchange program at Norway's leading business school, specializing in advanced business analytics and quantitative financial modeling techniques for strategic decision making.",
+            "focus": [
+                "Business Analytics",
+                "Financial Modeling",
+                "Data Science",
+                "Quantitative Analysis",
+            ],
+            "type": "exchange",
+            "icon": "fas fa-chart-bar",
         },
         {
             "degree": "Bachelor of Technology (Computer Science and Engineering)",
@@ -175,8 +256,18 @@ async def timeline_page(request: Request):
             "location": "Haryana, India",
             "gpa": None,
             "institution_url": "https://dcrustm.ac.in",
-            "logo": "/static/img/logos/dcrust.png"
-        }
+            "logo": "/static/img/logos/dcrust.png",
+            "description": "Comprehensive engineering program covering software development, algorithms, data structures, and system design. Built strong foundation in computer science principles and practical programming skills.",
+            "focus": [
+                "Software Engineering",
+                "Data Structures",
+                "Algorithms",
+                "System Design",
+                "Programming",
+            ],
+            "type": "bachelors",
+            "icon": "fas fa-code",
+        },
     ]
 
     return templates.TemplateResponse(
@@ -186,8 +277,8 @@ async def timeline_page(request: Request):
             "title": "Timeline - Tony",
             "active_page": "timeline",
             "work_experience": work_experience,
-            "education": education
-        }
+            "education": education,
+        },
     )
 
 
@@ -198,7 +289,7 @@ async def terminal_page(request: Request):
     return templates.TemplateResponse(
         request,
         "terminal.html",
-        {"title": "Terminal - Tony", "active_page": "terminal"}
+        {"title": "Terminal - Tony", "active_page": "terminal"},
     )
 
 
@@ -209,7 +300,7 @@ async def contact_submit(
     name: str = Form(..., min_length=2, max_length=100),
     email: str = Form(..., min_length=5, max_length=255),
     subject: str = Form(..., min_length=5, max_length=200),
-    message: str = Form(..., min_length=10, max_length=2000)
+    message: str = Form(..., min_length=10, max_length=2000),
 ):
     """Handle contact form submission."""
     settings = get_settings()
@@ -217,17 +308,17 @@ async def contact_submit(
     try:
         # Create email message
         msg = MIMEMultipart()
-        msg['From'] = (
+        msg["From"] = (
             settings.smtp_username
-            if hasattr(settings, 'smtp_username')
+            if hasattr(settings, "smtp_username")
             else "noreply@tonybenoy.com"
         )
-        msg['To'] = (
+        msg["To"] = (
             settings.contact_email
-            if hasattr(settings, 'contact_email')
+            if hasattr(settings, "contact_email")
             else "me@tonybenoy.com"
         )
-        msg['Subject'] = f"Contact Form: {subject}"
+        msg["Subject"] = f"Contact Form: {subject}"
 
         # Email body
         body = f"""
@@ -241,23 +332,22 @@ Message:
 
 ---
 Sent from tonybenoy.com contact form
-Client IP: {request.client.host if request.client else 'unknown'}
-User Agent: {request.headers.get('User-Agent', 'unknown')}
+Client IP: {request.client.host if request.client else "unknown"}
+User Agent: {request.headers.get("User-Agent", "unknown")}
         """
 
-        msg.attach(MIMEText(body, 'plain'))
+        msg.attach(MIMEText(body, "plain"))
 
         # Send email (only if SMTP is configured)
-        if hasattr(settings, 'smtp_server') and settings.smtp_server:
+        if hasattr(settings, "smtp_server") and settings.smtp_server:
             try:
                 smtp_port = (
-                    settings.smtp_port if hasattr(settings, 'smtp_port') else 587
+                    settings.smtp_port if hasattr(settings, "smtp_port") else 587
                 )
                 server = smtplib.SMTP(settings.smtp_server, smtp_port)
                 server.starttls()
-                if (
-                    hasattr(settings, 'smtp_username')
-                    and hasattr(settings, 'smtp_password')
+                if hasattr(settings, "smtp_username") and hasattr(
+                    settings, "smtp_password"
                 ):
                     server.login(settings.smtp_username, settings.smtp_password)
 
@@ -283,8 +373,8 @@ User Agent: {request.headers.get('User-Agent', 'unknown')}
             {
                 "title": "Contact - Tony",
                 "active_page": "contact",
-                "success_message": success_message
-            }
+                "success_message": success_message,
+            },
         )
 
     except Exception as e:
@@ -296,8 +386,7 @@ User Agent: {request.headers.get('User-Agent', 'unknown')}
                 "title": "Contact - Tony",
                 "active_page": "contact",
                 "error_message": (
-                    "Sorry, there was an error sending your message. "
-                    "Please try again."
-                )
-            }
+                    "Sorry, there was an error sending your message. Please try again."
+                ),
+            },
         )
