@@ -1,11 +1,15 @@
 import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Form, HTTPException
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from starlette.responses import RedirectResponse
 
 from app.utils import templates
+from app.config import get_settings
 
 # Use the same limiter instance as main app
 limiter = Limiter(key_func=get_remote_address)
@@ -85,3 +89,93 @@ async def metrics(request: Request):
         "requests_total": "N/A",  # Would implement proper metrics
         "status": "ok",
     }
+
+
+@home.get("/contact")
+@limiter.limit("30/minute")
+async def contact_page(request: Request):
+    """Contact page with form."""
+    return templates.TemplateResponse(
+        request, "contact.html", {"title": "Contact - Tony", "active_page": "contact"}
+    )
+
+
+@home.post("/contact")
+@limiter.limit("5/minute")
+async def contact_submit(
+    request: Request,
+    name: str = Form(..., min_length=2, max_length=100),
+    email: str = Form(..., min_length=5, max_length=255),
+    subject: str = Form(..., min_length=5, max_length=200),
+    message: str = Form(..., min_length=10, max_length=2000)
+):
+    """Handle contact form submission."""
+    settings = get_settings()
+    
+    try:
+        # Create email message
+        msg = MIMEMultipart()
+        msg['From'] = settings.smtp_username if hasattr(settings, 'smtp_username') else "noreply@tonybenoy.com"
+        msg['To'] = settings.contact_email if hasattr(settings, 'contact_email') else "me@tonybenoy.com"
+        msg['Subject'] = f"Contact Form: {subject}"
+        
+        # Email body
+        body = f"""
+New contact form submission:
+
+From: {name} <{email}>
+Subject: {subject}
+
+Message:
+{message}
+
+---
+Sent from tonybenoy.com contact form
+Client IP: {request.client.host if request.client else 'unknown'}
+User Agent: {request.headers.get('User-Agent', 'unknown')}
+        """
+        
+        msg.attach(MIMEText(body, 'plain'))
+        
+        # Send email (only if SMTP is configured)
+        if hasattr(settings, 'smtp_server') and settings.smtp_server:
+            try:
+                server = smtplib.SMTP(settings.smtp_server, settings.smtp_port if hasattr(settings, 'smtp_port') else 587)
+                server.starttls()
+                if hasattr(settings, 'smtp_username') and hasattr(settings, 'smtp_password'):
+                    server.login(settings.smtp_username, settings.smtp_password)
+                
+                server.send_message(msg)
+                server.quit()
+                
+                logger.info(f"Contact form email sent from {email}")
+                success_message = "Thank you! Your message has been sent successfully."
+            except Exception as e:
+                logger.error(f"Failed to send email: {e}")
+                success_message = "Thank you! Your message has been received (email delivery pending)."
+        else:
+            # Log the message if no SMTP configured
+            logger.info(f"Contact form submission: {name} <{email}> - {subject}")
+            success_message = "Thank you! Your message has been received."
+        
+        return templates.TemplateResponse(
+            request, 
+            "contact.html", 
+            {
+                "title": "Contact - Tony", 
+                "active_page": "contact",
+                "success_message": success_message
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Contact form error: {e}")
+        return templates.TemplateResponse(
+            request,
+            "contact.html",
+            {
+                "title": "Contact - Tony",
+                "active_page": "contact", 
+                "error_message": "Sorry, there was an error sending your message. Please try again."
+            }
+        )

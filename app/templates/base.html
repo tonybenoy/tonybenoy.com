@@ -35,12 +35,57 @@
 							Other Stuff{% if active_page == "apps" %}<span class="blink_text">_</span>{% endif %}
 						</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link {% if active_page == 'contact' %}active{% endif %}" href="/contact">
+							Contact{% if active_page == "contact" %}<span class="blink_text">_</span>{% endif %}
+						</a>
+					</li>
 				</ul>
+				<div class="d-flex ms-auto">
+					<div class="theme-toggle-container" title="Toggle Dark/Light Mode">
+						<input type="checkbox" id="theme-toggle" class="theme-toggle-input">
+						<label for="theme-toggle" class="theme-toggle-label">
+							<span class="theme-toggle-slider">
+								<i class="theme-icon-dark fas fa-moon"></i>
+								<i class="theme-icon-light fas fa-sun"></i>
+							</span>
+						</label>
+					</div>
+				</div>
 			</div>
 		</div>
 	</nav>
 	{% block content %}
 	{% endblock %}
+
+	<!-- Theme Toggle Script -->
+	<script>
+		// Theme toggle functionality
+		const themeToggle = document.getElementById('theme-toggle');
+		const body = document.body;
+
+		// Check for saved theme preference or default to dark
+		const currentTheme = localStorage.getItem('theme') || 'dark';
+		
+		// Apply theme on page load
+		if (currentTheme === 'light') {
+			body.classList.add('light-theme');
+			themeToggle.checked = true;
+		} else {
+			themeToggle.checked = false;
+		}
+
+		// Theme toggle event listener
+		themeToggle.addEventListener('change', function() {
+			if (this.checked) {
+				body.classList.add('light-theme');
+				localStorage.setItem('theme', 'light');
+			} else {
+				body.classList.remove('light-theme');
+				localStorage.setItem('theme', 'dark');
+			}
+		});
+	</script>
 </body>
 <footer class="bg-dark text-light py-3 mt-auto">
 	<div class="container">

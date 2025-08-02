@@ -30,6 +30,13 @@ class Settings(BaseSettings):
 
     # Logging settings
     log_level: str = "INFO"
+    
+    # Email/SMTP settings (optional)
+    smtp_server: str | None = None
+    smtp_port: int = 587
+    smtp_username: str | None = None
+    smtp_password: str | None = None
+    contact_email: str = "me@tonybenoy.com"
 
     @field_validator("allowed_hosts", "cors_origins", mode="before")
     @classmethod

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="flex-grow-1 py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="hero-section bg-1 p-4 p-md-5 rounded">
+                    <h2 class="text-center mb-4">Contact Me</h2>
+                    <p class="text-center lead mb-4">
+                        Get in touch! I'd love to hear from you
+                        <span class="blink_text">_</span>
+                    </p>
+                    
+                    {% if success_message %}
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>{{ success_message }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if error_message %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>{{ error_message }}
+                    </div>
+                    {% endif %}
+                    
+                    <form method="POST" action="/contact" class="contact-form">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required 
+                                   minlength="2" maxlength="100" placeholder="Your name">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required 
+                                   minlength="5" maxlength="255" placeholder="your.email@example.com">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required 
+                                   minlength="5" maxlength="200" placeholder="What's this about?">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="6" required 
+                                      minlength="10" maxlength="2000" placeholder="Your message..."></textarea>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-5">
+                    
+                    <div class="text-center">
+                        <h5 class="mb-3">Other Ways to Reach Me</h5>
+                        <div class="social-links">
+                            <a href="https://www.linkedin.com/in/tonybenoy/" class="social-link" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://twitter.com/TonyBenoy" class="social-link" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://github.com/tonybenoy" class="social-link" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="mailto:me@tonybenoy.com" class="social-link" aria-label="Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+.contact-form .form-control {
+    background-color: rgba(42, 42, 42, 0.9);
+    border: 1px solid #00ff41;
+    color: #ffffff;
+    font-family: 'Fira Code', monospace;
+}
+
+.contact-form .form-control:focus {
+    background-color: rgba(42, 42, 42, 1);
+    border-color: #00ff41;
+    box-shadow: 0 0 0 0.2rem rgba(0, 255, 65, 0.25);
+    color: #ffffff;
+}
+
+.contact-form .form-label {
+    color: #00ff41;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.alert {
+    border: none;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+}
+
+.alert-success {
+    background-color: rgba(0, 255, 65, 0.1);
+    color: #00ff41;
+    border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* Soft Neumorphic Dark Mode Contact Form */
+.contact-form .form-control {
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a) !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 
+        inset 3px 3px 6px rgba(0, 0, 0, 0.7),
+        inset -3px -3px 6px rgba(40, 40, 40, 0.1) !important;
+}
+
+.contact-form .form-control:focus {
+    box-shadow: 
+        inset 4px 4px 8px rgba(0, 0, 0, 0.8),
+        inset -4px -4px 8px rgba(40, 40, 40, 0.15),
+        0 0 0 2px rgba(0, 255, 65, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.contact-form .form-label {
+    color: #00ff41 !important;
+}
+
+/* Neumorphic Solarized theme styles for contact form */
+body.light-theme .contact-form .form-control {
+    background: linear-gradient(145deg, #f5f3e8, #eee8d5) !important;
+    border: none !important;
+    color: #586e75 !important;
+    border-radius: 10px !important;
+    box-shadow: 
+        inset 4px 4px 8px rgba(0, 0, 0, 0.1),
+        inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
+}
+
+body.light-theme .contact-form .form-control:focus {
+    box-shadow: 
+        inset 6px 6px 12px rgba(0, 0, 0, 0.15),
+        inset -6px -6px 12px rgba(255, 255, 255, 0.9),
+        0 0 0 2px rgba(42, 161, 152, 0.2) !important;
+    color: #586e75 !important;
+}
+
+body.light-theme .contact-form .form-label {
+    color: #2aa198 !important;
+}
+
+body.light-theme .alert-success {
+    background-color: rgba(133, 153, 0, 0.1) !important;
+    color: #859900 !important;
+    border: 1px solid rgba(133, 153, 0, 0.3) !important;
+}
+
+body.light-theme .alert-danger {
+    background-color: rgba(220, 50, 47, 0.1) !important;
+    color: #dc322f !important;
+    border: 1px solid rgba(220, 50, 47, 0.3) !important;
+}
+</style>
+
+{% endblock %}
