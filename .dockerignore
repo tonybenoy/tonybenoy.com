@@ -1,0 +1,70 @@
+# Git and version control
+.git
+.gitignore
+
+# Python cache and temp files
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+*.so
+.pytest_cache
+.coverage
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker and deployment
+docker-compose.yml
+docker-compose.*.yml
+.dockerignore
+Dockerfile
+
+# SSL certificates and Let's Encrypt
+certbot/
+ssl/
+certs/
+
+# Logs and data
+logs/
+*.log
+data/
+
+# Documentation and development
+README.md
+CLAUDE.md
+TONY_PROFILE.md
+LICENSE
+.env.*
+
+# Scripts and tools
+scripts/
+k3s/
+nginx/
+init-letsencrypt.sh
+Makefile
+
+# Only include the src directory and necessary files

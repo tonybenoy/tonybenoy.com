@@ -49,15 +49,25 @@ error() {
 # Validate environment
 if [ ! -f "$PROJECT_DIR/.env.$ENV" ]; then
     error "Environment file .env.$ENV not found"
+    info "💡 Create it with: make create-env-$ENV"
     exit 1
+fi
+
+# Ensure /tmp/empty exists for non-local environments
+if [ ! -d "/tmp/empty" ]; then
+    log "Creating /tmp/empty directory for volume mounting..."
+    mkdir -p /tmp/empty
 fi
 
 cd "$PROJECT_DIR"
 
 info "Starting TonyBenoy.com in $ENV environment..."
 
-# Build if requested
-if [ -n "$BUILD_FLAG" ]; then
+# Check if Docker image exists, build if needed
+if ! docker image inspect tonybenoy-com:latest >/dev/null 2>&1; then
+    log "Docker image not found. Building services..."
+    docker-compose --env-file ".env.$ENV" build
+elif [ -n "$BUILD_FLAG" ]; then
     log "Building services..."
     docker-compose --env-file ".env.$ENV" build
 fi

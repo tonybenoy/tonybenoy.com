@@ -5,6 +5,8 @@
 .PHONY: start-local start-dev start-prod stop-local stop-dev stop-prod
 .PHONY: deploy-local deploy-dev deploy-prod monitor-local monitor-dev monitor-prod
 .PHONY: logs-local logs-dev logs-prod backup restore
+.PHONY: create-env create-env-local create-env-dev create-env-prod create-env-all
+.PHONY: setup setup-local setup-dev setup-prod first-time-setup
 
 # Default environment
 ENV ?= local
@@ -25,11 +27,15 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / && /Deployment/ {printf "  $(YELLOW)%-15s$(NC) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo "\n$(GREEN)Monitoring:$(NC)"
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / && /Monitoring/ {printf "  $(YELLOW)%-15s$(NC) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@echo "\n$(GREEN)Quick Start (New Users):$(NC)"
+	@echo "  make first-time-setup                    # Complete setup for new users"
+	@echo "  make setup-local                         # Setup local development"
+	@echo "  make setup-prod DOMAIN=mysite.com        # Setup production"
 	@echo "\n$(GREEN)Examples:$(NC)"
-	@echo "  make dev          # Start development server"
-	@echo "  make start-prod   # Start production environment"
-	@echo "  make deploy-prod  # Full production deployment"
-	@echo "  make logs ENV=dev # View development logs"
+	@echo "  make create-env-local                    # Create .env.local"
+	@echo "  make dev                                 # Start development server"
+	@echo "  make start-prod                          # Start production environment"
+	@echo "  make logs ENV=dev                        # View development logs"
 
 # Development Commands
 install: ## Development: Install dependencies
@@ -61,6 +67,56 @@ clean: ## Development: Clean up Docker resources
 	docker image prune -f
 
 # Environment Management
+create-env: ## Environment: Create environment file (ENV=local|dev|prod, USERNAME=user, DOMAIN=domain)
+	./scripts/create-env.sh $(ENV) $(if $(USERNAME),-u $(USERNAME)) $(if $(DOMAIN),-d $(DOMAIN)) $(if $(TOKEN),-t $(TOKEN)) $(if $(FORCE),-f)
+
+create-env-local: ## Environment: Create .env.local file
+	./scripts/create-env.sh local $(if $(USERNAME),-u $(USERNAME)) $(if $(TOKEN),-t $(TOKEN)) $(if $(FORCE),-f)
+
+create-env-dev: ## Environment: Create .env.dev file
+	./scripts/create-env.sh dev $(if $(USERNAME),-u $(USERNAME)) $(if $(TOKEN),-t $(TOKEN)) $(if $(FORCE),-f)
+
+create-env-prod: ## Environment: Create .env.prod file
+	./scripts/create-env.sh prod $(if $(USERNAME),-u $(USERNAME)) $(if $(DOMAIN),-d $(DOMAIN)) $(if $(TOKEN),-t $(TOKEN)) $(if $(FORCE),-f)
+
+create-env-all: ## Environment: Create all environment files
+	./scripts/create-env.sh all $(if $(USERNAME),-u $(USERNAME)) $(if $(DOMAIN),-d $(DOMAIN)) $(if $(TOKEN),-t $(TOKEN)) $(if $(FORCE),-f)
+
+first-time-setup: ## Environment: Complete setup for new users (creates .env.local, builds image, starts)
+	@echo "🚀 Setting up TonyBenoy.com for first-time use..."
+	@if [ ! -f .env.local ]; then \
+		echo "📄 Creating .env.local..."; \
+		./scripts/create-env.sh local $(if $(USERNAME),-u $(USERNAME)) $(if $(TOKEN),-t $(TOKEN)); \
+	else \
+		echo "✅ .env.local already exists"; \
+	fi
+	@echo "🏗️  Building Docker image..."
+	@$(MAKE) build
+	@echo "🚀 Starting local environment..."
+	@$(MAKE) start-local
+	@echo ""
+	@echo "🎉 Setup complete! Your site is running at:"
+	@echo "   🌐 Direct: http://localhost:8000"
+	@echo "   🔧 Nginx:  http://localhost"
+
+setup-local: ## Environment: Setup local environment (create env + build + start)
+	@$(MAKE) create-env-local $(if $(USERNAME),USERNAME=$(USERNAME)) $(if $(TOKEN),TOKEN=$(TOKEN)) $(if $(FORCE),FORCE=$(FORCE))
+	@$(MAKE) build
+	@$(MAKE) start-local
+
+setup-dev: ## Environment: Setup development environment (create env + build + start)
+	@$(MAKE) create-env-dev $(if $(USERNAME),USERNAME=$(USERNAME)) $(if $(TOKEN),TOKEN=$(TOKEN)) $(if $(FORCE),FORCE=$(FORCE))
+	@$(MAKE) build
+	@$(MAKE) start-dev
+
+setup-prod: ## Environment: Setup production environment (create env + build + deploy)
+	@$(MAKE) create-env-prod $(if $(USERNAME),USERNAME=$(USERNAME)) $(if $(DOMAIN),DOMAIN=$(DOMAIN)) $(if $(TOKEN),TOKEN=$(TOKEN)) $(if $(FORCE),FORCE=$(FORCE))
+	@$(MAKE) build
+	@$(MAKE) deploy-prod
+
+setup: ## Environment: Setup specified environment (ENV=local|dev|prod)
+	@$(MAKE) setup-$(ENV)
+
 start-local: ## Environment: Start local environment (HTTP, debug)
 	./scripts/start.sh local
 
