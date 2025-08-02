@@ -108,8 +108,8 @@ check_domain_dns() {
     local domain="$1"
     print_status "Checking DNS resolution for $domain..."
     
-    # Get domain's IP
-    DOMAIN_IP=$(getnet +short "$domain" | tail -n1)
+    # Get domain's IP using getent (universally available)
+    DOMAIN_IP=$(getent hosts "$domain" | awk '{print $1}' | head -n1)
     
     if [[ -z "$DOMAIN_IP" ]]; then
         print_warning "Could not resolve domain $domain. Please ensure DNS is configured correctly."
