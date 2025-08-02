@@ -35,6 +35,7 @@ help: ## Show this help message
 	@echo "  make create-env-local                    # Create .env.local"
 	@echo "  make dev                                 # Start development server"
 	@echo "  make start-prod                          # Start production environment"
+	@echo "  make ssl-init EMAIL=admin@domain.com     # Initialize SSL certificates"
 	@echo "  make logs ENV=dev                        # View development logs"
 
 # Development Commands
@@ -203,6 +204,9 @@ redis-cli: ## Utility: Open Redis CLI
 
 nginx-reload: ## Utility: Reload nginx configuration
 	docker-compose --env-file .env.$(ENV) exec nginx nginx -s reload
+
+ssl-init: ## Utility: Initialize SSL certificates for production (EMAIL=email, DOMAIN=domain)
+	./scripts/init-ssl.sh $(if $(EMAIL),--email $(EMAIL)) $(if $(DOMAIN),--domain $(DOMAIN)) $(if $(SKIP_STAGING),--skip-staging) $(if $(FORCE),--force)
 
 ssl-renew: ## Utility: Renew SSL certificates (production only)
 	docker-compose --env-file .env.prod exec certbot certbot renew --dry-run
