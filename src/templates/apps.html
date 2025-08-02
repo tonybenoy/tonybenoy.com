@@ -1,39 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section id="sec1" class="content">
-    <div class="container-fluid">
+<main class="flex-grow-1 py-5">
+    <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="jumbotron bg-1">
-                    <h2 class="text-center">Stuff I Do</h2>
-                    <p class="text-center">Here are some of the projects I'm working on:</p>
-                    <div class="row">
+            <div class="col-12">
+                <div class="hero-section bg-1 p-4 p-md-5 rounded">
+                    <h2 class="text-center mb-3">Stuff I Do</h2>
+                    <p class="text-center lead mb-5">Here are some of the projects I'm working on:</p>
+                    <div class="row g-4">
                         {% for repo in repos %}
-                        <div class="col-lg-4 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <h3>{{ repo.name }}</h3>
-                                    <p>
-                                        <strong>Language:</strong> {{ repo.language }}<br>
-                                        <i class="fa fa-star"></i> {{ repo.stargazers_count }}<br>
-                                        <i class="fa fa-code-fork"></i> {{ repo.forks }}
-                                    </p>
-                                    <a href="{{ repo.html_url }}" class="btn btn-primary">View Project</a>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ repo.name }}</h5>
+                                    <div class="card-text flex-grow-1">
+                                        {% if repo.language %}
+                                        <p class="mb-2"><strong>Language:</strong> {{ repo.language }}</p>
+                                        {% endif %}
+                                        <div class="repo-stats mb-3">
+                                            <span class="badge bg-warning text-dark me-2">
+                                                <i class="fas fa-star"></i> {{ repo.stargazers_count }}
+                                            </span>
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-code-branch"></i> {{ repo.forks }}
+                                            </span>
+                                        </div>
+                                        {% if repo.description %}
+                                        <p class="text-muted small">{{ repo.description[:100] }}{% if repo.description|length > 100 %}...{% endif %}</p>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{{ repo.html_url }}" class="btn btn-primary mt-auto" target="_blank">View Project</a>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="text-center" style="margin-top: 20px;">
-                        <a href="https://github.com/tonybenoy?tab=repositories" class="btn btn-secondary">More on
-                            GitHub</a>
+                    <div class="text-center mt-5">
+                        <a href="https://github.com/tonybenoy?tab=repositories" class="btn btn-outline-light btn-lg" target="_blank">
+                            <i class="fab fa-github me-2"></i>More on GitHub
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-
+</main>
 
 {% endblock %}

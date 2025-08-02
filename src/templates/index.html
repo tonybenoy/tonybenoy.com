@@ -1,28 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section id="sec1" class="content">
-	<div class="row">
-		<div class="col-sm-12 container-fluid ">
-			<div class="jumbotron bg-1 text-center ">
-				<div style="position:relative; top:12.5%; bottom: 12.5%">
-					<br />
-					<img src="/static/img/me.jpg" class="img-circle" alt="Tony Benoy profile picture">
-					<br />
-					<h1>Tony Benoy</h1>
-					<p>
+<main class="flex-grow-1 d-flex align-items-center">
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-8 col-lg-6">
+				<div class="hero-section bg-1 text-center p-4 p-md-5">
+					<img src="/static/img/me.jpg" class="profile-img rounded-circle mb-4" alt="Tony Benoy profile picture">
+					<h1 class="display-4 mb-3">Tony Benoy</h1>
+					<p class="lead mb-4">
 						A "Juggadu" Pretentious Noob
 						<span class="blink_text">_</span>
 					</p>
-					<br />
-					<a href="https://www.linkedin.com/in/tonybenoy/" class="fa-brands fa-linkedin-in fa-2xl"></a>
-					<a href="https://twitter.com/TonyBenoy" class="fa-brands fa-twitter fa-2xl"></a>
-					<a href="https://github.com/tonybenoy" class="fa-brands fa-github fa-2xl"></a>
-					<a href="https://instagram.com/tonybenoy" class="fa-brands fa-instagram fa-2xl"></a>
+					<div class="social-links">
+						<a href="https://www.linkedin.com/in/tonybenoy/" class="social-link" aria-label="LinkedIn">
+							<i class="fab fa-linkedin-in"></i>
+						</a>
+						<a href="https://twitter.com/TonyBenoy" class="social-link" aria-label="Twitter">
+							<i class="fab fa-twitter"></i>
+						</a>
+						<a href="https://github.com/tonybenoy" class="social-link" aria-label="GitHub">
+							<i class="fab fa-github"></i>
+						</a>
+						<a href="https://instagram.com/tonybenoy" class="social-link" aria-label="Instagram">
+							<i class="fab fa-instagram"></i>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</section>
+</main>
 
 {% endblock %}
