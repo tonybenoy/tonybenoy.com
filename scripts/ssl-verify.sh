@@ -217,7 +217,7 @@ obtain_certificates() {
     
     # Run certbot to obtain certificates
     print_status "Running certbot to obtain certificates..."
-    if docker-compose run --rm certbot certonly \
+    if docker-compose run --rm --entrypoint "" certbot certbot certonly \
         --standalone \
         --email "${email}" \
         --agree-tos \
@@ -311,7 +311,7 @@ EOF
     
     # First try staging certificates to validate setup
     print_status "Step 4a: Testing with staging certificates first..."
-    if docker-compose run --rm certbot certonly \
+    if docker-compose run --rm --entrypoint "" certbot certbot certonly \
         --standalone \
         --staging \
         --email "${email}" \
@@ -323,14 +323,14 @@ EOF
         
         # Remove staging certificates
         print_status "Step 4b: Removing staging certificates..."
-        docker-compose run --rm --entrypoint "\
+        docker-compose run --rm --entrypoint "/bin/sh" certbot -c "\
           rm -Rf /etc/letsencrypt/live/${DOMAIN} && \
           rm -Rf /etc/letsencrypt/archive/${DOMAIN} && \
-          rm -Rf /etc/letsencrypt/renewal/${DOMAIN}.conf" certbot
+          rm -Rf /etc/letsencrypt/renewal/${DOMAIN}.conf"
         
         # Now get production certificates
         print_status "Step 4c: Obtaining production SSL certificates..."
-        if docker-compose run --rm certbot certonly \
+        if docker-compose run --rm --entrypoint "" certbot certbot certonly \
             --standalone \
             --email "${email}" \
             --agree-tos \
