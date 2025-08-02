@@ -156,3 +156,6 @@ logs/
 *.swo
 
 .ruff_cache/
+
+
+!uv.lock
