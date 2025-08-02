@@ -160,7 +160,7 @@ check_dns() {
     
     for domain in "${DOMAIN}" "${WWW_DOMAIN}"; do
         local ip
-        if ip=$(dig +short "${domain}" A | head -1); then
+        if ip=$(nslookup "${domain}" | grep -A1 "Name:" | grep "Address:" | cut -d' ' -f2 | head -1); then
             if [ -n "${ip}" ]; then
                 print_success "DNS resolves ${domain} to ${ip}"
             else
