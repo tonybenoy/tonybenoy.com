@@ -1,6 +1,6 @@
 # tonybenoy.com
 
-Personal website built with FastAPI and served via Docker with nginx reverse proxy. The application fetches and displays GitHub repository information with Redis caching.
+Personal website built with FastAPI and served via Docker with nginx reverse proxy. The application fetches and displays GitHub repository information with in-memory caching.
 
 ## Architecture
 
@@ -8,8 +8,8 @@ Personal website built with FastAPI and served via Docker with nginx reverse pro
 - **Structure**: Modular routing in `app/routes/` with separate routers for home and apps
 - **Static Files**: CSS, images, and files served from `app/static/`
 - **Templates**: HTML templates in `app/templates/` using base template inheritance
-- **Caching**: Redis for GitHub API response caching
-- **Deployment**: Docker Compose with nginx, FastAPI app, Redis, and Let's Encrypt certbot
+- **Caching**: Simple in-memory cache for GitHub API response caching
+- **Deployment**: Docker Compose with nginx, FastAPI app, and Let's Encrypt certbot
 - **Package Management**: uv for fast Python dependency management
 
 ## Quick Start
@@ -181,67 +181,55 @@ For production deployment with HTTPS, the application includes automated SSL cer
 - Ports 80 and 443 open on your server
 - Email address for certificate registration
 
-**Configure email for SSL certificates:**
-Add your email to any of the environment files:
+**Automated SSL initialization (recommended):**
 ```bash
-# In .env.prod, .env.dev, or .env.local
-EMAIL=your@email.com
+# Initialize SSL certificates with interactive prompts
+make ssl-init
+
+# With email specified
+make ssl-init EMAIL=admin@yourdomain.com
+
+# With custom domain (if different from .env.prod)
+make ssl-init EMAIL=admin@yourdomain.com DOMAIN=yourdomain.com
+
+# Skip staging test (for advanced users)
+make ssl-init EMAIL=admin@yourdomain.com SKIP_STAGING=true
+
+# Force renewal of existing certificates
+make ssl-init EMAIL=admin@yourdomain.com FORCE=true
 ```
 
-**First-time SSL setup (recommended):**
+**Manual SSL script usage:**
 ```bash
-# Automated setup from HTTP to HTTPS
-./scripts/ssl-verify.sh first-time your@email.com
-# or use email from .env file
-./scripts/ssl-verify.sh first-time
+# Direct script usage with more options
+./scripts/init-ssl.sh --email admin@yourdomain.com
+./scripts/init-ssl.sh --email admin@yourdomain.com --skip-staging
+./scripts/init-ssl.sh --email admin@yourdomain.com --force
 ```
 
-**Manual SSL certificate obtainment:**
+**SSL certificate management:**
 ```bash
-# For existing HTTPS environment
-./scripts/ssl-verify.sh obtain your@email.com
-# or use email from .env file
-./scripts/ssl-verify.sh obtain
-```
+# Renew certificates (automated via certbot container)
+make ssl-renew
 
-**SSL maintenance:**
-```bash
-# Verify SSL configuration and certificates
-./scripts/ssl-verify.sh check
-
-# Renew certificates (automated via cron)
-./scripts/ssl-verify.sh renew
-
-# Test SSL connectivity
-./scripts/ssl-verify.sh test
-
-# Show certificate information
-./scripts/ssl-verify.sh info
-```
-
-**SSL verification includes:**
-- Container health checks
-- DNS resolution verification
-- Certificate file validation
-- ACME challenge path testing
-- SSL connection testing
-- Certificate expiration monitoring
-
-**Production deployment with SSL:**
-```bash
-# Complete production setup with health checks
+# Production deployment with SSL
 make deploy-prod
-
-# Monitor SSL status
-./scripts/ssl-verify.sh check
 ```
+
+**The SSL initialization process:**
+1. Validates domain and email
+2. Checks DNS resolution  
+3. Tests with Let's Encrypt staging environment
+4. Issues production certificates if staging succeeds
+5. Switches nginx to HTTPS configuration
+6. Verifies HTTPS functionality
 
 ## Key Files
 
 **Application:**
 - `app/main.py`: FastAPI application entry point with router registration
 - `app/routes/home.py`: Home page routes including test endpoints and utilities
-- `app/routes/apps.py`: GitHub repository display with Redis caching
+- `app/routes/apps.py`: GitHub repository display with in-memory caching
 - `app/utils.py`: GitHub API integration and template configuration
 - `app/config.py`: Application settings and environment management
 
@@ -258,7 +246,7 @@ make deploy-prod
 - `Makefile`: Development and deployment convenience commands
 - `.env.example`: Environment configuration template
 - `scripts/`: Deployment, monitoring, and maintenance scripts
-  - `ssl-verify.sh`: SSL certificate management and verification
+  - `init-ssl.sh`: Automated SSL certificate initialization with Let's Encrypt
 
 **Documentation:**
 - `README.md`: This file - setup and usage guide
