@@ -112,7 +112,7 @@ async def timeline_page(request: Request):
             "period": "Jul. 2024 – Present",
             "location": "Tallinn, Estonia",
             "company_url": "https://proffy.ee",
-            "logo": None  # No logo available
+            "logo": "/static/img/logos/proffyhub.png"
         },
         {
             "title": "Founder",
@@ -120,7 +120,7 @@ async def timeline_page(request: Request):
             "period": "Nov. 2022 – Present",
             "location": "Tallinn, Estonia",
             "company_url": None,
-            "logo": None
+            "logo": "/static/img/logos/sunyata.png"
         },
         {
             "title": "Senior Software Engineer",
@@ -128,7 +128,7 @@ async def timeline_page(request: Request):
             "period": "Aug. 2021 – Apr. 2022",
             "location": "Bengaluru, India",
             "company_url": "https://merklescience.com",
-            "logo": None
+            "logo": "/static/img/logos/merkle-science.png"
         },
         {
             "title": "Member Technical Staff",
@@ -136,7 +136,7 @@ async def timeline_page(request: Request):
             "period": "May. 2019 – Apr. 2021",
             "location": "Delhi, India",
             "company_url": "https://www.ycombinator.com/companies/redcarpetup",
-            "logo": None
+            "logo": "/static/img/logos/redcarpetup.png"
         },
         {
             "title": "Co-Founder & Chief Technology Officer",
@@ -144,7 +144,7 @@ async def timeline_page(request: Request):
             "period": "Oct. 2017 – Apr. 2019",
             "location": "Delhi, India",
             "company_url": "https://techneith.com/",
-            "logo": None
+            "logo": "/static/img/logos/techneith.png"
         }
     ]
     
@@ -157,7 +157,7 @@ async def timeline_page(request: Request):
             "location": "Tallinn, Estonia",
             "gpa": "GPA 4.44/5",
             "institution_url": "https://ebs.ee",
-            "logo": None
+            "logo": "/static/img/logos/ebs.png"
         },
         {
             "degree": "Erasmus Exchange (Business Analytics and Financial Modeling)",
@@ -166,7 +166,7 @@ async def timeline_page(request: Request):
             "location": "Bergen, Norway",
             "gpa": None,
             "institution_url": "https://nhh.no",
-            "logo": None
+            "logo": "/static/img/logos/nhh.png"
         },
         {
             "degree": "Bachelor of Technology (Computer Science and Engineering)",
@@ -175,7 +175,7 @@ async def timeline_page(request: Request):
             "location": "Haryana, India",
             "gpa": None,
             "institution_url": "https://dcrustm.ac.in",
-            "logo": None
+            "logo": "/static/img/logos/dcrust.png"
         }
     ]
     
