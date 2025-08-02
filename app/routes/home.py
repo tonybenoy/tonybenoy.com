@@ -113,7 +113,13 @@ async def timeline_page(request: Request):
             "location": "Tallinn, Estonia",
             "company_url": "https://proffy.ee",
             "logo": "/static/img/logos/proffyhub.png",
-            "description": "Leading technical strategy and product development for Proffy.ee, Estonia's flexible work platform. Building scalable job marketplace connecting employers with workers seeking part-time and gig opportunities, while developing features for schedule flexibility and skill development.",
+            "description": (
+                "Leading technical strategy and product development for Proffy.ee, "
+                "Estonia's flexible work platform. Building scalable job marketplace "
+                "connecting employers with workers seeking part-time and gig "
+                "opportunities, while developing features for schedule flexibility "
+                "and skill development."
+            ),
             "technologies": [
                 "TypeScript",
                 "NestJS",
@@ -135,7 +141,12 @@ async def timeline_page(request: Request):
             "location": "Tallinn, Estonia",
             "company_url": "https://github.com/Sunyata-OU",
             "logo": "/static/img/logos/sunyata.png",
-            "description": "Founded and operating an independent software development company in Estonia. Focusing on cutting-edge technology solutions and open-source contributions while building sustainable business practices.",
+            "description": (
+                "Founded and operating an independent software development company "
+                "in Estonia. Focusing on cutting-edge technology solutions and "
+                "open-source contributions while building sustainable business "
+                "practices."
+            ),
             "technologies": [
                 "Full-Stack Engineering",
                 "Cloud Architecture",
@@ -154,7 +165,12 @@ async def timeline_page(request: Request):
             "location": "Bengaluru, India",
             "company_url": "https://merklescience.com",
             "logo": "/static/img/logos/merkle-science.png",
-            "description": "Developed blockchain analytics and cryptocurrency compliance solutions for financial institutions and government agencies. Built predictive risk monitoring systems and transaction analysis tools for crypto crime detection.",
+            "description": (
+                "Developed blockchain analytics and cryptocurrency compliance "
+                "solutions for financial institutions and government agencies. "
+                "Built predictive risk monitoring systems and transaction analysis "
+                "tools for crypto crime detection."
+            ),
             "technologies": [
                 "Python",
                 "Blockchain Analytics",
@@ -175,7 +191,12 @@ async def timeline_page(request: Request):
             "location": "Delhi, India",
             "company_url": "https://www.ycombinator.com/companies/redcarpetup",
             "logo": "/static/img/logos/redcarpetup.png",
-            "description": "Core engineering team member at Y Combinator-backed fintech startup. Built scalable lending platform infrastructure, implemented risk assessment algorithms, and developed customer-facing financial products.",
+            "description": (
+                "Core engineering team member at Y Combinator-backed fintech "
+                "startup. Built scalable lending platform infrastructure, "
+                "implemented risk assessment algorithms, and developed "
+                "customer-facing financial products."
+            ),
             "technologies": [
                 "Python",
                 "Django Framework",
@@ -197,7 +218,12 @@ async def timeline_page(request: Request):
             "location": "Delhi, India",
             "company_url": "https://techneith.com/",
             "logo": "/static/img/logos/techneith.png",
-            "description": "Co-founded technology consulting company, leading technical vision and team building. Delivered end-to-end software solutions for startups and enterprises while establishing engineering best practices and company culture.",
+            "description": (
+                "Co-founded technology consulting company, leading technical vision "
+                "and team building. Delivered end-to-end software solutions for "
+                "startups and enterprises while establishing engineering best "
+                "practices and company culture."
+            ),
             "technologies": [
                 "Full-Stack Engineering",
                 "Team Leadership",
@@ -221,7 +247,12 @@ async def timeline_page(request: Request):
             "gpa": "GPA 4.44/5",
             "institution_url": "https://ebs.ee",
             "logo": "/static/img/logos/ebs.png",
-            "description": "Completed comprehensive MBA program focusing on strategic management, digital transformation, and entrepreneurship. Achieved distinction with 4.44/5 GPA while building international business network.",
+            "description": (
+                "Completed comprehensive MBA program focusing on strategic "
+                "management, digital transformation, and entrepreneurship. "
+                "Achieved distinction with 4.44/5 GPA while building "
+                "international business network."
+            ),
             "focus": [
                 "Strategic Management",
                 "Digital Transformation",
@@ -239,7 +270,11 @@ async def timeline_page(request: Request):
             "gpa": None,
             "institution_url": "https://nhh.no",
             "logo": "/static/img/logos/nhh.png",
-            "description": "Intensive exchange program at Norway's leading business school, specializing in advanced business analytics and quantitative financial modeling techniques for strategic decision making.",
+            "description": (
+                "Intensive exchange program at Norway's leading business school, "
+                "specializing in advanced business analytics and quantitative "
+                "financial modeling techniques for strategic decision making."
+            ),
             "focus": [
                 "Business Analytics",
                 "Financial Modeling",
@@ -257,7 +292,12 @@ async def timeline_page(request: Request):
             "gpa": None,
             "institution_url": "https://dcrustm.ac.in",
             "logo": "/static/img/logos/dcrust.png",
-            "description": "Comprehensive engineering program covering software development, algorithms, data structures, and system design. Built strong foundation in computer science principles and practical programming skills.",
+            "description": (
+                "Comprehensive engineering program covering software development, "
+                "algorithms, data structures, and system design. Built strong "
+                "foundation in computer science principles and practical "
+                "programming skills."
+            ),
             "focus": [
                 "Software Engineering",
                 "Data Structures",

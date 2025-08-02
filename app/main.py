@@ -114,7 +114,7 @@ async def get_llms_txt():
     """Serve llms.txt file for LLM context."""
     try:
         llms_file = pathlib.Path(__file__).parent.parent / "llms.txt"
-        with open(llms_file, "r", encoding="utf-8") as f:
+        with open(llms_file, encoding="utf-8") as f:
             content = f.read()
         return Response(content=content, media_type="text/plain")
     except FileNotFoundError:
