@@ -5,7 +5,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from starlette.responses import RedirectResponse
 
-from src.utils import templates
+from utils import templates
 
 logger = logging.getLogger(__name__)
 limiter = Limiter(key_func=get_remote_address)

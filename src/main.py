@@ -12,9 +12,9 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
-from src.config import get_settings
-from src.routes.apps import apps
-from src.routes.home import home
+from config import get_settings
+from routes.apps import apps
+from routes.home import home
 
 # Configure logging
 logging.basicConfig(

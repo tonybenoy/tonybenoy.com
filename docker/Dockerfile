@@ -48,7 +48,7 @@ USER appuser
 
 # Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app"
+ENV PYTHONPATH="/app/src"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
