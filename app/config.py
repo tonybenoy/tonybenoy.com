@@ -1,7 +1,9 @@
 """Configuration management for the application."""
 
+import json
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -28,6 +30,18 @@ class Settings(BaseSettings):
 
     # Logging settings
     log_level: str = "INFO"
+
+    @field_validator("allowed_hosts", "cors_origins", mode="before")
+    @classmethod
+    def parse_json_list(cls, v):
+        """Parse JSON string list from environment variables."""
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except json.JSONDecodeError:
+                # If not valid JSON, split by comma and strip whitespace
+                return [item.strip().strip('"') for item in v.split(",")]
+        return v
 
 
 @lru_cache
