@@ -154,3 +154,5 @@ logs/
 .idea/
 *.swp
 *.swo
+
+.ruff_cache/

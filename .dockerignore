@@ -67,4 +67,7 @@ nginx/
 init-letsencrypt.sh
 Makefile
 
-# Only include the src directory and necessary files
+# Allow essential project files
+!pyproject.toml
+!uv.lock
+!app/
