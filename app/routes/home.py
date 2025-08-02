@@ -100,6 +100,97 @@ async def contact_page(request: Request):
     )
 
 
+@home.get("/timeline")
+@limiter.limit("30/minute")
+async def timeline_page(request: Request):
+    """Timeline page with work experience and education."""
+    # Work experience data from CV
+    work_experience = [
+        {
+            "title": "Chief Technology Officer",
+            "company": "Proffyhub OÜ",
+            "period": "Jul. 2024 – Present",
+            "location": "Tallinn, Estonia",
+            "company_url": "https://proffy.ee",
+            "logo": None  # No logo available
+        },
+        {
+            "title": "Founder",
+            "company": "Sunyata OÜ",
+            "period": "Nov. 2022 – Present",
+            "location": "Tallinn, Estonia",
+            "company_url": None,
+            "logo": None
+        },
+        {
+            "title": "Senior Software Engineer",
+            "company": "Merkle Science",
+            "period": "Aug. 2021 – Apr. 2022",
+            "location": "Bengaluru, India",
+            "company_url": "https://merklescience.com",
+            "logo": None
+        },
+        {
+            "title": "Member Technical Staff",
+            "company": "Redcarpetup",
+            "period": "May. 2019 – Apr. 2021",
+            "location": "Delhi, India",
+            "company_url": "https://www.ycombinator.com/companies/redcarpetup",
+            "logo": None
+        },
+        {
+            "title": "Co-Founder & Chief Technology Officer",
+            "company": "Techneith",
+            "period": "Oct. 2017 – Apr. 2019",
+            "location": "Delhi, India",
+            "company_url": "https://techneith.com/",
+            "logo": None
+        }
+    ]
+    
+    # Education data from CV
+    education = [
+        {
+            "degree": "Master of Business Administration (Management)",
+            "institution": "Estonian Business School",
+            "period": "June 2024",
+            "location": "Tallinn, Estonia",
+            "gpa": "GPA 4.44/5",
+            "institution_url": "https://ebs.ee",
+            "logo": None
+        },
+        {
+            "degree": "Erasmus Exchange (Business Analytics and Financial Modeling)",
+            "institution": "Norwegian School of Economics",
+            "period": "December 2023",
+            "location": "Bergen, Norway",
+            "gpa": None,
+            "institution_url": "https://nhh.no",
+            "logo": None
+        },
+        {
+            "degree": "Bachelor of Technology (Computer Science and Engineering)",
+            "institution": "Deenbandhu Chottu Ram University of Science and Technology",
+            "period": "September 2017",
+            "location": "Haryana, India",
+            "gpa": None,
+            "institution_url": "https://dcrustm.ac.in",
+            "logo": None
+        }
+    ]
+    
+    return templates.TemplateResponse(
+        request, 
+        "timeline.html", 
+        {
+            "title": "Timeline - Tony", 
+            "active_page": "timeline",
+            "work_experience": work_experience,
+            "education": education
+        }
+    )
+
+
 @home.post("/contact")
 @limiter.limit("5/minute")
 async def contact_submit(

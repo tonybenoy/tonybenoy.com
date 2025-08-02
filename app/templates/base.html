@@ -36,6 +36,11 @@
 						</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link {% if active_page == 'timeline' %}active{% endif %}" href="/timeline">
+							Timeline{% if active_page == "timeline" %}<span class="blink_text">_</span>{% endif %}
+						</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link {% if active_page == 'contact' %}active{% endif %}" href="/contact">
 							Contact{% if active_page == "contact" %}<span class="blink_text">_</span>{% endif %}
 						</a>

@@ -189,6 +189,10 @@
 		font-weight: 600;
 	}
 
+	.card-text .text-muted {
+		color: #b8b8b8 !important;
+	}
+
 	/* Repository stats badges */
 	.repo-stats .badge {
 		font-size: 0.85rem;
@@ -357,6 +361,10 @@ body.light-theme .card-text {
 
 body.light-theme .card-text strong {
 	color: #2aa198 !important;
+}
+
+body.light-theme .card-text .text-muted {
+	color: #657b83 !important;
 }
 
 body.light-theme .btn-primary {

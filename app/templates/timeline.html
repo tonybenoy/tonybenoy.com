@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="flex-grow-1 py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="hero-section bg-1 p-4 p-md-5 rounded">
+                    <h2 class="text-center mb-4">Timeline</h2>
+                    <p class="text-center lead mb-5">
+                        My professional journey
+                        <span class="blink_text">_</span>
+                    </p>
+                    
+                    <!-- Work Experience Section -->
+                    <div class="mb-5">
+                        <h3 class="mb-4 text-center">Work Experience</h3>
+                        <div class="timeline">
+                            {% for job in work_experience %}
+                            <div class="timeline-item card mb-4">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-8">
+                                            <h5 class="card-title mb-2">{{ job.title }}</h5>
+                                            {% if job.company_url %}
+                                            <h6 class="company-name mb-2">
+                                                <a href="{{ job.company_url }}" target="_blank" class="company-link">
+                                                    {{ job.company }}
+                                                    <i class="fas fa-external-link-alt ms-1"></i>
+                                                </a>
+                                            </h6>
+                                            {% else %}
+                                            <h6 class="company-name mb-2">{{ job.company }}</h6>
+                                            {% endif %}
+                                            <p class="timeline-date mb-1">{{ job.period }}</p>
+                                            <p class="timeline-location text-muted mb-0">{{ job.location }}</p>
+                                        </div>
+                                        {% if job.logo %}
+                                        <div class="col-lg-4 text-center">
+                                            <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Education Section -->
+                    <div class="mb-4">
+                        <h3 class="mb-4 text-center">Education</h3>
+                        <div class="timeline">
+                            {% for edu in education %}
+                            <div class="timeline-item card mb-4">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-8">
+                                            <h5 class="card-title mb-2">{{ edu.degree }}</h5>
+                                            {% if edu.institution_url %}
+                                            <h6 class="institution-name mb-2">
+                                                <a href="{{ edu.institution_url }}" target="_blank" class="company-link">
+                                                    {{ edu.institution }}
+                                                    <i class="fas fa-external-link-alt ms-1"></i>
+                                                </a>
+                                            </h6>
+                                            {% else %}
+                                            <h6 class="institution-name mb-2">{{ edu.institution }}</h6>
+                                            {% endif %}
+                                            <p class="timeline-date mb-1">{{ edu.period }}</p>
+                                            <p class="timeline-location text-muted mb-1">{{ edu.location }}</p>
+                                            {% if edu.gpa %}
+                                            <p class="timeline-gpa text-muted mb-0">{{ edu.gpa }}</p>
+                                            {% endif %}
+                                        </div>
+                                        {% if edu.logo %}
+                                        <div class="col-lg-4 text-center">
+                                            <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+/* Timeline specific styles */
+.timeline {
+    position: relative;
+}
+
+.timeline-item {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+.timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+.company-link, .institution-link {
+    color: #00ff41;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+}
+
+.company-link:hover, .institution-link:hover {
+    color: #00cc33;
+    text-decoration: underline;
+}
+
+.company-name, .institution-name {
+    color: #00ff41;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+}
+
+.timeline-date {
+    color: #00ff41;
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.timeline-location, .timeline-gpa {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+}
+
+.company-logo {
+    max-width: 80px;
+    max-height: 60px;
+    object-fit: contain;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    /* Soft neumorphic dark mode */
+    box-shadow: 
+        4px 4px 8px rgba(0, 0, 0, 0.6),
+        -4px -4px 8px rgba(40, 40, 40, 0.1);
+}
+
+.company-logo:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        6px 6px 12px rgba(0, 0, 0, 0.7),
+        -6px -6px 12px rgba(40, 40, 40, 0.15);
+}
+
+/* Light theme overrides */
+body.light-theme .company-link, 
+body.light-theme .institution-link {
+    color: #2aa198 !important;
+}
+
+body.light-theme .company-link:hover, 
+body.light-theme .institution-link:hover {
+    color: #268e85 !important;
+}
+
+body.light-theme .company-name, 
+body.light-theme .institution-name {
+    color: #2aa198 !important;
+}
+
+body.light-theme .timeline-date {
+    color: #2aa198 !important;
+}
+
+body.light-theme .timeline-location, 
+body.light-theme .timeline-gpa {
+    color: #586e75 !important;
+}
+
+body.light-theme .company-logo {
+    box-shadow: 
+        4px 4px 8px rgba(0, 0, 0, 0.1),
+        -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .timeline-item .row {
+        text-align: center;
+    }
+    
+    .company-logo {
+        margin-top: 1rem;
+        max-width: 60px;
+        max-height: 45px;
+    }
+}
+</style>
+
+{% endblock %}
