@@ -1,0 +1,246 @@
+/* Hacker Terminal Styles - Black & Green Theme */
+.terminal-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 20px #00ff0050;
+}
+
+.terminal-minimized {
+    transform: translateY(calc(100% - 40px));
+}
+
+.terminal-header {
+    background: #000000;
+    color: #00ff00;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1px solid #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.terminal-title {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.terminal-btn {
+    background: none;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 0;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-shadow: 0 0 3px #00ff00;
+    transition: all 0.2s ease;
+}
+
+.terminal-btn:hover {
+    background: #00ff0020;
+    box-shadow: 0 0 8px #00ff00;
+}
+
+.terminal-close {
+    color: #ff0000;
+    border-color: #ff0000;
+    text-shadow: 0 0 3px #ff0000;
+}
+
+.terminal-close:hover {
+    background: #ff000020;
+    box-shadow: 0 0 8px #ff0000;
+}
+
+.terminal-body {
+    background: #000000;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    text-shadow: 0 0 2px #00ff00;
+}
+
+.terminal-output {
+    flex-grow: 1;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.terminal-line {
+    margin-bottom: 2px;
+    line-height: 1.4;
+}
+
+.terminal-prompt {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.terminal-command {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.terminal-error {
+    color: #ff0000;
+    text-shadow: 0 0 3px #ff0000;
+    font-weight: bold;
+}
+
+.terminal-success {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+    font-weight: bold;
+}
+
+.terminal-info {
+    color: #00ff00;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: inherit;
+    flex-grow: 1;
+    outline: none;
+    margin-left: 5px;
+    text-shadow: 0 0 2px #00ff00;
+    font-weight: bold;
+}
+
+.terminal-input::selection {
+    background: #00ff0040;
+}
+
+.terminal-cursor {
+    animation: blink 1s infinite;
+    background: #00ff00;
+    width: 8px;
+    height: 16px;
+    display: inline-block;
+    box-shadow: 0 0 5px #00ff00;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .terminal-body {
+        height: 250px;
+        font-size: 12px;
+        padding: 10px;
+    }
+    
+    .terminal-header {
+        padding: 6px 10px;
+    }
+    
+    .terminal-container {
+        box-shadow: 0 0 15px #00ff0040;
+    }
+}
+
+/* Scrollbar styling for hacker theme */
+.terminal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 0;
+    box-shadow: 0 0 5px #00ff00;
+}
+
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background: #00ff00;
+    box-shadow: 0 0 8px #00ff00;
+}
+
+/* Light theme override - maintain hacker aesthetic */
+.light-theme .terminal-header {
+    background: #000000;
+    color: #00ff00;
+    border-bottom-color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.light-theme .terminal-body {
+    background: #000000;
+    color: #00ff00;
+    text-shadow: 0 0 2px #00ff00;
+}
+
+.light-theme .terminal-input {
+    color: #00ff00;
+    text-shadow: 0 0 2px #00ff00;
+}
+
+.light-theme .terminal-cursor {
+    background: #00ff00;
+    box-shadow: 0 0 5px #00ff00;
+}
+
+.light-theme .terminal-btn {
+    color: #00ff00;
+    border-color: #00ff00;
+    text-shadow: 0 0 3px #00ff00;
+}
+
+.light-theme .terminal-btn:hover {
+    background: #00ff0020;
+    box-shadow: 0 0 8px #00ff00;
+}
+
+.light-theme .terminal-close {
+    color: #ff0000;
+    border-color: #ff0000;
+    text-shadow: 0 0 3px #ff0000;
+}
+
+.light-theme .terminal-close:hover {
+    background: #ff000020;
+    box-shadow: 0 0 8px #ff0000;
+}
+
+.light-theme .terminal-container {
+    border-color: #00ff00;
+    box-shadow: 0 0 20px #00ff0050;
+}

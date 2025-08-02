@@ -1,15 +1,15 @@
 import logging
 import smtplib
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-from fastapi import APIRouter, Request, Form, HTTPException
+from fastapi import APIRouter, Form, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from starlette.responses import RedirectResponse
 
-from app.utils import templates
 from app.config import get_settings
+from app.utils import templates
 
 # Use the same limiter instance as main app
 limiter = Limiter(key_func=get_remote_address)
@@ -147,7 +147,7 @@ async def timeline_page(request: Request):
             "logo": "/static/img/logos/techneith.png"
         }
     ]
-    
+
     # Education data from CV
     education = [
         {
@@ -178,16 +178,27 @@ async def timeline_page(request: Request):
             "logo": "/static/img/logos/dcrust.png"
         }
     ]
-    
+
     return templates.TemplateResponse(
-        request, 
-        "timeline.html", 
+        request,
+        "timeline.html",
         {
-            "title": "Timeline - Tony", 
+            "title": "Timeline - Tony",
             "active_page": "timeline",
             "work_experience": work_experience,
             "education": education
         }
+    )
+
+
+@home.get("/terminal")
+@limiter.limit("30/minute")
+async def terminal_page(request: Request):
+    """Full-page terminal interface."""
+    return templates.TemplateResponse(
+        request,
+        "terminal.html",
+        {"title": "Terminal - Tony", "active_page": "terminal"}
     )
 
 
@@ -202,14 +213,22 @@ async def contact_submit(
 ):
     """Handle contact form submission."""
     settings = get_settings()
-    
+
     try:
         # Create email message
         msg = MIMEMultipart()
-        msg['From'] = settings.smtp_username if hasattr(settings, 'smtp_username') else "noreply@tonybenoy.com"
-        msg['To'] = settings.contact_email if hasattr(settings, 'contact_email') else "me@tonybenoy.com"
+        msg['From'] = (
+            settings.smtp_username
+            if hasattr(settings, 'smtp_username')
+            else "noreply@tonybenoy.com"
+        )
+        msg['To'] = (
+            settings.contact_email
+            if hasattr(settings, 'contact_email')
+            else "me@tonybenoy.com"
+        )
         msg['Subject'] = f"Contact Form: {subject}"
-        
+
         # Email body
         body = f"""
 New contact form submission:
@@ -225,40 +244,49 @@ Sent from tonybenoy.com contact form
 Client IP: {request.client.host if request.client else 'unknown'}
 User Agent: {request.headers.get('User-Agent', 'unknown')}
         """
-        
+
         msg.attach(MIMEText(body, 'plain'))
-        
+
         # Send email (only if SMTP is configured)
         if hasattr(settings, 'smtp_server') and settings.smtp_server:
             try:
-                server = smtplib.SMTP(settings.smtp_server, settings.smtp_port if hasattr(settings, 'smtp_port') else 587)
+                smtp_port = (
+                    settings.smtp_port if hasattr(settings, 'smtp_port') else 587
+                )
+                server = smtplib.SMTP(settings.smtp_server, smtp_port)
                 server.starttls()
-                if hasattr(settings, 'smtp_username') and hasattr(settings, 'smtp_password'):
+                if (
+                    hasattr(settings, 'smtp_username')
+                    and hasattr(settings, 'smtp_password')
+                ):
                     server.login(settings.smtp_username, settings.smtp_password)
-                
+
                 server.send_message(msg)
                 server.quit()
-                
+
                 logger.info(f"Contact form email sent from {email}")
                 success_message = "Thank you! Your message has been sent successfully."
             except Exception as e:
                 logger.error(f"Failed to send email: {e}")
-                success_message = "Thank you! Your message has been received (email delivery pending)."
+                success_message = (
+                    "Thank you! Your message has been received "
+                    "(email delivery pending)."
+                )
         else:
             # Log the message if no SMTP configured
             logger.info(f"Contact form submission: {name} <{email}> - {subject}")
             success_message = "Thank you! Your message has been received."
-        
+
         return templates.TemplateResponse(
-            request, 
-            "contact.html", 
+            request,
+            "contact.html",
             {
-                "title": "Contact - Tony", 
+                "title": "Contact - Tony",
                 "active_page": "contact",
                 "success_message": success_message
             }
         )
-        
+
     except Exception as e:
         logger.error(f"Contact form error: {e}")
         return templates.TemplateResponse(
@@ -266,7 +294,10 @@ User Agent: {request.headers.get('User-Agent', 'unknown')}
             "contact.html",
             {
                 "title": "Contact - Tony",
-                "active_page": "contact", 
-                "error_message": "Sorry, there was an error sending your message. Please try again."
+                "active_page": "contact",
+                "error_message": (
+                    "Sorry, there was an error sending your message. "
+                    "Please try again."
+                )
             }
         )

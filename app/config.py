@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
     # Logging settings
     log_level: str = "INFO"
-    
+
     # Email/SMTP settings (optional)
     smtp_server: str | None = None
     smtp_port: int = 587
