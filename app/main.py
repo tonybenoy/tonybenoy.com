@@ -16,6 +16,7 @@ from slowapi.util import get_remote_address
 from app.config import get_settings
 from app.routes.apps import apps
 from app.routes.home import home
+from app.routes.photography import photography
 
 # Load settings for logging configuration
 settings = get_settings()
@@ -107,6 +108,7 @@ app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 # Include routers
 app.include_router(home, tags=["home"])
 app.include_router(apps, tags=["applications"])
+app.include_router(photography, tags=["photography"])
 
 
 @app.get("/llms.txt", response_class=Response)
