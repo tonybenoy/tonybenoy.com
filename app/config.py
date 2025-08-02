@@ -21,12 +21,8 @@ class Settings(BaseSettings):
     github_token: str | None = None
     github_api_timeout: float = 30.0
 
-    # Redis settings
-    redis_host: str = "redis_db"
-    redis_port: int = 6379
-    redis_db: int = 0
-    redis_password: str | None = None
-    redis_cache_ttl: int = 3600  # 1 hour
+    # Cache settings
+    cache_ttl: int = 3600  # 1 hour
 
     # Security settings
     allowed_hosts: list[str] = ["*"]

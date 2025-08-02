@@ -3,8 +3,6 @@ networks:
     driver: bridge
 
 volumes:
-  redis-data:
-    driver: local
   nginx-conf:
     driver: local
   certbot-conf:
@@ -34,7 +32,7 @@ services:
     depends_on:
       - fastapi
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/test"]
+      test: ["CMD", "nginx", "-t"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -64,8 +62,6 @@ services:
     container_name: tonybenoy-app
     restart: unless-stopped
     environment:
-      - REDIS_HOST=redis_db
-      - REDIS_PORT=6379
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - GITHUB_USERNAME=${GITHUB_USERNAME:-tonybenoy}
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
@@ -77,9 +73,7 @@ services:
       - ${CODE_MOUNT:-/tmp/empty}:/app/app
     networks:
       - app-network
-    depends_on:
-      redis_db:
-        condition: service_healthy
+    depends_on: []
     healthcheck:
       test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/test', timeout=10)"]
       interval: 30s
@@ -100,36 +94,6 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-
-  redis_db:
-    image: redis:7.2-alpine
-    container_name: tonybenoy-redis
-    restart: unless-stopped
-    volumes:
-      - redis-data:/data
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-        compress: "true"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          cpus: '0.1'
-          memory: 128M
 
   certbot:
     image: certbot/certbot:latest

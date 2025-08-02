@@ -1,9 +1,8 @@
-import json
 import logging
+import time
+from typing import Any
 
-import redis
 from fastapi import APIRouter, HTTPException, Request
-from redis.exceptions import RedisError
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
@@ -14,70 +13,61 @@ logger = logging.getLogger(__name__)
 limiter = Limiter(key_func=get_remote_address)
 apps = APIRouter()
 
+# Simple in-memory cache
+_cache: dict[str, dict[str, Any]] = {}
+
+
+def _get_cached_data(cache_key: str, ttl: int) -> Any | None:
+    """Get data from cache if it exists and is not expired."""
+    if cache_key not in _cache:
+        return None
+
+    cache_entry = _cache[cache_key]
+    if time.time() - cache_entry["timestamp"] > ttl:
+        del _cache[cache_key]
+        return None
+
+    return cache_entry["data"]
+
+
+def _set_cache_data(cache_key: str, data: Any) -> None:
+    """Store data in cache with timestamp."""
+    _cache[cache_key] = {
+        "data": data,
+        "timestamp": time.time()
+    }
+
 
 @apps.get("/app")
 @limiter.limit("10/minute")
 async def apps_view(request: Request):
-    """Display GitHub repositories with Redis caching."""
+    """Display GitHub repositories with in-memory caching."""
     settings = get_settings()
 
-    try:
-        # Initialize Redis connection with proper configuration
-        redis_client = redis.Redis(
-            host=settings.redis_host,
-            port=settings.redis_port,
-            db=settings.redis_db,
-            password=settings.redis_password,
-            decode_responses=True,
-            socket_connect_timeout=5,
-            socket_timeout=5,
-        )
+    cache_key = f"github_repos_{settings.github_username}"
+    cached_repos = _get_cached_data(cache_key, settings.cache_ttl)
 
-        # Try to get cached data
-        cache_key = f"github_repos_{settings.github_username}"
-        cached_data = redis_client.get(cache_key)
-
-        if cached_data:
-            logger.info("Serving repositories from cache")
-            repos = json.loads(cached_data)["repos"]
-        else:
-            logger.info("Fetching fresh repository data from GitHub")
-            # Fetch fresh data from GitHub
-            url = f"https://api.github.com/users/{settings.github_username}/repos?sort=pushed"
-
-            try:
-                repo_data = await get_repo_data_for_user(
-                    url=url, github_token=settings.github_token
-                )
-                repos = sort_repos(repo_data)
-
-                # Cache the data
-                cache_data = json.dumps({"repos": repos})
-                redis_client.setex(cache_key, settings.redis_cache_ttl, cache_data)
-                logger.info(f"Cached {len(repos)} repositories")
-
-            except Exception as e:
-                logger.error(f"Failed to fetch GitHub data: {e}")
-                raise HTTPException(
-                    status_code=503,
-                    detail="Unable to fetch repository data at this time",
-                ) from e
-
-    except RedisError as e:
-        logger.warning(
-            f"Redis connection failed: {e}. Falling back to direct GitHub API"
-        )
-        # Fallback to direct API call without caching
+    if cached_repos is not None:
+        logger.info("Serving repositories from cache")
+        repos = cached_repos
+    else:
+        logger.info("Fetching fresh repository data from GitHub")
         try:
             url = f"https://api.github.com/users/{settings.github_username}/repos?sort=pushed"
             repo_data = await get_repo_data_for_user(
                 url=url, github_token=settings.github_token
             )
             repos = sort_repos(repo_data)
+
+            # Cache the data
+            _set_cache_data(cache_key, repos)
+            logger.info(f"Cached {len(repos)} repositories")
+
         except Exception as e:
-            logger.error(f"Failed to fetch GitHub data without cache: {e}")
+            logger.error(f"Failed to fetch GitHub data: {e}")
             raise HTTPException(
-                status_code=503, detail="Service temporarily unavailable"
+                status_code=503,
+                detail="Unable to fetch repository data at this time",
             ) from e
 
     return templates.TemplateResponse(
