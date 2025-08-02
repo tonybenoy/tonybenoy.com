@@ -37,7 +37,13 @@
                                         </div>
                                         {% if job.logo %}
                                         <div class="col-lg-4 text-center">
+                                            {% if job.company_url %}
+                                            <a href="{{ job.company_url }}" target="_blank">
+                                                <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
+                                            </a>
+                                            {% else %}
                                             <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
+                                            {% endif %}
                                         </div>
                                         {% endif %}
                                     </div>
@@ -75,7 +81,13 @@
                                         </div>
                                         {% if edu.logo %}
                                         <div class="col-lg-4 text-center">
+                                            {% if edu.institution_url %}
+                                            <a href="{{ edu.institution_url }}" target="_blank">
+                                                <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
+                                            </a>
+                                            {% else %}
                                             <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
+                                            {% endif %}
                                         </div>
                                         {% endif %}
                                     </div>
@@ -148,6 +160,7 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     filter: brightness(1.1) contrast(1.1);
+    animation: logoPulse 3s ease-in-out infinite;
     /* Enhanced neumorphic shadow with glow */
     box-shadow: 
         4px 4px 12px rgba(0, 0, 0, 0.8),
@@ -190,9 +203,6 @@
     }
 }
 
-.company-logo {
-    animation: logoPulse 3s ease-in-out infinite;
-}
 
 /* Light theme overrides */
 body.light-theme .company-link, 
@@ -222,6 +232,7 @@ body.light-theme .timeline-gpa {
 body.light-theme .company-logo {
     border: 1px solid rgba(42, 161, 152, 0.3);
     filter: brightness(1.05) contrast(1.05);
+    animation: logoPulseLight 3s ease-in-out infinite !important;
     /* Enhanced light theme neumorphic shadow */
     box-shadow: 
         4px 4px 12px rgba(0, 0, 0, 0.15),
@@ -259,9 +270,6 @@ body.light-theme .company-logo:hover {
     }
 }
 
-body.light-theme .company-logo {
-    animation: logoPulseLight 3s ease-in-out infinite !important;
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
