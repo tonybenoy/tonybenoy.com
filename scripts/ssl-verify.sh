@@ -211,9 +211,9 @@ obtain_certificates() {
         fi
     fi
     
-    # Stop nginx temporarily to free port 80
-    print_status "Stopping nginx temporarily..."
-    docker-compose stop nginx
+    # Stop all services temporarily to free port 80
+    print_status "Stopping all services temporarily..."
+    docker-compose down
     
     # Run certbot to obtain certificates
     print_status "Running certbot to obtain certificates..."
@@ -227,13 +227,13 @@ obtain_certificates() {
         print_success "Certificates obtained successfully"
     else
         print_error "Failed to obtain certificates"
-        docker-compose start nginx
+        docker-compose up -d
         return 1
     fi
     
-    # Start nginx again
-    print_status "Starting nginx..."
-    docker-compose start nginx
+    # Start services again
+    print_status "Starting services..."
+    docker-compose up -d
     
     # Wait for nginx to be ready
     sleep 10
@@ -306,8 +306,8 @@ EOF
     print_status "Step 2: Skipping ACME challenge test (using standalone mode)..."
     
     # Stop services to obtain certificates
-    print_status "Step 3: Stopping services to obtain SSL certificates..."
-    docker-compose stop nginx
+    print_status "Step 3: Stopping all services to obtain SSL certificates..."
+    docker-compose down
     
     # First try staging certificates to validate setup
     print_status "Step 4a: Testing with staging certificates first..."
