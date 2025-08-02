@@ -20,7 +20,7 @@ home = APIRouter()
 async def index(request: Request):
     """Home page with rate limiting."""
     return templates.TemplateResponse(
-        "index.html", {"request": request, "title": "Tony", "active_page": "home"}
+        request, "index.html", {"title": "Tony", "active_page": "home"}
     )
 
 

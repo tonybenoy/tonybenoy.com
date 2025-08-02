@@ -33,7 +33,7 @@ jobs:
         run: uv run mypy . --ignore-missing-imports
 
       - name: Run tests
-        run: uv run pytest || echo "No tests found"
+        run: uv run pytest
 
       - name: Check security with bandit
         run: uv run bandit -r app/

@@ -68,9 +68,9 @@ async def apps_view(request: Request):
             ) from e
 
     return templates.TemplateResponse(
+        request,
         "apps.html",
         {
-            "request": request,
             "title": "My Apps",
             "repos": repos,
             "active_page": "apps",
