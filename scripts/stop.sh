@@ -10,6 +10,9 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 ENV="${1:-local}"
 REMOVE_VOLUMES=""
 
+# Source common functions
+source "$SCRIPT_DIR/common.sh"
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -28,29 +31,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-log() {
-    echo -e "${GREEN}[$(date '+%H:%M:%S')] $1${NC}"
-}
-
-warn() {
-    echo -e "${YELLOW}[$(date '+%H:%M:%S')] $1${NC}"
-}
-
-error() {
-    echo -e "${RED}[$(date '+%H:%M:%S')] ERROR: $1${NC}"
-}
-
-# Validate environment
-if [ ! -f "$PROJECT_DIR/.env.$ENV" ]; then
-    error "Environment file .env.$ENV not found"
-    exit 1
-fi
+# Validate environment  
+validate_env "$ENV" "$PROJECT_DIR"
 
 cd "$PROJECT_DIR"
 
@@ -59,9 +41,9 @@ log "Stopping TonyBenoy.com in $ENV environment..."
 # Stop and remove containers
 if [ -n "$REMOVE_VOLUMES" ]; then
     warn "Removing volumes - all data will be lost!"
-    docker-compose --env-file ".env.$ENV" down $REMOVE_VOLUMES
+    docker_compose "$ENV" down $REMOVE_VOLUMES
 else
-    docker-compose --env-file ".env.$ENV" down
+    docker_compose "$ENV" down
 fi
 
 log "Services stopped successfully!"

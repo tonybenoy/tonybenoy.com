@@ -10,6 +10,9 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 ENV="${1:-local}"
 BUILD_FLAG=""
 
+# Source common functions
+source "$SCRIPT_DIR/common.sh"
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -28,30 +31,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Colors for output
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-log() {
-    echo -e "${GREEN}[$(date '+%H:%M:%S')] $1${NC}"
-}
-
-info() {
-    echo -e "${BLUE}[$(date '+%H:%M:%S')] $1${NC}"
-}
-
-error() {
-    echo -e "${RED}[$(date '+%H:%M:%S')] ERROR: $1${NC}"
-}
-
 # Validate environment
-if [ ! -f "$PROJECT_DIR/.env.$ENV" ]; then
-    error "Environment file .env.$ENV not found"
-    info "💡 Create it with: make create-env-$ENV"
-    exit 1
-fi
+validate_env "$ENV" "$PROJECT_DIR"
 
 # Ensure /tmp/empty exists for non-local environments
 if [ ! -d "/tmp/empty" ]; then
@@ -66,22 +47,22 @@ info "Starting TonyBenoy.com in $ENV environment..."
 # Check if Docker image exists, build if needed
 if ! docker image inspect tonybenoy-com:latest >/dev/null 2>&1; then
     log "Docker image not found. Building services..."
-    docker-compose --env-file ".env.$ENV" build
+    docker_compose "$ENV" build
 elif [ -n "$BUILD_FLAG" ]; then
     log "Building services..."
-    docker-compose --env-file ".env.$ENV" build
+    docker_compose "$ENV" build
 fi
 
 # Start services
 log "Starting services..."
-docker-compose --env-file ".env.$ENV" up -d
+docker_compose "$ENV" up -d
 
 # Wait for services to be ready
 log "Waiting for services to start..."
 sleep 10
 
 # Check if services are running
-if docker-compose --env-file ".env.$ENV" ps | grep -q "Up"; then
+if docker_compose "$ENV" ps | grep -q "Up"; then
     log "Services started successfully!"
     
     # Show access URLs
@@ -102,10 +83,10 @@ if docker-compose --env-file ".env.$ENV" ps | grep -q "Up"; then
     
     echo ""
     echo "Useful commands:"
-    echo "  📋 View logs: docker-compose --env-file .env.$ENV logs -f"
-    echo "  📊 Service status: docker-compose --env-file .env.$ENV ps"
-    echo "  🛑 Stop services: docker-compose --env-file .env.$ENV down"
-    echo "  🔄 Restart service: docker-compose --env-file .env.$ENV restart <service>"
+    echo "  📋 View logs: ./scripts/start.sh $ENV logs -f"
+    echo "  📊 Service status: ./scripts/start.sh $ENV ps"  
+    echo "  🛑 Stop services: ./scripts/stop.sh $ENV"
+    echo "  🔄 Restart service: ./scripts/start.sh $ENV restart <service>"
     echo "  🏥 Health check: curl http://localhost/test (or :8000 for local)"
 else
     error "Failed to start services"

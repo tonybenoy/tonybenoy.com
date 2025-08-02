@@ -143,7 +143,7 @@ configure_environment() {
             log "Using HTTPS configuration with SSL certificates"
             # Check if SSL certificates exist for production
             if ! docker-compose --env-file ".env.$ENV" config | grep -q "letsencrypt"; then
-                warn "SSL certificates may not be configured. Run init-letsencrypt.sh first."
+                warn "SSL certificates may not be configured. Run ./scripts/init-ssl.sh first."
             fi
             ;;
     esac

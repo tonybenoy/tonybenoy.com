@@ -17,9 +17,13 @@ from app.config import get_settings
 from app.routes.apps import apps
 from app.routes.home import home
 
+# Load settings for logging configuration
+settings = get_settings()
+
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=getattr(logging, settings.log_level.upper()),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -34,9 +38,6 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("Shutting down TonyBenoy.com application")
 
-
-# Load settings
-settings = get_settings()
 
 # Initialize FastAPI app
 app = FastAPI(

@@ -7,8 +7,10 @@ from starlette.responses import RedirectResponse
 
 from app.utils import templates
 
-logger = logging.getLogger(__name__)
+# Use the same limiter instance as main app
 limiter = Limiter(key_func=get_remote_address)
+
+logger = logging.getLogger(__name__)
 home = APIRouter()
 
 
@@ -70,27 +72,16 @@ async def metrics(request: Request):
     """Basic metrics endpoint."""
     import time
 
-    import psutil
-
     try:
-        return {
-            "uptime": time.time(),  # Would track actual uptime
-            "memory_usage": psutil.virtual_memory().percent,
-            "cpu_usage": psutil.cpu_percent(),
-            "disk_usage": psutil.disk_usage("/").percent,
-            "requests_total": "N/A",  # Would implement proper metrics
-            "status": "ok",
-        }
+        import psutil
     except ImportError:
         return {"status": "ok", "message": "Detailed metrics not available"}
 
-
-# @home.get("/counter.svg")
-# async def count_app():
-#     count = update_count()
-#     sizes = calculate_svg_sizes(count)
-#     svg = get_svg(count, sizes["width"], sizes["recWidth"], sizes["textX"]).encode(
-#         "utf-8"
-#     )
-#     headers = {"Cache-Control": "no-cache"}
-#     return Response(content=svg, media_type="image/svg+xml", headers=headers)
+    return {
+        "uptime": time.time(),  # Would track actual uptime
+        "memory_usage": psutil.virtual_memory().percent,
+        "cpu_usage": psutil.cpu_percent(),
+        "disk_usage": psutil.disk_usage("/").percent,
+        "requests_total": "N/A",  # Would implement proper metrics
+        "status": "ok",
+    }
