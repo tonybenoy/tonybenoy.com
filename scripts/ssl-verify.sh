@@ -211,14 +211,14 @@ obtain_certificates() {
         fi
     fi
     
-    # Stop all services temporarily to free port 80
-    print_status "Stopping all services temporarily..."
-    docker-compose down
+    # Use webroot mode with nginx running
+    print_status "Using webroot mode with nginx running..."
     
     # Run certbot to obtain certificates
     print_status "Running certbot to obtain certificates..."
     if docker-compose run --rm --entrypoint "" certbot certbot certonly \
-        --standalone \
+        --webroot \
+        --webroot-path=/var/www/certbot \
         --email "${email}" \
         --agree-tos \
         --no-eff-email \
@@ -231,9 +231,8 @@ obtain_certificates() {
         return 1
     fi
     
-    # Start services again
-    print_status "Starting services..."
-    docker-compose up -d
+    # Services are already running - no need to restart
+    print_status "Certificates obtained with services running"
     
     # Wait for nginx to be ready
     sleep 10
@@ -302,17 +301,17 @@ EOF
     print_status "Waiting for services to start..."
     sleep 15
     
-    # Skip ACME challenge test for standalone mode - certbot will handle its own verification
-    print_status "Step 2: Skipping ACME challenge test (using standalone mode)..."
+    # Skip ACME challenge test for webroot mode - certbot will handle its own verification
+    print_status "Step 2: Skipping ACME challenge test (using webroot mode)..."
     
-    # Stop services to obtain certificates
-    print_status "Step 3: Stopping all services to obtain SSL certificates..."
-    docker-compose down
+    # Keep services running and use webroot mode for certificates
+    print_status "Step 3: Using webroot mode with nginx running..."
     
     # First try staging certificates to validate setup
     print_status "Step 4a: Testing with staging certificates first..."
     if docker-compose run --rm --entrypoint "" certbot certbot certonly \
-        --standalone \
+        --webroot \
+        --webroot-path=/var/www/certbot \
         --staging \
         --email "${email}" \
         --agree-tos \
@@ -331,7 +330,8 @@ EOF
         # Now get production certificates
         print_status "Step 4c: Obtaining production SSL certificates..."
         if docker-compose run --rm --entrypoint "" certbot certbot certonly \
-            --standalone \
+            --webroot \
+            --webroot-path=/var/www/certbot \
             --email "${email}" \
             --agree-tos \
             --no-eff-email \
