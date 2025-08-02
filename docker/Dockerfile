@@ -48,16 +48,16 @@ USER appuser
 
 # Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app/src"
+ENV PYTHONPATH="/app"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD /usr/local/bin/python3 -c "import sys; sys.path.insert(0, '/app/.venv/lib/python3.11/site-packages'); import httpx; httpx.get('http://localhost:8000/test', timeout=10)" || exit 1
+    CMD curl -f http://localhost:8000/test || exit 1
 
 # Expose port
 EXPOSE 8000
 
-# Run the application  
-CMD ["/usr/local/bin/python3", "-c", "import sys; sys.path.insert(0, '/app/.venv/lib/python3.11/site-packages'); from gunicorn.app.wsgiapp import run; sys.argv=['gunicorn', '-b', '0.0.0.0:8000', 'src.main:app', '-w', '2', '-k', 'uvicorn.workers.UvicornWorker', '--preload', '--access-logfile', '-', '--error-logfile', '-']; run()"]
+# Run the application using the virtual environment's gunicorn
+CMD ["/app/.venv/bin/gunicorn", "-b", "0.0.0.0:8000", "src.main:app", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--preload", "--access-logfile", "-", "--error-logfile", "-"]
