@@ -6,16 +6,16 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
-from src.config import get_settings
-from src.routes.apps import apps
-from src.routes.home import home
+from app.config import get_settings
+from app.routes.apps import apps
+from app.routes.home import home
 
 # Configure logging
 logging.basicConfig(
@@ -61,7 +61,14 @@ app.add_middleware(
 # Add rate limiting middleware
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+# Custom rate limit handler to match expected signature
+async def custom_rate_limit_handler(request: Request, exc: Exception) -> Response:
+    if isinstance(exc, RateLimitExceeded):
+        response = _rate_limit_exceeded_handler(request, exc)
+        return response
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+app.add_exception_handler(RateLimitExceeded, custom_rate_limit_handler)
 
 
 @app.exception_handler(500)
@@ -89,22 +96,9 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-# Mount static files
-# Determine the correct path based on environment
-current_dir = pathlib.Path.cwd()
-if (current_dir / "static").exists():
-    static_dir = "static"
-elif (current_dir / "src" / "static").exists():
-    static_dir = "src/static"
-else:
-    # Fallback: check relative to this file's location
-    file_dir = pathlib.Path(__file__).parent
-    if (file_dir / "static").exists():
-        static_dir = str(file_dir / "static")
-    else:
-        static_dir = "src/static"  # Default fallback
-
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
+# Mount static files using consistent path
+static_dir = pathlib.Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 # Include routers
 app.include_router(home, tags=["home"])

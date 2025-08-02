@@ -7,8 +7,8 @@ from redis.exceptions import RedisError
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from src.config import get_settings
-from src.utils import get_repo_data_for_user, sort_repos, templates
+from app.config import get_settings
+from app.utils import get_repo_data_for_user, sort_repos, templates
 
 logger = logging.getLogger(__name__)
 limiter = Limiter(key_func=get_remote_address)

@@ -39,25 +39,25 @@ help: ## Show this help message
 
 # Development Commands
 install: ## Development: Install dependencies
-	cd src && uv sync
+	uv sync
 
 dev: ## Development: Run development server
-	cd src && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+	uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 test: ## Development: Run tests
-	cd src && uv run pytest
+	uv run pytest
 
 lint: ## Development: Run linting
-	cd src && uv run ruff check .
+	uv run ruff check .
 
 format: ## Development: Format code
-	cd src && uv run ruff format .
+	uv run ruff format .
 
 typecheck: ## Development: Run type checking
-	cd src && uv run mypy . --ignore-missing-imports
+	uv run mypy . --ignore-missing-imports
 
 security: ## Development: Run security check
-	cd src && uv run bandit -r .
+	uv run bandit -r app/
 
 build: ## Development: Build Docker image
 	docker build -f docker/Dockerfile -t tonybenoy-com:latest .

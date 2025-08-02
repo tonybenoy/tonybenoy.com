@@ -5,9 +5,9 @@ Personal website built with FastAPI and served via Docker with nginx reverse pro
 ## Architecture
 
 - **Framework**: FastAPI with Jinja2 templating
-- **Structure**: Modular routing in `src/routes/` with separate routers for home and apps
-- **Static Files**: CSS, images, and files served from `src/static/`
-- **Templates**: HTML templates in `src/templates/` using base template inheritance
+- **Structure**: Modular routing in `app/routes/` with separate routers for home and apps
+- **Static Files**: CSS, images, and files served from `app/static/`
+- **Templates**: HTML templates in `app/templates/` using base template inheritance
 - **Caching**: Redis for GitHub API response caching
 - **Deployment**: Docker Compose with nginx, FastAPI app, Redis, and Let's Encrypt certbot
 - **Package Management**: uv for fast Python dependency management
@@ -47,23 +47,23 @@ make start-prod      # Production with SSL and security
 **Install dependencies:**
 ```bash
 make install
-# or manually: cd src && uv sync
+# or manually: uv sync
 ```
 
 **Run development server:**
 ```bash
 make dev
-# or manually: cd src && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# or manually: uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Code quality:**
 ```bash
 make lint format typecheck security
 # or manually:
-# cd src && uv run ruff check .
-# cd src && uv run ruff format .
-# cd src && uv run mypy . --ignore-missing-imports
-# cd src && uv run bandit -r .
+# uv run ruff check .
+# uv run ruff format .
+# uv run mypy . --ignore-missing-imports
+# uv run bandit -r app/
 ```
 
 ### Docker Development
@@ -108,7 +108,7 @@ The application supports three environments with different configurations:
 - `.env.example` - Template with all options
 
 **Key differences:**
-- **Local**: Volume mounts `./src` for instant code changes without rebuilds
+- **Local**: Volume mounts `./app` for instant code changes without rebuilds
 - **Dev/Prod**: Uses code built into Docker image, requires rebuild for changes
 
 ## Monitoring & Maintenance
@@ -173,20 +173,18 @@ sudo ./scripts/setup-cron.sh setup
 ## Key Files
 
 **Application:**
-- `src/main.py`: FastAPI application entry point with router registration
-- `src/routes/home.py`: Home page routes (/, /about, /contact)
-- `src/routes/apps.py`: GitHub repository display with Redis caching
-- `src/utils.py`: GitHub API integration and template configuration
-- `src/config.py`: Application settings and environment management
+- `app/main.py`: FastAPI application entry point with router registration
+- `app/routes/home.py`: Home page routes including test endpoints and utilities
+- `app/routes/apps.py`: GitHub repository display with Redis caching
+- `app/utils.py`: GitHub API integration and template configuration
+- `app/config.py`: Application settings and environment management
 
 **Frontend:**
-- `src/templates/`: Jinja2 templates with Solarized Dark terminal theme
+- `app/templates/`: Jinja2 templates with base template inheritance
   - `base.html`: Base template with navigation
-  - `index.html`: Homepage with professional summary
-  - `about.html`: Professional background and achievements
-  - `contact.html`: Contact information and services
+  - `index.html`: Homepage
   - `apps.html`: GitHub projects showcase
-- `src/static/css/style.css`: Solarized Dark theme with responsive design
+- `app/static/css/style.css`: Application styling with responsive design
 
 **Deployment:**
 - `docker-compose.yml`: Multi-environment deployment configuration

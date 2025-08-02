@@ -5,7 +5,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from starlette.responses import RedirectResponse
 
-from src.utils import templates
+from app.utils import templates
 
 logger = logging.getLogger(__name__)
 limiter = Limiter(key_func=get_remote_address)
@@ -41,7 +41,7 @@ async def myssh():
 @limiter.limit("10/minute")
 async def get_my_ip(request: Request):
     """Get client IP and user agent information."""
-    client_ip = request.client.host
+    client_ip = request.client.host if request.client else "unknown"
     client_ua = request.headers.get("User-Agent")
     forwarded_for = request.headers.get("X-Forwarded-For")
     real_ip = request.headers.get("X-Real-IP")

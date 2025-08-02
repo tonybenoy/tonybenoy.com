@@ -15,7 +15,7 @@ ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /app
 
 # Copy project configuration
-COPY src/pyproject.toml src/uv.lock ./
+COPY pyproject.toml uv.lock ./
 
 # Install dependencies
 RUN uv sync --frozen --no-dev
@@ -38,7 +38,7 @@ WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 
 # Copy application code
-COPY src/ /app/src/
+COPY app/ /app/app/
 
 # Create necessary directories and set permissions
 RUN mkdir -p /app/logs && chown -R appuser:appuser /app
@@ -52,6 +52,9 @@ ENV PYTHONPATH="/app"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
+# Set working directory for proper imports
+WORKDIR /app
+
 # Add health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/test || exit 1
@@ -60,4 +63,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE 8000
 
 # Run the application using the virtual environment's gunicorn
-CMD ["/app/.venv/bin/gunicorn", "-b", "0.0.0.0:8000", "src.main:app", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--preload", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["/app/.venv/bin/gunicorn", "-b", "0.0.0.0:8000", "app.main:app", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--preload", "--access-logfile", "-", "--error-logfile", "-"]
