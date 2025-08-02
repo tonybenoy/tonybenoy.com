@@ -309,8 +309,8 @@ EOF
     print_status "Step 3: Stopping services to obtain SSL certificates..."
     docker-compose stop nginx
     
-    # Obtain certificates using standalone mode
-    print_status "Step 4: Obtaining SSL certificates (STAGING MODE)..."
+    # First try staging certificates to validate setup
+    print_status "Step 4a: Testing with staging certificates first..."
     if docker-compose run --rm certbot certonly \
         --standalone \
         --staging \
@@ -319,9 +319,33 @@ EOF
         --no-eff-email \
         -d "${DOMAIN}" \
         -d "${WWW_DOMAIN}"; then
-        print_success "SSL certificates obtained successfully"
+        print_success "Staging certificates obtained successfully!"
+        
+        # Remove staging certificates
+        print_status "Step 4b: Removing staging certificates..."
+        docker-compose run --rm --entrypoint "\
+          rm -Rf /etc/letsencrypt/live/${DOMAIN} && \
+          rm -Rf /etc/letsencrypt/archive/${DOMAIN} && \
+          rm -Rf /etc/letsencrypt/renewal/${DOMAIN}.conf" certbot
+        
+        # Now get production certificates
+        print_status "Step 4c: Obtaining production SSL certificates..."
+        if docker-compose run --rm certbot certonly \
+            --standalone \
+            --email "${email}" \
+            --agree-tos \
+            --no-eff-email \
+            -d "${DOMAIN}" \
+            -d "${WWW_DOMAIN}"; then
+            print_success "Production SSL certificates obtained successfully"
+        else
+            print_error "Failed to obtain production SSL certificates"
+            # Restart with HTTP configuration
+            docker-compose --env-file .env.dev up -d
+            return 1
+        fi
     else
-        print_error "Failed to obtain SSL certificates"
+        print_error "Failed to obtain staging SSL certificates - setup validation failed"
         # Restart with HTTP configuration
         docker-compose --env-file .env.dev up -d
         return 1
