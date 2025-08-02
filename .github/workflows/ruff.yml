@@ -2,44 +2,44 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Install uv
-      uses: astral-sh/setup-uv@v4
-      with:
-        version: "latest"
-    
-    - name: Set up Python
-      run: uv python install 3.11
-    
-    - name: Install dependencies
-      working-directory: ./src
-      run: uv sync
-    
-    - name: Run Ruff linter
-      working-directory: ./src
-      run: uv run ruff check .
-    
-    - name: Run Ruff formatter
-      working-directory: ./src
-      run: uv run ruff format --check .
-    
-    - name: Type check with mypy
-      working-directory: ./src
-      run: uv run mypy . --ignore-missing-imports || true
-    
-    - name: Run tests
-      working-directory: ./src
-      run: uv run python -m pytest || echo "No tests found"
-    
-    - name: Check security with bandit
-      working-directory: ./src
-      run: uv run bandit -r . -f json || true
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: uv sync
+
+      - name: Run Ruff linter
+        working-directory: ./app
+        run: uv run ruff check .
+
+      - name: Run Ruff formatter
+        working-directory: ./app
+        run: uv run ruff format --check .
+
+      - name: Type check with mypy
+        working-directory: ./app
+        run: uv run mypy . --ignore-missing-imports || true
+
+      - name: Run tests
+        working-directory: ./app
+        run: uv run python -m pytest || echo "No tests found"
+
+      - name: Check security with bandit
+        working-directory: ./app
+        run: uv run bandit -r . -f json || true

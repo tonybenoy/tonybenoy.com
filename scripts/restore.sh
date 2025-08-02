@@ -36,12 +36,12 @@ info() {
 show_manifest() {
     local backup_date="$1"
     local backup_dir="$BACKUP_BASE_DIR/$backup_date"
-    
+
     if [ ! -f "$backup_dir/MANIFEST.txt" ]; then
         error "Backup manifest not found: $backup_dir/MANIFEST.txt"
         return 1
     fi
-    
+
     echo ""
     cat "$backup_dir/MANIFEST.txt"
     echo ""
@@ -50,20 +50,20 @@ show_manifest() {
 # Function to restore Redis data
 restore_redis() {
     local backup_dir="$1"
-    
+
     log "Restoring Redis data..."
-    
+
     if [ ! -d "$backup_dir/redis" ]; then
         warn "No Redis backup found, skipping"
         return
     fi
-    
+
     # Stop Redis container if running
     if docker ps | grep -q tonybenoy-redis; then
         log "Stopping Redis container..."
         docker stop tonybenoy-redis || warn "Could not stop Redis container"
     fi
-    
+
     # Restore Redis volume
     if [ -f "$backup_dir/redis/redis-volume.tar.gz" ]; then
         log "Restoring Redis volume..."
@@ -72,7 +72,7 @@ restore_redis() {
             -v "$backup_dir/redis":/backup \
             alpine sh -c "cd /target && rm -rf * && tar xzf /backup/redis-volume.tar.gz" || warn "Could not restore Redis volume"
     fi
-    
+
     # Restore RDB file if available
     if [ -f "$backup_dir/redis/dump.rdb" ]; then
         log "Restoring Redis RDB file..."
@@ -81,21 +81,21 @@ restore_redis() {
             -v "$backup_dir/redis":/backup \
             alpine cp /backup/dump.rdb /target/dump.rdb || warn "Could not restore RDB file"
     fi
-    
+
     log "Redis data restoration completed"
 }
 
 # Function to restore application data
 restore_application() {
     local backup_dir="$1"
-    
+
     log "Restoring application data..."
-    
+
     if [ ! -d "$backup_dir/application" ]; then
         warn "No application backup found, skipping"
         return
     fi
-    
+
     # Restore application logs
     if [ -f "$backup_dir/application/app-logs.tar.gz" ]; then
         log "Restoring application logs..."
@@ -104,27 +104,27 @@ restore_application() {
             -v "$backup_dir/application":/backup \
             alpine sh -c "cd /target && rm -rf * && tar xzf /backup/app-logs.tar.gz" || warn "Could not restore app logs"
     fi
-    
+
     # Restore container image if available
     if [ -f "$backup_dir/application/app-container.tar.gz" ]; then
         log "Restoring application container image..."
         gunzip -c "$backup_dir/application/app-container.tar.gz" | docker load || warn "Could not restore container image"
     fi
-    
+
     log "Application data restoration completed"
 }
 
 # Function to restore nginx configuration and logs
 restore_nginx() {
     local backup_dir="$1"
-    
+
     log "Restoring nginx configuration and logs..."
-    
+
     if [ ! -d "$backup_dir/nginx" ]; then
         warn "No nginx backup found, skipping"
         return
     fi
-    
+
     # Restore nginx configuration
     if [ -d "$backup_dir/nginx/config" ]; then
         log "Restoring nginx configuration..."
@@ -133,7 +133,7 @@ restore_nginx() {
         fi
         cp -r "$backup_dir/nginx/config" "$PROJECT_DIR/nginx" || warn "Could not restore nginx config"
     fi
-    
+
     # Restore nginx logs
     if [ -f "$backup_dir/nginx/nginx-logs.tar.gz" ]; then
         log "Restoring nginx logs..."
@@ -142,21 +142,21 @@ restore_nginx() {
             -v "$backup_dir/nginx":/backup \
             alpine sh -c "cd /target && rm -rf * && tar xzf /backup/nginx-logs.tar.gz" || warn "Could not restore nginx logs"
     fi
-    
+
     log "Nginx restoration completed"
 }
 
 # Function to restore SSL certificates
 restore_ssl() {
     local backup_dir="$1"
-    
+
     log "Restoring SSL certificates..."
-    
+
     if [ ! -d "$backup_dir/ssl" ]; then
         warn "No SSL backup found, skipping"
         return
     fi
-    
+
     # Restore Let's Encrypt certificates
     if [ -f "$backup_dir/ssl/letsencrypt.tar.gz" ]; then
         log "Restoring Let's Encrypt certificates..."
@@ -165,7 +165,7 @@ restore_ssl() {
             -v "$backup_dir/ssl":/backup \
             alpine sh -c "cd /target && rm -rf * && tar xzf /backup/letsencrypt.tar.gz" || warn "Could not restore SSL certificates"
     fi
-    
+
     # Restore certbot www directory
     if [ -f "$backup_dir/ssl/certbot-www.tar.gz" ]; then
         log "Restoring certbot www directory..."
@@ -174,27 +174,27 @@ restore_ssl() {
             -v "$backup_dir/ssl":/backup \
             alpine sh -c "cd /target && rm -rf * && tar xzf /backup/certbot-www.tar.gz" || warn "Could not restore certbot www"
     fi
-    
+
     log "SSL restoration completed"
 }
 
 # Function to restore project configuration
 restore_config() {
     local backup_dir="$1"
-    
+
     log "Restoring project configuration..."
-    
+
     if [ ! -d "$backup_dir/config" ]; then
         warn "No configuration backup found, skipping"
         return
     fi
-    
+
     cd "$PROJECT_DIR"
-    
+
     # Backup current configuration
     local current_backup_dir="config.backup.$(date +%Y%m%d-%H%M%S)"
     mkdir -p "$current_backup_dir"
-    
+
     # Restore configuration files
     for file in docker-compose.yml .env .env.example; do
         if [ -f "$backup_dir/config/$file" ]; then
@@ -205,7 +205,7 @@ restore_config() {
             log "Restored: $file"
         fi
     done
-    
+
     # Restore scripts directory
     if [ -d "$backup_dir/config/scripts" ]; then
         if [ -d "scripts" ]; then
@@ -215,17 +215,17 @@ restore_config() {
         chmod +x scripts/*.sh 2>/dev/null || warn "Could not set script permissions"
         log "Restored: scripts directory"
     fi
-    
+
     # Restore source code
     if [ -f "$backup_dir/config/source-code.tar.gz" ]; then
         log "Restoring source code..."
-        if [ -d "src" ]; then
-            tar czf "$current_backup_dir/src.tar.gz" src/ || warn "Could not backup current source"
+        if [ -d "app" ]; then
+            tar czf "$current_backup_dir/app.tar.gz" app/ || warn "Could not backup current source"
         fi
         tar xzf "$backup_dir/config/source-code.tar.gz" || warn "Could not restore source code"
         log "Restored: source code"
     fi
-    
+
     log "Configuration restoration completed"
     info "Current configuration backed up to: $current_backup_dir"
 }
@@ -233,11 +233,11 @@ restore_config() {
 # Function to verify restoration
 verify_restore() {
     local backup_dir="$1"
-    
+
     log "Verifying restoration..."
-    
+
     local issues=0
-    
+
     # Check if volumes were restored
     if [ -f "$backup_dir/redis/redis-volume.tar.gz" ]; then
         if ! docker volume ls | grep -q tonybenoy_redis-data; then
@@ -245,14 +245,14 @@ verify_restore() {
             ((issues++))
         fi
     fi
-    
+
     if [ -f "$backup_dir/application/app-logs.tar.gz" ]; then
         if ! docker volume ls | grep -q tonybenoy_app-logs; then
             warn "Application logs volume not found"
             ((issues++))
         fi
     fi
-    
+
     # Check configuration files
     cd "$PROJECT_DIR"
     for file in docker-compose.yml; do
@@ -261,7 +261,7 @@ verify_restore() {
             ((issues++))
         fi
     done
-    
+
     if [ "$issues" -eq 0 ]; then
         log "Restoration verification completed successfully"
         return 0
@@ -276,17 +276,17 @@ perform_restore() {
     local backup_date="$1"
     local restore_type="${2:-full}"
     local backup_dir="$BACKUP_BASE_DIR/$backup_date"
-    
+
     if [ ! -d "$backup_dir" ]; then
         error "Backup directory not found: $backup_dir"
         exit 1
     fi
-    
+
     log "Starting $restore_type restore from backup: $backup_date"
-    
+
     # Show backup manifest
     show_manifest "$backup_date"
-    
+
     # Confirm restoration
     if [ "${FORCE:-false}" != "true" ]; then
         echo -n "Continue with restoration? (y/N): "
@@ -296,12 +296,12 @@ perform_restore() {
             exit 0
         fi
     fi
-    
+
     # Stop all services before restoration
     log "Stopping all services..."
     cd "$PROJECT_DIR"
     docker-compose down || warn "Could not stop services"
-    
+
     # Perform restoration based on type
     case "$restore_type" in
         "full")
@@ -325,12 +325,12 @@ perform_restore() {
             exit 1
             ;;
     esac
-    
+
     # Verify restoration
     verify_restore "$backup_dir"
-    
+
     log "Restoration completed successfully!"
-    
+
     # Ask to start services
     if [ "${AUTO_START:-false}" = "true" ]; then
         log "Starting services..."
@@ -341,10 +341,10 @@ perform_restore() {
         if [[ ! "$response" =~ ^[nN]$ ]]; then
             log "Starting services..."
             docker-compose up -d
-            
+
             # Wait for services to be ready
             sleep 10
-            
+
             # Basic health check
             if curl -f -s -o /dev/null "http://localhost:8000/health" 2>/dev/null; then
                 log "Services started successfully and health check passed"
@@ -353,14 +353,14 @@ perform_restore() {
             fi
         fi
     fi
-    
+
     echo ""
     echo "=== Restoration Summary ==="
     echo "Backup date: $backup_date"
     echo "Restore type: $restore_type"
     echo "Backup location: $backup_dir"
     echo "Project directory: $PROJECT_DIR"
-    
+
     echo ""
     echo "Next steps:"
     echo "1. Verify all services are running: docker-compose ps"

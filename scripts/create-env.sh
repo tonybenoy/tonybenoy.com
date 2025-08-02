@@ -46,14 +46,14 @@ create_env_local() {
     local username="$1"
     local token="$2"
     local force="$3"
-    
+
     if [[ -f "$file" && "$force" != "true" ]]; then
         echo -e "${YELLOW}Warning: $file already exists. Use -f to overwrite.${NC}"
         return 1
     fi
-    
+
     echo -e "${BLUE}Creating $file...${NC}"
-    
+
     cat > "$file" << EOF
 # Local Development Environment Configuration
 APP_ENV=local
@@ -70,7 +70,7 @@ CORS_ORIGINS=["*"]
 ALLOWED_HOSTS=["*"]
 
 # Development Mode - Volume mount source code for live reload
-CODE_MOUNT=./src
+CODE_MOUNT=./app
 
 # Redis Settings
 REDIS_HOST=redis_db
@@ -79,7 +79,7 @@ REDIS_DB=0
 REDIS_PASSWORD=
 REDIS_CACHE_TTL=3600
 EOF
-    
+
     echo -e "${GREEN}✓ Created $file${NC}"
 }
 
@@ -88,14 +88,14 @@ create_env_dev() {
     local username="$1"
     local token="$2"
     local force="$3"
-    
+
     if [[ -f "$file" && "$force" != "true" ]]; then
         echo -e "${YELLOW}Warning: $file already exists. Use -f to overwrite.${NC}"
         return 1
     fi
-    
+
     echo -e "${BLUE}Creating $file...${NC}"
-    
+
     cat > "$file" << EOF
 # Development Environment Configuration
 APP_ENV=dev
@@ -121,7 +121,7 @@ REDIS_DB=0
 REDIS_PASSWORD=
 REDIS_CACHE_TTL=3600
 EOF
-    
+
     echo -e "${GREEN}✓ Created $file${NC}"
 }
 
@@ -131,14 +131,14 @@ create_env_prod() {
     local domain="$2"
     local token="$3"
     local force="$4"
-    
+
     if [[ -f "$file" && "$force" != "true" ]]; then
         echo -e "${YELLOW}Warning: $file already exists. Use -f to overwrite.${NC}"
         return 1
     fi
-    
+
     echo -e "${BLUE}Creating $file...${NC}"
-    
+
     cat > "$file" << EOF
 # Production Environment Configuration
 APP_ENV=prod
@@ -164,7 +164,7 @@ REDIS_DB=0
 REDIS_PASSWORD=
 REDIS_CACHE_TTL=3600
 EOF
-    
+
     echo -e "${GREEN}✓ Created $file${NC}"
 }
 
