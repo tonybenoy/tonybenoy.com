@@ -61,12 +61,15 @@ app.add_middleware(
 # Add rate limiting middleware
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
+
+
 # Custom rate limit handler to match expected signature
 async def custom_rate_limit_handler(request: Request, exc: Exception) -> Response:
     if isinstance(exc, RateLimitExceeded):
         response = _rate_limit_exceeded_handler(request, exc)
         return response
     return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
 
 app.add_exception_handler(RateLimitExceeded, custom_rate_limit_handler)
 

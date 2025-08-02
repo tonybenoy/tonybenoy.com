@@ -21,25 +21,23 @@ jobs:
         run: uv python install 3.11
 
       - name: Install dependencies
-        working-directory: ./app
         run: uv sync
 
       - name: Run Ruff linter
-        working-directory: ./app
         run: uv run ruff check .
 
       - name: Run Ruff formatter
-        working-directory: ./app
         run: uv run ruff format --check .
 
       - name: Type check with mypy
-        working-directory: ./app
-        run: uv run mypy . --ignore-missing-imports || true
+        run: uv run mypy . --ignore-missing-imports
 
       - name: Run tests
-        working-directory: ./app
-        run: uv run python -m pytest || echo "No tests found"
+        run: uv run pytest || echo "No tests found"
 
       - name: Check security with bandit
-        working-directory: ./app
-        run: uv run bandit -r . -f json || true
+        run: uv run bandit -r app/
+
+      - name: Test application startup
+        run: |
+          uv run python -c "from app.main import app; print('✅ Application imports successfully')"

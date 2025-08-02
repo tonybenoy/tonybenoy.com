@@ -32,10 +32,7 @@ def _get_cached_data(cache_key: str, ttl: int) -> Any | None:
 
 def _set_cache_data(cache_key: str, data: Any) -> None:
     """Store data in cache with timestamp."""
-    _cache[cache_key] = {
-        "data": data,
-        "timestamp": time.time()
-    }
+    _cache[cache_key] = {"data": data, "timestamp": time.time()}
 
 
 @apps.get("/app")
