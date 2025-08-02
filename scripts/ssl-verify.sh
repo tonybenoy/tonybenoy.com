@@ -304,11 +304,37 @@ EOF
     # Skip ACME challenge test for webroot mode - certbot will handle its own verification
     print_status "Step 2: Skipping ACME challenge test (using webroot mode)..."
     
-    # Keep services running and use webroot mode for certificates
-    print_status "Step 3: Using webroot mode with nginx running..."
+    # Step 3: Create dummy certificate to allow nginx to start with SSL config
+    print_status "Step 3: Creating dummy certificate for ${DOMAIN}..."
+    docker-compose run --rm --entrypoint "/bin/sh" certbot -c "\
+      mkdir -p /etc/letsencrypt/live/${DOMAIN} && \
+      openssl req -x509 -nodes -newkey rsa:4096 -days 1 \
+        -keyout '/etc/letsencrypt/live/${DOMAIN}/privkey.pem' \
+        -out '/etc/letsencrypt/live/${DOMAIN}/fullchain.pem' \
+        -subj '/CN=localhost'"
     
-    # First try staging certificates to validate setup
-    print_status "Step 4a: Testing with staging certificates first..."
+    # Step 4: Switch to production (HTTPS) configuration with dummy certs
+    print_status "Step 4: Switching to HTTPS configuration with dummy certificates..."
+    docker-compose down
+    if [ -f ".env.prod" ]; then
+        docker-compose --env-file .env.prod up -d
+    else
+        print_error ".env.prod file not found"
+        return 1
+    fi
+    
+    # Wait for nginx to start with dummy certs
+    sleep 10
+    
+    # Step 5: Delete dummy certificate
+    print_status "Step 5: Deleting dummy certificate..."
+    docker-compose run --rm --entrypoint "/bin/sh" certbot -c "\
+      rm -Rf /etc/letsencrypt/live/${DOMAIN} && \
+      rm -Rf /etc/letsencrypt/archive/${DOMAIN} && \
+      rm -Rf /etc/letsencrypt/renewal/${DOMAIN}.conf"
+    
+    # Step 6: Get real certificates via webroot (nginx running)
+    print_status "Step 6a: Testing with staging certificates first..."
     if docker-compose run --rm --entrypoint "" certbot certbot certonly \
         --webroot \
         --webroot-path=/var/www/certbot \
@@ -321,14 +347,14 @@ EOF
         print_success "Staging certificates obtained successfully!"
         
         # Remove staging certificates
-        print_status "Step 4b: Removing staging certificates..."
+        print_status "Step 6b: Removing staging certificates..."
         docker-compose run --rm --entrypoint "/bin/sh" certbot -c "\
           rm -Rf /etc/letsencrypt/live/${DOMAIN} && \
           rm -Rf /etc/letsencrypt/archive/${DOMAIN} && \
           rm -Rf /etc/letsencrypt/renewal/${DOMAIN}.conf"
         
         # Now get production certificates
-        print_status "Step 4c: Obtaining production SSL certificates..."
+        print_status "Step 6c: Obtaining production SSL certificates..."
         if docker-compose run --rm --entrypoint "" certbot certbot certonly \
             --webroot \
             --webroot-path=/var/www/certbot \
@@ -338,48 +364,31 @@ EOF
             -d "${DOMAIN}" \
             -d "${WWW_DOMAIN}"; then
             print_success "Production SSL certificates obtained successfully"
+            
+            # Reload nginx to use new certificates
+            print_status "Step 7: Reloading nginx with real certificates..."
+            docker-compose exec nginx nginx -s reload
         else
             print_error "Failed to obtain production SSL certificates"
             # Restart with HTTP configuration
+            docker-compose down
             docker-compose --env-file .env.dev up -d
             return 1
         fi
     else
         print_error "Failed to obtain staging SSL certificates - setup validation failed"
         # Restart with HTTP configuration
+        docker-compose down
         docker-compose --env-file .env.dev up -d
         return 1
     fi
     
-    # Switch to production configuration with SSL
-    print_status "Step 5: Switching to HTTPS configuration..."
-    docker-compose down
-    
-    # Start with production environment (HTTPS)
-    if [ -f ".env.prod" ]; then
-        docker-compose --env-file .env.prod up -d
-    else
-        print_error ".env.prod file not found. Creating basic production environment..."
-        cat > .env.prod << EOF
-APP_ENV=prod
-NGINX_CONFIG=app.conf
-HTTPS_PORT=443
-LOG_LEVEL=INFO
-GITHUB_USERNAME=tonybenoy
-GITHUB_TOKEN=
-CORS_ORIGINS=["https://tonybenoy.com","https://www.tonybenoy.com"]
-ALLOWED_HOSTS=["tonybenoy.com","www.tonybenoy.com"]
-CODE_MOUNT=/tmp/empty
-EOF
-        docker-compose --env-file .env.prod up -d
-    fi
-    
-    # Wait for services to start with SSL
-    print_status "Waiting for HTTPS services to start..."
-    sleep 20
+    # Wait for nginx reload
+    print_status "Waiting for nginx to reload with SSL certificates..."
+    sleep 10
     
     # Verify SSL is working
-    print_status "Step 6: Verifying SSL configuration..."
+    print_status "Step 8: Verifying SSL configuration..."
     if test_ssl_connection; then
         print_success "✅ First-time SSL setup completed successfully!"
         print_success "Your website is now accessible at:"
