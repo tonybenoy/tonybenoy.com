@@ -15,6 +15,7 @@ NC='\033[0m'
 # Default values
 DEFAULT_GITHUB_USERNAME="tonybenoy"
 DEFAULT_DOMAIN="tonybenoy.com"
+DEFAULT_EMAIL="admin@tonybenoy.com"
 
 show_help() {
     echo -e "${BLUE}Create Environment Configuration Files${NC}"
@@ -30,22 +31,24 @@ show_help() {
     echo "Options:"
     echo "  -u, --username USERNAME    GitHub username (default: $DEFAULT_GITHUB_USERNAME)"
     echo "  -d, --domain DOMAIN        Production domain (default: $DEFAULT_DOMAIN)"
+    echo "  -e, --email EMAIL          Email for SSL certificates (default: $DEFAULT_EMAIL)"
     echo "  -t, --token TOKEN          GitHub API token (optional)"
     echo "  -f, --force                Overwrite existing files"
     echo "  -h, --help                 Show this help message"
     echo ""
     echo "Examples:"
     echo "  $0 local                   # Create .env.local"
-    echo "  $0 prod -d mysite.com      # Create .env.prod with custom domain"
-    echo "  $0 all -u myuser -f        # Create all env files, overwrite existing"
+    echo "  $0 prod -d mysite.com -e admin@mysite.com  # Create .env.prod with custom domain and email"
+    echo "  $0 all -u myuser -e admin@example.com -f   # Create all env files, overwrite existing"
     echo ""
 }
 
 create_env_local() {
     local file=".env.local"
     local username="$1"
-    local token="$2"
-    local force="$3"
+    local email="$2"
+    local token="$3"
+    local force="$4"
 
     if [[ -f "$file" && "$force" != "true" ]]; then
         echo -e "${YELLOW}Warning: $file already exists. Use -f to overwrite.${NC}"
@@ -66,6 +69,7 @@ HTTPS_PORT=443
 # Application Settings
 GITHUB_USERNAME=$username
 GITHUB_TOKEN=$token
+EMAIL=$email
 CORS_ORIGINS=["*"]
 ALLOWED_HOSTS=["*"]
 
@@ -86,8 +90,9 @@ EOF
 create_env_dev() {
     local file=".env.dev"
     local username="$1"
-    local token="$2"
-    local force="$3"
+    local email="$2"
+    local token="$3"
+    local force="$4"
 
     if [[ -f "$file" && "$force" != "true" ]]; then
         echo -e "${YELLOW}Warning: $file already exists. Use -f to overwrite.${NC}"
@@ -108,6 +113,7 @@ HTTPS_PORT=443
 # Application Settings
 GITHUB_USERNAME=$username
 GITHUB_TOKEN=$token
+EMAIL=$email
 CORS_ORIGINS=["http://localhost","http://127.0.0.1"]
 ALLOWED_HOSTS=["localhost","127.0.0.1"]
 
@@ -129,8 +135,9 @@ create_env_prod() {
     local file=".env.prod"
     local username="$1"
     local domain="$2"
-    local token="$3"
-    local force="$4"
+    local email="$3"
+    local token="$4"
+    local force="$5"
 
     if [[ -f "$file" && "$force" != "true" ]]; then
         echo -e "${YELLOW}Warning: $file already exists. Use -f to overwrite.${NC}"
@@ -151,6 +158,7 @@ HTTPS_PORT=443
 # Application Settings
 GITHUB_USERNAME=$username
 GITHUB_TOKEN=$token
+EMAIL=$email
 CORS_ORIGINS=["https://$domain"]
 ALLOWED_HOSTS=["$domain","www.$domain"]
 
@@ -171,6 +179,7 @@ EOF
 # Parse arguments
 GITHUB_USERNAME="$DEFAULT_GITHUB_USERNAME"
 DOMAIN="$DEFAULT_DOMAIN"
+EMAIL="$DEFAULT_EMAIL"
 GITHUB_TOKEN=""
 FORCE="false"
 ENV_TYPE=""
@@ -183,6 +192,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -d|--domain)
             DOMAIN="$2"
+            shift 2
+            ;;
+        -e|--email)
+            EMAIL="$2"
             shift 2
             ;;
         -t|--token)
@@ -219,20 +232,20 @@ fi
 # Main logic
 case "$ENV_TYPE" in
     local)
-        create_env_local "$GITHUB_USERNAME" "$GITHUB_TOKEN" "$FORCE"
+        create_env_local "$GITHUB_USERNAME" "$EMAIL" "$GITHUB_TOKEN" "$FORCE"
         ;;
     dev)
-        create_env_dev "$GITHUB_USERNAME" "$GITHUB_TOKEN" "$FORCE"
+        create_env_dev "$GITHUB_USERNAME" "$EMAIL" "$GITHUB_TOKEN" "$FORCE"
         ;;
     prod)
-        create_env_prod "$GITHUB_USERNAME" "$DOMAIN" "$GITHUB_TOKEN" "$FORCE"
+        create_env_prod "$GITHUB_USERNAME" "$DOMAIN" "$EMAIL" "$GITHUB_TOKEN" "$FORCE"
         ;;
     all)
         echo -e "${BLUE}Creating all environment files...${NC}"
         echo ""
-        create_env_local "$GITHUB_USERNAME" "$GITHUB_TOKEN" "$FORCE" || true
-        create_env_dev "$GITHUB_USERNAME" "$GITHUB_TOKEN" "$FORCE" || true
-        create_env_prod "$GITHUB_USERNAME" "$DOMAIN" "$GITHUB_TOKEN" "$FORCE" || true
+        create_env_local "$GITHUB_USERNAME" "$EMAIL" "$GITHUB_TOKEN" "$FORCE" || true
+        create_env_dev "$GITHUB_USERNAME" "$EMAIL" "$GITHUB_TOKEN" "$FORCE" || true
+        create_env_prod "$GITHUB_USERNAME" "$DOMAIN" "$EMAIL" "$GITHUB_TOKEN" "$FORCE" || true
         ;;
     *)
         echo -e "${RED}Error: Invalid environment type: $ENV_TYPE${NC}"
@@ -247,7 +260,8 @@ echo ""
 echo -e "${BLUE}Next steps:${NC}"
 echo "  1. Review and customize the created .env files"
 echo "  2. Add your GitHub token if needed: GITHUB_TOKEN=your_token_here"
-echo "  3. Start your environment: make start-${ENV_TYPE}"
+echo "  3. Verify your SSL email is correct: EMAIL=your@email.com"
+echo "  4. Start your environment: make start-${ENV_TYPE}"
 echo ""
 echo -e "${BLUE}Available commands:${NC}"
 echo "  make start-local    # Start local development"

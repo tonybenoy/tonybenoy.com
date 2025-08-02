@@ -13,6 +13,20 @@ NGINX_CONTAINER="tonybenoy-nginx"
 CERTBOT_CONTAINER="tonybenoy-certbot"
 CERT_PATH="/etc/letsencrypt/live/${DOMAIN}"
 
+# Load email from environment file if available
+load_email_from_env() {
+    local env_file="${1:-}"
+    if [ -n "${env_file}" ] && [ -f "${env_file}" ]; then
+        # Extract EMAIL from env file, handle different formats
+        local email_line
+        email_line=$(grep -E "^EMAIL=" "${env_file}" 2>/dev/null | head -1)
+        if [ -n "${email_line}" ]; then
+            # Remove EMAIL= prefix and any quotes
+            echo "${email_line#EMAIL=}" | sed 's/^["'\'']*//;s/["'\'']*$//'
+        fi
+    fi
+}
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -164,9 +178,24 @@ check_dns() {
 obtain_certificates() {
     local email="${1:-}"
     
+    # Try to load email from environment file if not provided
+    if [ -z "${email}" ]; then
+        # Try production first, then dev, then local
+        for env_file in ".env.prod" ".env.dev" ".env.local"; do
+            if [ -f "${env_file}" ]; then
+                email=$(load_email_from_env "${env_file}")
+                if [ -n "${email}" ]; then
+                    print_status "Using email from ${env_file}: ${email}"
+                    break
+                fi
+            fi
+        done
+    fi
+    
     if [ -z "${email}" ]; then
         print_error "Email address required for certificate registration"
         echo "Usage: $0 obtain <email@example.com>"
+        echo "Or set EMAIL=your@email.com in your .env file"
         return 1
     fi
     
@@ -216,9 +245,24 @@ obtain_certificates() {
 first_time_setup() {
     local email="${1:-}"
     
+    # Try to load email from environment file if not provided
+    if [ -z "${email}" ]; then
+        # Try production first, then dev, then local
+        for env_file in ".env.prod" ".env.dev" ".env.local"; do
+            if [ -f "${env_file}" ]; then
+                email=$(load_email_from_env "${env_file}")
+                if [ -n "${email}" ]; then
+                    print_status "Using email from ${env_file}: ${email}"
+                    break
+                fi
+            fi
+        done
+    fi
+    
     if [ -z "${email}" ]; then
         print_error "Email address required for certificate registration"
         echo "Usage: $0 first-time <email@example.com>"
+        echo "Or set EMAIL=your@email.com in your .env file"
         return 1
     fi
     
@@ -372,16 +416,21 @@ show_usage() {
     echo "Usage: $0 [COMMAND]"
     echo ""
     echo "Commands:"
-    echo "  first-time <email>  - Complete first-time SSL setup (HTTP → HTTPS)"
+    echo "  first-time [email]  - Complete first-time SSL setup (HTTP → HTTPS)"
     echo "  check               - Run all verification checks"
-    echo "  obtain <email>      - Obtain new SSL certificates"
+    echo "  obtain [email]      - Obtain new SSL certificates"
     echo "  renew               - Renew existing certificates"
     echo "  test                - Test SSL connection and ACME challenge"
     echo "  info                - Show certificate information"
     echo "  help                - Show this help message"
     echo ""
+    echo "Email Configuration:"
+    echo "  Email can be provided as command argument or set in .env files"
+    echo "  Set EMAIL=your@email.com in .env.prod, .env.dev, or .env.local"
+    echo ""
     echo "Examples:"
-    echo "  $0 first-time admin@tonybenoy.com    # First-time setup"
+    echo "  $0 first-time admin@tonybenoy.com    # First-time setup with email"
+    echo "  $0 first-time                       # Uses email from .env file"
     echo "  $0 check                             # Verify current setup"
     echo "  $0 renew                             # Renew certificates"
     echo ""

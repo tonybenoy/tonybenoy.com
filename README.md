@@ -170,6 +170,72 @@ docker-compose ps
 sudo ./scripts/setup-cron.sh setup
 ```
 
+## SSL Configuration
+
+For production deployment with HTTPS, the application includes automated SSL certificate management using Let's Encrypt.
+
+### SSL Setup
+
+**Prerequisites:**
+- Domain name pointing to your server
+- Ports 80 and 443 open on your server
+- Email address for certificate registration
+
+**Configure email for SSL certificates:**
+Add your email to any of the environment files:
+```bash
+# In .env.prod, .env.dev, or .env.local
+EMAIL=your@email.com
+```
+
+**First-time SSL setup (recommended):**
+```bash
+# Automated setup from HTTP to HTTPS
+./scripts/ssl-verify.sh first-time your@email.com
+# or use email from .env file
+./scripts/ssl-verify.sh first-time
+```
+
+**Manual SSL certificate obtainment:**
+```bash
+# For existing HTTPS environment
+./scripts/ssl-verify.sh obtain your@email.com
+# or use email from .env file
+./scripts/ssl-verify.sh obtain
+```
+
+**SSL maintenance:**
+```bash
+# Verify SSL configuration and certificates
+./scripts/ssl-verify.sh check
+
+# Renew certificates (automated via cron)
+./scripts/ssl-verify.sh renew
+
+# Test SSL connectivity
+./scripts/ssl-verify.sh test
+
+# Show certificate information
+./scripts/ssl-verify.sh info
+```
+
+**SSL verification includes:**
+- Container health checks
+- DNS resolution verification
+- Certificate file validation
+- ACME challenge path testing
+- SSL connection testing
+- Certificate expiration monitoring
+
+**Production deployment with SSL:**
+```bash
+# Complete production setup with health checks
+make deploy-prod
+
+# Monitor SSL status
+./scripts/ssl-verify.sh check
+```
+
 ## Key Files
 
 **Application:**
@@ -192,6 +258,7 @@ sudo ./scripts/setup-cron.sh setup
 - `Makefile`: Development and deployment convenience commands
 - `.env.example`: Environment configuration template
 - `scripts/`: Deployment, monitoring, and maintenance scripts
+  - `ssl-verify.sh`: SSL certificate management and verification
 
 **Documentation:**
 - `README.md`: This file - setup and usage guide
