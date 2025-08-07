@@ -6,7 +6,7 @@
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-10 col-lg-8">
 				<div class="hero-section bg-1 text-center p-4 p-md-5">
-					<img src="/static/img/me.jpg" class="profile-img rounded-circle mb-4" alt="Tony Benoy profile picture">
+					<img src="/static/img/me.jpg" class="profile-img rounded-circle mb-4 easter-egg-trigger" alt="Tony Benoy profile picture" onclick="handleEasterEggClick()" title="Something's here... try tapping me!">
 					<h1 class="display-4 mb-3">Tony Benoy</h1>
 					<p class="lead mb-4">
 						A "Juggadu" Pretentious Noob
@@ -31,5 +31,272 @@
 		</div>
 	</div>
 </main>
+
+<!-- Matrix Easter Egg Overlay -->
+<div id="matrix-overlay" class="matrix-overlay hidden">
+	<canvas id="matrix-canvas"></canvas>
+	<div id="matrix-controls">
+		<button id="end-matrix-btn" class="btn btn-danger" onclick="endMatrixAnimation()">End Matrix</button>
+	</div>
+</div>
+
+<!-- Matrix End Screen -->
+<div id="matrix-end-screen" class="matrix-end-screen hidden">
+	<div class="end-screen-content">
+		<h2>Welcome back to reality</h2>
+		<button class="btn btn-primary" onclick="goHome()">Go Home</button>
+	</div>
+</div>
+
+<script>
+let easterEggCount = 0;
+let matrixInterval = null;
+let matrixCanvasContext = null;
+
+function handleEasterEggClick() {
+	easterEggCount++;
+	
+	// Add a little bounce effect on each click
+	const img = document.querySelector('.easter-egg-trigger');
+	img.style.transform = 'scale(0.95)';
+	setTimeout(() => {
+		img.style.transform = 'scale(1.05)';
+		setTimeout(() => {
+			img.style.transform = 'scale(1)';
+		}, 100);
+	}, 100);
+	
+	// Visual feedback with color flash
+	img.style.filter = 'drop-shadow(0 0 20px #00ff41)';
+	setTimeout(() => {
+		img.style.filter = '';
+	}, 200);
+	
+	if (easterEggCount === 7) {
+		startMatrixAnimation();
+	} else if (easterEggCount < 7) {
+		// Show progress
+		const remaining = 7 - easterEggCount;
+		img.title = `${remaining} more taps to unlock something special...`;
+	}
+}
+
+function startMatrixAnimation() {
+	const overlay = document.getElementById('matrix-overlay');
+	const canvas = document.getElementById('matrix-canvas');
+	const ctx = canvas.getContext('2d');
+	
+	// Setup canvas
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	matrixCanvasContext = ctx;
+	
+	// Show overlay
+	overlay.classList.remove('hidden');
+	
+	// Matrix characters
+	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()";
+	const charArray = chars.split('');
+	
+	// Column setup
+	const fontSize = 14;
+	const columns = canvas.width / fontSize;
+	const drops = [];
+	
+	for (let i = 0; i < columns; i++) {
+		drops[i] = 1;
+	}
+	
+	// Matrix animation function
+	function drawMatrix() {
+		ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		
+		ctx.fillStyle = '#00ff41';
+		ctx.font = fontSize + 'px monospace';
+		
+		for (let i = 0; i < drops.length; i++) {
+			const text = charArray[Math.floor(Math.random() * charArray.length)];
+			ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+			
+			if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+				drops[i] = 0;
+			}
+			drops[i]++;
+		}
+	}
+	
+	// Start animation
+	matrixInterval = setInterval(drawMatrix, 35);
+	
+	// Show controls after 3 seconds
+	setTimeout(() => {
+		document.getElementById('matrix-controls').style.opacity = '1';
+	}, 3000);
+}
+
+function endMatrixAnimation() {
+	if (matrixInterval) {
+		clearInterval(matrixInterval);
+		matrixInterval = null;
+	}
+	
+	// Falling animation
+	startFallingAnimation();
+}
+
+function startFallingAnimation() {
+	const canvas = document.getElementById('matrix-canvas');
+	const ctx = matrixCanvasContext;
+	
+	if (!ctx) return;
+	
+	// Add glitch effect before falling
+	let glitchCount = 0;
+	const glitchInterval = setInterval(() => {
+		// Random glitch distortion
+		ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 255, 0, 0.3)';
+		ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 
+					Math.random() * 200, Math.random() * 50);
+		
+		glitchCount++;
+		if (glitchCount > 10) {
+			clearInterval(glitchInterval);
+			startActualFall();
+		}
+	}, 80);
+	
+	function startActualFall() {
+		// Capture the final glitched frame
+		const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		
+		// Create multiple falling chunks
+		const chunks = [];
+		const chunkHeight = 30;
+		const numChunks = Math.ceil(canvas.height / chunkHeight);
+		
+		for (let i = 0; i < numChunks; i++) {
+			chunks.push({
+				y: i * chunkHeight,
+				height: chunkHeight,
+				fallSpeed: Math.random() * 5 + 3,
+				rotation: (Math.random() - 0.5) * 0.3,
+				opacity: 1,
+				broken: false
+			});
+		}
+		
+		const fallAnimation = setInterval(() => {
+			// Clear canvas
+			ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			
+			let allFallen = true;
+			
+			chunks.forEach((chunk, index) => {
+				if (!chunk.broken && chunk.y + chunk.fallSpeed * 60 < canvas.height) {
+					allFallen = false;
+					
+					// Apply gravity acceleration
+					chunk.fallSpeed += 0.8;
+					
+					// Save context for transformation
+					ctx.save();
+					
+					// Apply rotation and position
+					const chunkCenterY = chunk.y + chunk.height / 2;
+					ctx.translate(0, chunkCenterY);
+					ctx.rotate(chunk.rotation);
+					ctx.translate(0, -chunkCenterY);
+					
+					// Fade out as it falls
+					chunk.opacity = Math.max(0, 1 - (chunk.fallSpeed * 60 - chunk.y) / canvas.height);
+					ctx.globalAlpha = chunk.opacity;
+					
+					// Draw the chunk
+					try {
+						const chunkData = ctx.createImageData(canvas.width, chunk.height);
+						const sourceY = index * chunkHeight;
+						
+						for (let y = 0; y < chunk.height; y++) {
+							for (let x = 0; x < canvas.width; x++) {
+								const sourceIndex = ((sourceY + y) * canvas.width + x) * 4;
+								const destIndex = (y * canvas.width + x) * 4;
+								
+								if (sourceIndex < imageData.data.length) {
+									chunkData.data[destIndex] = imageData.data[sourceIndex];
+									chunkData.data[destIndex + 1] = imageData.data[sourceIndex + 1];
+									chunkData.data[destIndex + 2] = imageData.data[sourceIndex + 2];
+									chunkData.data[destIndex + 3] = imageData.data[sourceIndex + 3] * chunk.opacity;
+								}
+							}
+						}
+						
+						ctx.putImageData(chunkData, 0, chunk.y + chunk.fallSpeed * 60);
+					} catch (e) {
+						// If imageData operation fails, just draw a green rectangle
+						ctx.fillStyle = `rgba(0, 255, 65, ${chunk.opacity})`;
+						ctx.fillRect(0, chunk.y + chunk.fallSpeed * 60, canvas.width, chunk.height);
+					}
+					
+					ctx.restore();
+					
+					// Mark as broken when it hits bottom
+					if (chunk.y + chunk.fallSpeed * 60 >= canvas.height - chunk.height) {
+						chunk.broken = true;
+						// Add crash effect
+						ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+						ctx.fillRect(0, canvas.height - 5, canvas.width, 5);
+					}
+				}
+			});
+			
+			if (allFallen) {
+				clearInterval(fallAnimation);
+				// Add final screen flicker
+				let flickerCount = 0;
+				const flickerInterval = setInterval(() => {
+					ctx.fillStyle = flickerCount % 2 === 0 ? '#000' : 'rgba(255, 255, 255, 0.1)';
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+					flickerCount++;
+					if (flickerCount > 6) {
+						clearInterval(flickerInterval);
+						showEndScreen();
+					}
+				}, 100);
+			}
+		}, 16);
+	}
+}
+
+function showEndScreen() {
+	// Hide matrix overlay
+	document.getElementById('matrix-overlay').classList.add('hidden');
+	
+	// Show end screen
+	document.getElementById('matrix-end-screen').classList.remove('hidden');
+}
+
+function goHome() {
+	// Hide end screen
+	document.getElementById('matrix-end-screen').classList.add('hidden');
+	
+	// Reset easter egg counter
+	easterEggCount = 0;
+	
+	// Reset profile image title
+	const img = document.querySelector('.easter-egg-trigger');
+	img.title = "Something's here... try tapping me!";
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+	const canvas = document.getElementById('matrix-canvas');
+	if (canvas && !canvas.classList.contains('hidden')) {
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+	}
+});
+</script>
 
 {% endblock %}

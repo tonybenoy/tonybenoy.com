@@ -33,7 +33,7 @@ if command -v docker &> /dev/null; then
     
     # Check container health
     log "\nContainer Health:"
-    for container in tonybenoy-nginx tonybenoy-app tonybenoy-redis; do
+    for container in tonybenoy-nginx tonybenoy-app; do
         if docker ps --filter "name=$container" --filter "status=running" | grep -q "$container"; then
             health=$(docker inspect --format='{{.State.Health.Status}}' "$container" 2>/dev/null || echo "no-healthcheck")
             log "$container: RUNNING ($health)"
@@ -94,20 +94,7 @@ case "$ENV" in
         ;;
 esac
 
-# Check Redis
-if command -v redis-cli &> /dev/null; then
-    if redis-cli -h localhost -p 6379 ping | grep -q "PONG"; then
-        log "Redis: OK"
-        # Get Redis info
-        redis_memory=$(redis-cli -h localhost -p 6379 info memory | grep "used_memory_human" | cut -d: -f2 | tr -d '\r')
-        redis_keys=$(redis-cli -h localhost -p 6379 dbsize)
-        log "Redis Memory: $redis_memory, Keys: $redis_keys"
-    else
-        log "Redis: FAILED"
-    fi
-else
-    log "Redis CLI not available"
-fi
+# Redis monitoring removed
 
 # Check SSL certificate expiry (if HTTPS is configured)
 if command -v openssl &> /dev/null; then

@@ -1,7 +1,7 @@
 # Makefile for TonyBenoy.com
 # Provides convenient shortcuts for common development and deployment tasks
 
-.PHONY: help install dev test lint format typecheck security build clean
+.PHONY: help install dev test test-cov lint format typecheck security build clean
 .PHONY: start-local start-dev start-prod stop-local stop-dev stop-prod
 .PHONY: deploy-local deploy-dev deploy-prod monitor-local monitor-dev monitor-prod
 .PHONY: logs-local logs-dev logs-prod backup restore
@@ -47,6 +47,9 @@ dev: ## Development: Run development server
 
 test: ## Development: Run tests
 	uv run pytest
+
+test-cov: ## Development: Run tests with coverage
+	uv run pytest --cov=app --cov-report=term-missing --cov-report=html --cov-report=xml
 
 lint: ## Development: Run linting
 	uv run ruff check .
@@ -199,8 +202,6 @@ health: ## Utility: Check health for environment (ENV=local|dev|prod)
 shell: ## Utility: Open shell in app container for environment (ENV=local|dev|prod)
 	docker-compose --env-file .env.$(ENV) exec fastapi /bin/bash
 
-redis-cli: ## Utility: Open Redis CLI
-	docker-compose --env-file .env.$(ENV) exec redis_db redis-cli
 
 nginx-reload: ## Utility: Reload nginx configuration
 	docker-compose --env-file .env.$(ENV) exec nginx nginx -s reload

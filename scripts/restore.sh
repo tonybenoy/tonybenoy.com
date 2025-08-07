@@ -47,43 +47,7 @@ show_manifest() {
     echo ""
 }
 
-# Function to restore Redis data
-restore_redis() {
-    local backup_dir="$1"
-
-    log "Restoring Redis data..."
-
-    if [ ! -d "$backup_dir/redis" ]; then
-        warn "No Redis backup found, skipping"
-        return
-    fi
-
-    # Stop Redis container if running
-    if docker ps | grep -q tonybenoy-redis; then
-        log "Stopping Redis container..."
-        docker stop tonybenoy-redis || warn "Could not stop Redis container"
-    fi
-
-    # Restore Redis volume
-    if [ -f "$backup_dir/redis/redis-volume.tar.gz" ]; then
-        log "Restoring Redis volume..."
-        docker run --rm \
-            -v tonybenoy_redis-data:/target \
-            -v "$backup_dir/redis":/backup \
-            alpine sh -c "cd /target && rm -rf * && tar xzf /backup/redis-volume.tar.gz" || warn "Could not restore Redis volume"
-    fi
-
-    # Restore RDB file if available
-    if [ -f "$backup_dir/redis/dump.rdb" ]; then
-        log "Restoring Redis RDB file..."
-        docker run --rm \
-            -v tonybenoy_redis-data:/target \
-            -v "$backup_dir/redis":/backup \
-            alpine cp /backup/dump.rdb /target/dump.rdb || warn "Could not restore RDB file"
-    fi
-
-    log "Redis data restoration completed"
-}
+# Redis restore function removed
 
 # Function to restore application data
 restore_application() {
@@ -238,13 +202,7 @@ verify_restore() {
 
     local issues=0
 
-    # Check if volumes were restored
-    if [ -f "$backup_dir/redis/redis-volume.tar.gz" ]; then
-        if ! docker volume ls | grep -q tonybenoy_redis-data; then
-            warn "Redis data volume not found"
-            ((issues++))
-        fi
-    fi
+    # Redis volume check removed
 
     if [ -f "$backup_dir/application/app-logs.tar.gz" ]; then
         if ! docker volume ls | grep -q tonybenoy_app-logs; then
@@ -305,14 +263,14 @@ perform_restore() {
     # Perform restoration based on type
     case "$restore_type" in
         "full")
-            restore_redis "$backup_dir"
+            # restore_redis removed
             restore_application "$backup_dir"
             restore_nginx "$backup_dir"
             restore_ssl "$backup_dir"
             restore_config "$backup_dir"
             ;;
         "data")
-            restore_redis "$backup_dir"
+            # restore_redis removed
             restore_application "$backup_dir"
             ;;
         "config")
@@ -395,7 +353,7 @@ case "$restore_type" in
         echo ""
         echo "Restore types:"
         echo "  full   - Complete restore (default)"
-        echo "  data   - Data only (Redis, application logs)"
+        echo "  data   - Data only (application logs)"
         echo "  config - Configuration only (nginx, SSL, source code)"
         echo "  show   - Show backup manifest only"
         echo ""

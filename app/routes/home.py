@@ -350,7 +350,7 @@ async def contact_submit(
         msg = MIMEMultipart()
         msg["From"] = (
             settings.smtp_username
-            if hasattr(settings, "smtp_username")
+            if hasattr(settings, "smtp_username") and settings.smtp_username
             else "noreply@tonybenoy.com"
         )
         msg["To"] = (
@@ -386,8 +386,11 @@ User Agent: {request.headers.get("User-Agent", "unknown")}
                 )
                 server = smtplib.SMTP(settings.smtp_server, smtp_port)
                 server.starttls()
-                if hasattr(settings, "smtp_username") and hasattr(
-                    settings, "smtp_password"
+                if (
+                    hasattr(settings, "smtp_username")
+                    and hasattr(settings, "smtp_password")
+                    and settings.smtp_username
+                    and settings.smtp_password
                 ):
                     server.login(settings.smtp_username, settings.smtp_password)
 

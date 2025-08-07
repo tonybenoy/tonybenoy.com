@@ -245,7 +245,7 @@ check_errors() {
     local since_time=$(date -d "$TIME_WINDOW seconds ago" "+%Y-%m-%d %H:%M:%S")
     
     # Check Docker logs
-    for container in tonybenoy-nginx tonybenoy-app tonybenoy-redis; do
+    for container in tonybenoy-nginx tonybenoy-app; do
         if docker ps --filter "name=$container" --filter "status=running" | grep -q "$container"; then
             for pattern in "${log_patterns[@]}"; do
                 local count=$(docker logs "$container" --since="${TIME_WINDOW}s" 2>&1 | grep -c "$pattern" || echo "0")
@@ -289,7 +289,7 @@ check_disk_space() {
 
 # Function to check service availability
 check_services() {
-    local services=("tonybenoy-nginx" "tonybenoy-app" "tonybenoy-redis")
+    local services=("tonybenoy-nginx" "tonybenoy-app")
     
     for service in "${services[@]}"; do
         if ! docker ps --filter "name=$service" --filter "status=running" | grep -q "$service"; then

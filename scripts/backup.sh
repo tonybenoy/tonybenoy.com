@@ -49,36 +49,7 @@ calculate_size() {
     fi
 }
 
-# Function to backup Redis data
-backup_redis() {
-    log "Backing up Redis data..."
-
-    local redis_backup_dir="$BACKUP_DIR/redis"
-    mkdir -p "$redis_backup_dir"
-
-    # Create Redis data dump
-    if docker ps | grep -q tonybenoy-redis; then
-        # Create a consistent backup using Redis SAVE command
-        docker exec tonybenoy-redis redis-cli BGSAVE >/dev/null 2>&1 || warn "Redis BGSAVE failed"
-        sleep 2
-
-        # Copy the RDB file
-        docker cp tonybenoy-redis:/data/dump.rdb "$redis_backup_dir/dump.rdb" 2>/dev/null || warn "Could not copy Redis dump"
-
-        # Also backup the entire data volume
-        docker run --rm \
-            -v tonybenoy_redis-data:/source:ro \
-            -v "$redis_backup_dir":/backup \
-            alpine tar czf /backup/redis-volume.tar.gz -C /source . 2>/dev/null || warn "Could not backup Redis volume"
-
-        # Get Redis info for backup metadata
-        docker exec tonybenoy-redis redis-cli INFO > "$redis_backup_dir/redis-info.txt" 2>/dev/null || warn "Could not get Redis info"
-
-        log "Redis backup completed: $(calculate_size "$redis_backup_dir")"
-    else
-        warn "Redis container not running, skipping Redis backup"
-    fi
-}
+# Redis backup function removed
 
 # Function to backup application data
 backup_application() {
@@ -238,7 +209,7 @@ create_manifest() {
 
         echo ""
         echo "=== Backup Verification ==="
-        echo "Redis data: $([ -f "$BACKUP_DIR/redis/dump.rdb" ] && echo "✓" || echo "✗")"
+        # Redis backup removed
         echo "Application logs: $([ -f "$BACKUP_DIR/application/app-logs.tar.gz" ] && echo "✓" || echo "✗")"
         echo "Nginx config: $([ -d "$BACKUP_DIR/nginx/config" ] && echo "✓" || echo "✗")"
         echo "SSL certificates: $([ -f "$BACKUP_DIR/ssl/letsencrypt.tar.gz" ] && echo "✓" || echo "✗")"
@@ -324,13 +295,7 @@ verify_backup() {
         fi
     done
 
-    # Check Redis backup
-    if [ -f "$BACKUP_DIR/redis/dump.rdb" ]; then
-        # Basic RDB file validation (check magic string)
-        if ! head -c 5 "$BACKUP_DIR/redis/dump.rdb" | grep -q "REDIS"; then
-            warn "Redis dump file may be corrupted"
-        fi
-    fi
+    # Redis backup validation removed
 
     if [ "$errors" -eq 0 ]; then
         log "Backup verification completed successfully"
@@ -356,14 +321,14 @@ perform_backup() {
     # Perform backups based on type
     case "$backup_type" in
         "full")
-            backup_redis
+            # backup_redis removed
             backup_application
             backup_nginx
             backup_ssl
             backup_config
             ;;
         "data")
-            backup_redis
+            # backup_redis removed
             backup_application
             ;;
         "config")
@@ -455,7 +420,7 @@ case "${1:-full}" in
         echo ""
         echo "Backup types:"
         echo "  full   - Complete backup (default)"
-        echo "  data   - Data only (Redis, application logs)"
+        echo "  data   - Data only (application logs)"
         echo "  config - Configuration only (nginx, SSL, source code)"
         echo ""
         echo "Other commands:"

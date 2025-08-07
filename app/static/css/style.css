@@ -742,3 +742,179 @@ body.light-theme .profile-img:hover {
 		-8px -8px 16px rgba(40, 40, 40, 0.15),
 		0 0 0 3px #00ff41 !important;
 }
+
+/* Easter Egg Profile Animation */
+.easter-egg-trigger {
+	cursor: pointer;
+	transition: all 0.3s ease !important;
+	position: relative;
+}
+
+.easter-egg-trigger::after {
+	content: '';
+	position: absolute;
+	top: -5px;
+	left: -5px;
+	right: -5px;
+	bottom: -5px;
+	border-radius: 50%;
+	background: rgba(0, 255, 65, 0.1);
+	animation: pulse-hint 3s infinite;
+	pointer-events: none;
+}
+
+@keyframes pulse-hint {
+	0%, 70%, 100% {
+		opacity: 0;
+		transform: scale(1);
+	}
+	35% {
+		opacity: 0.3;
+		transform: scale(1.1);
+	}
+}
+
+.easter-egg-trigger:hover::after {
+	animation: pulse-hint 1s infinite;
+}
+
+/* Matrix Overlay Styles */
+.matrix-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: #000;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 1;
+	transition: opacity 0.5s ease;
+}
+
+.matrix-overlay.hidden {
+	display: none;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#matrix-controls {
+	position: absolute;
+	top: 50px;
+	right: 50px;
+	opacity: 0;
+	transition: opacity 1s ease;
+	z-index: 10000;
+}
+
+#end-matrix-btn {
+	padding: 15px 30px;
+	font-size: 18px;
+	font-family: 'Fira Code', monospace;
+	background: linear-gradient(45deg, #ff0040, #cc0033);
+	border: none;
+	border-radius: 8px;
+	color: white;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(255, 0, 64, 0.3);
+}
+
+#end-matrix-btn:hover {
+	background: linear-gradient(45deg, #cc0033, #ff0040);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(255, 0, 64, 0.4);
+}
+
+/* Matrix End Screen */
+.matrix-end-screen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: linear-gradient(135deg, #000000, #1a1a1a);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10001;
+	opacity: 1;
+	transition: opacity 0.5s ease;
+}
+
+.matrix-end-screen.hidden {
+	display: none;
+}
+
+.end-screen-content {
+	text-align: center;
+	color: #00ff41;
+	font-family: 'Fira Code', monospace;
+	animation: fadeInUp 1s ease-out;
+}
+
+.end-screen-content h2 {
+	font-size: 3rem;
+	margin-bottom: 2rem;
+	color: #00ff41;
+	text-shadow: 0 0 20px #00ff41;
+	animation: glow 2s ease-in-out infinite alternate;
+}
+
+.end-screen-content .btn-primary {
+	padding: 15px 40px;
+	font-size: 20px;
+	margin-top: 20px;
+	background: linear-gradient(45deg, #00ff41, #00cc33);
+	border: none;
+	color: #000;
+	font-family: 'Fira Code', monospace;
+	font-weight: 600;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(0, 255, 65, 0.3);
+}
+
+.end-screen-content .btn-primary:hover {
+	background: linear-gradient(45deg, #00cc33, #00ff41);
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(0, 255, 65, 0.4);
+}
+
+@keyframes glow {
+	from {
+		text-shadow: 0 0 20px #00ff41, 0 0 30px #00ff41, 0 0 40px #00ff41;
+	}
+	to {
+		text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+	}
+}
+
+/* Light theme support for easter egg */
+body.light-theme .easter-egg-trigger::after {
+	background: rgba(42, 161, 152, 0.1);
+}
+
+body.light-theme .end-screen-content h2 {
+	color: #2aa198;
+	text-shadow: 0 0 20px #2aa198;
+}
+
+body.light-theme .end-screen-content .btn-primary {
+	background: linear-gradient(45deg, #2aa198, #268e85);
+	color: #fdf6e3;
+}
+
+body.light-theme .end-screen-content .btn-primary:hover {
+	background: linear-gradient(45deg, #268e85, #2aa198);
+}

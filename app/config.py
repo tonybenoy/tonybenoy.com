@@ -11,9 +11,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
 
     # Application settings
@@ -34,7 +32,6 @@ class Settings(BaseSettings):
 
     # Logging settings
     log_level: str = "INFO"
-
 
     # Email/SMTP settings (optional)
     smtp_server: str | None = None

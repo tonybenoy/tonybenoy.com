@@ -1,5 +1,13 @@
 # tonybenoy.com
 
+[![CI](https://github.com/tonybenoy/tonybenoy.com/workflows/CI/badge.svg)](https://github.com/tonybenoy/tonybenoy.com/actions)
+[![codecov](https://codecov.io/gh/tonybenoy/tonybenoy.com/branch/master/graph/badge.svg)](https://codecov.io/gh/tonybenoy/tonybenoy.com)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 Personal website built with FastAPI and served via Docker with nginx reverse proxy. The application fetches and displays GitHub repository information with in-memory caching.
 
 ## Architecture
@@ -54,6 +62,15 @@ make install
 ```bash
 make dev
 # or manually: uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Testing:**
+```bash
+make test         # Run tests
+make test-cov     # Run tests with coverage report
+# or manually:
+# uv run pytest
+# uv run pytest --cov=app --cov-report=term-missing --cov-report=html
 ```
 
 **Code quality:**

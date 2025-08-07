@@ -23,6 +23,6 @@ async def photography_page(request: Request):
         {
             "title": "Photography - Tony",
             "active_page": "photography",
-            "instagram_username": "tonybenoy"
-        }
+            "instagram_username": "tonybenoy",
+        },
     )

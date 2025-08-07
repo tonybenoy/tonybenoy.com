@@ -76,12 +76,7 @@ ALLOWED_HOSTS=["*"]
 # Development Mode - Volume mount source code for live reload
 CODE_MOUNT=./app
 
-# Redis Settings
-REDIS_HOST=redis_db
-REDIS_PORT=6379
-REDIS_DB=0
-REDIS_PASSWORD=
-REDIS_CACHE_TTL=3600
+# Redis settings removed
 EOF
 
     echo -e "${GREEN}✓ Created $file${NC}"
@@ -120,12 +115,7 @@ ALLOWED_HOSTS=["localhost","127.0.0.1"]
 # Production Mode - No code mounting
 CODE_MOUNT=/tmp/empty
 
-# Redis Settings
-REDIS_HOST=redis_db
-REDIS_PORT=6379
-REDIS_DB=0
-REDIS_PASSWORD=
-REDIS_CACHE_TTL=3600
+# Redis settings removed
 EOF
 
     echo -e "${GREEN}✓ Created $file${NC}"
@@ -165,12 +155,7 @@ ALLOWED_HOSTS=["$domain","www.$domain"]
 # Production Mode - No code mounting
 CODE_MOUNT=/tmp/empty
 
-# Redis Settings
-REDIS_HOST=redis_db
-REDIS_PORT=6379
-REDIS_DB=0
-REDIS_PASSWORD=
-REDIS_CACHE_TTL=3600
+# Redis settings removed
 EOF
 
     echo -e "${GREEN}✓ Created $file${NC}"

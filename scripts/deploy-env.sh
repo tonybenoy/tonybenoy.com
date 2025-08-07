@@ -90,13 +90,7 @@ create_backup() {
         docker commit tonybenoy-app "$BACKUP_DIR/app-backup:latest" || warn "Could not backup app container"
     fi
     
-    # Backup volumes
-    if docker volume ls -q | grep -q tonybenoy_redis-data; then
-        docker run --rm \
-            -v tonybenoy_redis-data:/source:ro \
-            -v "$BACKUP_DIR":/backup \
-            alpine tar czf /backup/redis-data.tar.gz -C /source . || warn "Could not backup Redis data"
-    fi
+    # Backup volumes (none currently configured)
     
     log "Backup created successfully"
 }
@@ -109,14 +103,7 @@ rollback() {
         log "Stopping current containers..."
         docker-compose --env-file ".env.$ENV" down || true
         
-        # Restore backup if available
-        if [ -f "$BACKUP_DIR/redis-data.tar.gz" ]; then
-            log "Restoring Redis data..."
-            docker run --rm \
-                -v tonybenoy_redis-data:/target \
-                -v "$BACKUP_DIR":/backup \
-                alpine sh -c "cd /target && tar xzf /backup/redis-data.tar.gz" || warn "Could not restore Redis data"
-        fi
+        # Restore backup if available (none currently configured)
         
         log "Starting previous version..."
         docker-compose --env-file ".env.$ENV" up -d || error "Rollback failed"
@@ -195,8 +182,7 @@ main() {
     log "Deploying services..."
     
     # Start dependencies first
-    docker-compose --env-file ".env.$ENV" up -d redis_db
-    log "Waiting for Redis to be ready..."
+    # Start core services (Redis removed)
     sleep 10
     
     # Deploy application
