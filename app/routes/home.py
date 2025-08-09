@@ -9,7 +9,7 @@ from slowapi.util import get_remote_address
 from starlette.responses import RedirectResponse
 
 from app.config import get_settings
-from app.utils import templates
+from app.utils import templates, get_structured_data
 
 # Use the same limiter instance as main app
 limiter = Limiter(key_func=get_remote_address)
@@ -22,9 +22,16 @@ home = APIRouter()
 @home.get("/index")
 @limiter.limit("30/minute")
 async def index(request: Request):
-    """Home page with rate limiting."""
+    """Home page with rate limiting and SEO optimization."""
     return templates.TemplateResponse(
-        request, "index.html", {"title": "Tony", "active_page": "home"}
+        request,
+        "index.html",
+        {
+            "title": "Tony Benoy - Chief Technology Officer & Full-Stack Engineer",
+            "description": "Tony Benoy - CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur. Expert in Python, JavaScript, cloud architecture, and team leadership. Based in Tallinn, Estonia.",
+            "active_page": "home",
+            "structured_data": get_structured_data(),
+        },
     )
 
 
@@ -36,6 +43,18 @@ async def test():
 @home.get("/favicon.ico")
 async def favicon():
     return RedirectResponse(url="/static/img/favicon.ico")
+
+
+@home.get("/robots.txt")
+async def robots():
+    """Serve robots.txt for SEO."""
+    return RedirectResponse(url="/static/robots.txt")
+
+
+@home.get("/sitemap.xml")
+async def sitemap():
+    """Serve sitemap.xml for SEO."""
+    return RedirectResponse(url="/static/sitemap.xml")
 
 
 @home.get("/myssh")
@@ -96,7 +115,13 @@ async def metrics(request: Request):
 async def contact_page(request: Request):
     """Contact page with form."""
     return templates.TemplateResponse(
-        request, "contact.html", {"title": "Contact - Tony", "active_page": "contact"}
+        request,
+        "contact.html",
+        {
+            "title": "Contact Tony Benoy - Chief Technology Officer",
+            "description": "Get in touch with Tony Benoy, CTO and Full-Stack Engineer. Available for consulting, speaking engagements, and technology leadership opportunities.",
+            "active_page": "contact",
+        },
     )
 
 
@@ -314,7 +339,8 @@ async def timeline_page(request: Request):
         request,
         "timeline.html",
         {
-            "title": "Timeline - Tony",
+            "title": "Tony Benoy Timeline - CTO Career & Education Journey",
+            "description": "Explore Tony Benoy's professional timeline: from Computer Science graduate to CTO at Proffyhub. Experience at Merkle Science, Redcarpetup, and MBA from Estonian Business School.",
             "active_page": "timeline",
             "work_experience": work_experience,
             "education": education,
@@ -329,7 +355,11 @@ async def terminal_page(request: Request):
     return templates.TemplateResponse(
         request,
         "terminal.html",
-        {"title": "Terminal - Tony", "active_page": "terminal"},
+        {
+            "title": "Interactive Terminal - Tony Benoy",
+            "description": "Explore Tony Benoy's interactive web terminal. Execute commands, learn about his experience, and discover hidden easter eggs in this unique developer interface.",
+            "active_page": "terminal",
+        },
     )
 
 

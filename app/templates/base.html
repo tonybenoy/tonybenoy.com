@@ -4,17 +4,96 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Primary Meta Tags -->
 	{% if title %}
 	<title>{{title}}</title>
 	{% else %}
-	<title>Tony</title>
+	<title>Tony Benoy - Chief Technology Officer & Full-Stack Engineer</title>
 	{% endif %}
+	
+	{% if description %}
+	<meta name="description" content="{{description}}">
+	{% else %}
+	<meta name="description" content="Tony Benoy - CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur. Expert in Python, JavaScript, cloud architecture, and team leadership. Based in Tallinn, Estonia.">
+	{% endif %}
+	
+	<meta name="author" content="Tony Benoy">
+	<meta name="keywords" content="Tony Benoy, CTO, Chief Technology Officer, Full-Stack Engineer, Python Developer, JavaScript, Estonian Tech, Tallinn, Software Engineer, Entrepreneur, MBA, Computer Science">
+	<meta name="robots" content="index, follow">
+	<meta name="googlebot" content="index, follow">
+	<meta name="bingbot" content="index, follow">
+	<meta name="theme-color" content="#000000">
+	<link rel="canonical" href="https://tonybenoy.com{{ request.url.path if request else '/' }}">
+	
+	<!-- Open Graph Meta Tags -->
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Tony Benoy">
+	<meta property="og:url" content="https://tonybenoy.com{{ request.url.path if request else '/' }}">
+	{% if og_title %}
+	<meta property="og:title" content="{{og_title}}">
+	{% elif title %}
+	<meta property="og:title" content="{{title}}">
+	{% else %}
+	<meta property="og:title" content="Tony Benoy - Chief Technology Officer & Full-Stack Engineer">
+	{% endif %}
+	{% if og_description %}
+	<meta property="og:description" content="{{og_description}}">
+	{% elif description %}
+	<meta property="og:description" content="{{description}}">
+	{% else %}
+	<meta property="og:description" content="CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur. Expert in Python, JavaScript, cloud architecture, and team leadership.">
+	{% endif %}
+	<meta property="og:image" content="https://tonybenoy.com/static/img/me.jpg">
+	<meta property="og:image:alt" content="Tony Benoy profile picture">
+	<meta property="og:image:width" content="400">
+	<meta property="og:image:height" content="400">
+	<meta property="og:locale" content="en_US">
+	
+	<!-- Twitter Card Meta Tags -->
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@TonyBenoy">
+	<meta name="twitter:creator" content="@TonyBenoy">
+	{% if twitter_title %}
+	<meta name="twitter:title" content="{{twitter_title}}">
+	{% elif title %}
+	<meta name="twitter:title" content="{{title}}">
+	{% else %}
+	<meta name="twitter:title" content="Tony Benoy - Chief Technology Officer & Full-Stack Engineer">
+	{% endif %}
+	{% if twitter_description %}
+	<meta name="twitter:description" content="{{twitter_description}}">
+	{% elif description %}
+	<meta name="twitter:description" content="{{description}}">
+	{% else %}
+	<meta name="twitter:description" content="CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur based in Tallinn, Estonia.">
+	{% endif %}
+	<meta name="twitter:image" content="https://tonybenoy.com/static/img/me.jpg">
+	<meta name="twitter:image:alt" content="Tony Benoy profile picture">
+	
+	<!-- Favicon and Icons -->
+	<link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon.ico">
 
+	<!-- Preconnect to external domains -->
+	<link rel="preconnect" href="https://cdn.jsdelivr.net">
+	<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+	
+	<!-- Critical CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
 	<link href="/static/css/terminal.css" rel="stylesheet" type="text/css" />
+	
+	<!-- Structured Data -->
+	{% if structured_data %}
+	<script type="application/ld+json">
+	{{structured_data|safe}}
+	</script>
+	{% endif %}
+	
+	<!-- Deferred JavaScript -->
+	<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -102,7 +181,7 @@
 			}
 		});
 	</script>
-	<script src="/static/js/terminal.js"></script>
+	<script defer src="/static/js/terminal.js"></script>
 </body>
 <footer class="bg-dark text-light py-3 mt-auto">
 	<div class="container">

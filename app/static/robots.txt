@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /static/
+Allow: /app
+Allow: /timeline
+Allow: /photography
+Allow: /contact
+Allow: /terminal
+
+# Disallow sensitive or unnecessary pages
+Disallow: /test
+Disallow: /client_ip
+Disallow: /metrics
+Disallow: /health
+
+# Sitemap location
+Sitemap: https://tonybenoy.com/sitemap.xml
+
+# Crawl delay (optional - be respectful)
+Crawl-delay: 1

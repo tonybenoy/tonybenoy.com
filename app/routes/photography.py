@@ -21,7 +21,8 @@ async def photography_page(request: Request):
         request,
         "photography.html",
         {
-            "title": "Photography - Tony",
+            "title": "Tony Benoy Photography - Travel & Life Moments",
+            "description": "Discover Tony Benoy's photography collection featuring travel experiences, life moments, and artistic captures. Follow his visual journey across Estonia and beyond.",
             "active_page": "photography",
             "instagram_username": "tonybenoy",
         },

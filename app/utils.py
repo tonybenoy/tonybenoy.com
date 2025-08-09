@@ -130,3 +130,65 @@ async def get_repo_data_for_user(
 
 def sort_repos(repos: list[dict[str, str]], count: int = 6) -> list[dict[str, str]]:
     return sorted(repos, key=lambda x: x["stargazers_count"], reverse=True)[:count]
+
+
+def get_structured_data() -> str:
+    """Generate JSON-LD structured data for the website."""
+    import json
+
+    person_data = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Tony Benoy",
+        "jobTitle": "Chief Technology Officer",
+        "description": "CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur based in Tallinn, Estonia",
+        "url": "https://tonybenoy.com",
+        "image": "https://tonybenoy.com/static/img/me.jpg",
+        "email": "me@tonybenoy.com",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Tallinn",
+            "addressCountry": "Estonia",
+        },
+        "alumniOf": [
+            {
+                "@type": "EducationalOrganization",
+                "name": "Estonian Business School",
+                "description": "Master of Business Administration (Management)",
+            },
+            {
+                "@type": "EducationalOrganization",
+                "name": "Norwegian School of Economics",
+                "description": "Erasmus Exchange (Business Analytics and Financial Modeling)",
+            },
+            {
+                "@type": "EducationalOrganization",
+                "name": "Deenbandhu Chottu Ram University of Science and Technology",
+                "description": "Bachelor of Technology (Computer Science and Engineering)",
+            },
+        ],
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Proffyhub OÜ",
+            "url": "https://proffy.ee",
+        },
+        "sameAs": [
+            "https://www.linkedin.com/in/tonybenoy/",
+            "https://twitter.com/TonyBenoy",
+            "https://github.com/tonybenoy",
+            "https://instagram.com/tonybenoy",
+        ],
+        "knowsAbout": [
+            "Software Engineering",
+            "Python",
+            "JavaScript",
+            "TypeScript",
+            "Cloud Architecture",
+            "Team Leadership",
+            "Full-Stack Development",
+            "Entrepreneurship",
+            "Business Strategy",
+        ],
+    }
+
+    return json.dumps(person_data, separators=(",", ":"))
