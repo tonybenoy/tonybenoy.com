@@ -3,8 +3,6 @@
 # Quick Start Script for TonyBenoy.com
 # Usage: ./scripts/start.sh [local|dev|prod] [--build]
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 ENV="${1:-local}"
@@ -57,38 +55,41 @@ fi
 log "Starting services..."
 docker_compose "$ENV" up -d
 
-# Wait for services to be ready
-log "Waiting for services to start..."
-sleep 10
+# Wait for health check
+log "Waiting for services to be ready..."
+case "$ENV" in
+    "local")
+        health_url="http://localhost:8000/health"
+        ;;
+    *)
+        health_url="http://localhost/health"
+        ;;
+esac
 
-# Check if services are running
-if docker_compose "$ENV" ps | grep -q "Up"; then
+if check_health 30 "$health_url"; then
     log "Services started successfully!"
-    
+
     # Show access URLs
     case "$ENV" in
         "local")
-            info "🌐 Application: http://localhost:8000"
-            info "🔧 Nginx proxy: http://localhost"
+            info "Application: http://localhost:8000"
+            info "Nginx proxy: http://localhost"
             ;;
         "dev")
-            info "🌐 Application: http://localhost"
-            info "🔧 Development server ready"
+            info "Application: http://localhost"
             ;;
         "prod")
-            info "🌐 Production: https://tonybenoy.com"
-            info "🔒 SSL enabled with automatic redirect"
+            info "Production: https://tonybenoy.com"
+            info "SSL enabled with automatic redirect"
             ;;
     esac
-    
+
     echo ""
     echo "Useful commands:"
-    echo "  📋 View logs: ./scripts/start.sh $ENV logs -f"
-    echo "  📊 Service status: ./scripts/start.sh $ENV ps"  
-    echo "  🛑 Stop services: ./scripts/stop.sh $ENV"
-    echo "  🔄 Restart service: ./scripts/start.sh $ENV restart <service>"
-    echo "  🏥 Health check: curl http://localhost/test (or :8000 for local)"
+    echo "  View logs: docker-compose --env-file .env.$ENV logs -f"
+    echo "  Stop services: ./scripts/stop.sh $ENV"
 else
-    error "Failed to start services"
+    error "Services failed health check"
+    docker_compose "$ENV" logs --tail=20
     exit 1
 fi

@@ -66,8 +66,7 @@ security: ## Development: Run security check
 build: ## Development: Build Docker image
 	docker build -f docker/Dockerfile -t tonybenoy-com:latest .
 
-clean: ## Development: Clean up Docker resources
-	docker system prune -f
+clean: ## Development: Clean up unused Docker images
 	docker image prune -f
 
 # Environment Management
