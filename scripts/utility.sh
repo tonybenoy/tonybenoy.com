@@ -3,8 +3,6 @@
 # Utility Script for TonyBenoy.com - Common operations
 # Usage: ./scripts/utility.sh <command> [environment] [options]
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
@@ -83,14 +81,22 @@ main() {
             esac
             ;;
         "exec")
-            local service="$3"
+            local service="${3:-}"
             local shell="${4:-sh}"
             if [ -z "$service" ]; then
-                error "Service name required for exec command"
+                error "Service name required. Available: fastapi, nginx, certbot"
                 exit 1
             fi
-            info "Executing $shell in $service..."
-            docker_compose "$env" exec "$service" "$shell"
+            case "$service" in
+                fastapi|nginx|certbot)
+                    info "Executing $shell in $service..."
+                    docker_compose "$env" exec "$service" "$shell"
+                    ;;
+                *)
+                    error "Unknown service: $service. Available: fastapi, nginx, certbot"
+                    exit 1
+                    ;;
+            esac
             ;;
         "build")
             info "Building services for $env environment..."

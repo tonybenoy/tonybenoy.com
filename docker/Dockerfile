@@ -1,5 +1,5 @@
 # Multi-stage build for smaller, more secure image
-FROM python:3.11-slim AS builder
+FROM python:3.13-slim AS builder
 
 # Install system dependencies and uv
 RUN apt-get update && apt-get install -y \
@@ -18,10 +18,10 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 
 # Install dependencies
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --python-preference only-system
 
 # Production stage
-FROM python:3.11-slim AS production
+FROM python:3.13-slim AS production
 
 # Create non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser
