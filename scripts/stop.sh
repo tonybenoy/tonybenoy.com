@@ -3,8 +3,6 @@
 # Stop Script for TonyBenoy.com
 # Usage: ./scripts/stop.sh [local|dev|prod] [--remove-volumes]
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 ENV="${1:-local}"
@@ -41,7 +39,7 @@ log "Stopping TonyBenoy.com in $ENV environment..."
 # Stop and remove containers
 if [ -n "$REMOVE_VOLUMES" ]; then
     warn "Removing volumes - all data will be lost!"
-    docker_compose "$ENV" down $REMOVE_VOLUMES
+    docker_compose "$ENV" down "$REMOVE_VOLUMES"
 else
     docker_compose "$ENV" down
 fi
