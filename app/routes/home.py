@@ -9,7 +9,7 @@ from slowapi.util import get_remote_address
 from starlette.responses import RedirectResponse
 
 from app.config import get_settings
-from app.utils import templates, get_structured_data
+from app.utils import get_structured_data, templates
 
 # Use the same limiter instance as main app
 limiter = Limiter(key_func=get_remote_address)
@@ -28,7 +28,11 @@ async def index(request: Request):
         "index.html",
         {
             "title": "Tony Benoy - Chief Technology Officer & Full-Stack Engineer",
-            "description": "Tony Benoy - CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur. Expert in Python, JavaScript, cloud architecture, and team leadership. Based in Tallinn, Estonia.",
+            "description": (
+                "Tony Benoy - CTO at Proffyhub, Full-Stack Engineer, and "
+                "Entrepreneur. Expert in Python, JavaScript, cloud architecture, "
+                "and team leadership. Based in Tallinn, Estonia."
+            ),
             "active_page": "home",
             "structured_data": get_structured_data(),
         },
@@ -119,7 +123,11 @@ async def contact_page(request: Request):
         "contact.html",
         {
             "title": "Contact Tony Benoy - Chief Technology Officer",
-            "description": "Get in touch with Tony Benoy, CTO and Full-Stack Engineer. Available for consulting, speaking engagements, and technology leadership opportunities.",
+            "description": (
+                "Get in touch with Tony Benoy, CTO and Full-Stack Engineer. "
+                "Available for consulting, speaking engagements, and technology "
+                "leadership opportunities."
+            ),
             "active_page": "contact",
         },
     )
@@ -335,15 +343,30 @@ async def timeline_page(request: Request):
         },
     ]
 
+    volunteer = [
+        {
+            "role": "AUR Package Maintainer",
+            "org": "Arch Linux",
+            "period": "2017 – 2024 (7 years)",
+            "icon": "fab fa-linux",
+            "color": "vol-blue",
+        },
+    ]
+
     return templates.TemplateResponse(
         request,
         "timeline.html",
         {
             "title": "Tony Benoy Timeline - CTO Career & Education Journey",
-            "description": "Explore Tony Benoy's professional timeline: from Computer Science graduate to CTO at Proffyhub. Experience at Merkle Science, Redcarpetup, and MBA from Estonian Business School.",
+            "description": (
+                "Explore Tony Benoy's professional timeline: from Computer "
+                "Science graduate to CTO at Proffyhub. Experience at Merkle "
+                "Science, Redcarpetup, and MBA from Estonian Business School."
+            ),
             "active_page": "timeline",
             "work_experience": work_experience,
             "education": education,
+            "volunteer": volunteer,
         },
     )
 
@@ -357,7 +380,11 @@ async def terminal_page(request: Request):
         "terminal.html",
         {
             "title": "Interactive Terminal - Tony Benoy",
-            "description": "Explore Tony Benoy's interactive web terminal. Execute commands, learn about his experience, and discover hidden easter eggs in this unique developer interface.",
+            "description": (
+                "Explore Tony Benoy's interactive web terminal. Execute commands, "
+                "learn about his experience, and discover hidden easter eggs in "
+                "this unique developer interface."
+            ),
             "active_page": "terminal",
         },
     )

@@ -141,7 +141,10 @@ def get_structured_data() -> str:
         "@type": "Person",
         "name": "Tony Benoy",
         "jobTitle": "Chief Technology Officer",
-        "description": "CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur based in Tallinn, Estonia",
+        "description": (
+            "CTO at Proffyhub, Full-Stack Engineer, and Entrepreneur "
+            "based in Tallinn, Estonia"
+        ),
         "url": "https://tonybenoy.com",
         "image": "https://tonybenoy.com/static/img/me.jpg",
         "email": "me@tonybenoy.com",
@@ -159,12 +162,16 @@ def get_structured_data() -> str:
             {
                 "@type": "EducationalOrganization",
                 "name": "Norwegian School of Economics",
-                "description": "Erasmus Exchange (Business Analytics and Financial Modeling)",
+                "description": (
+                    "Erasmus Exchange (Business Analytics and Financial Modeling)"
+                ),
             },
             {
                 "@type": "EducationalOrganization",
                 "name": "Deenbandhu Chottu Ram University of Science and Technology",
-                "description": "Bachelor of Technology (Computer Science and Engineering)",
+                "description": (
+                    "Bachelor of Technology (Computer Science and Engineering)"
+                ),
             },
         ],
         "worksFor": {

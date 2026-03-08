@@ -72,7 +72,11 @@ async def apps_view(request: Request):
         "apps.html",
         {
             "title": "Tony Benoy's Projects - GitHub Portfolio & Open Source",
-            "description": "Explore Tony Benoy's software projects and open source contributions on GitHub. Full-stack applications, Python tools, and innovative solutions from a seasoned CTO.",
+            "description": (
+                "Explore Tony Benoy's software projects and open source "
+                "contributions on GitHub. Full-stack applications, Python tools, "
+                "and innovative solutions from a seasoned CTO."
+            ),
             "repos": repos,
             "active_page": "apps",
             "repo_count": len(repos),

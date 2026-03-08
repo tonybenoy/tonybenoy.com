@@ -1,636 +1,207 @@
 {% extends "base.html" %}
 {% block content %}
 
-<main class="flex-grow-1 py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-                <div class="hero-section bg-1 p-4 p-md-5 rounded">
-                    <h2 class="text-center mb-4">Professional Timeline</h2>
-                    <p class="text-center lead mb-5">
-                        My journey through technology and business
-                        <span class="blink_text">_</span>
-                    </p>
-                    
-                    <!-- Work Experience Section -->
-                    <div class="mb-5">
-                        <h3 class="section-title mb-5 text-center">
-                            <i class="fas fa-briefcase me-2"></i>
-                            Work Experience
-                        </h3>
-                        
-                        <div class="modern-timeline">
-                            <div class="timeline-line"></div>
-                            {% for job in work_experience %}
-                            <div class="timeline-entry" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
-                                <div class="timeline-marker {{ job.type }}">
-                                    <i class="{{ job.icon }}"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <div class="timeline-card">
-                                        <div class="card-header">
-                                            <div class="row align-items-center">
-                                                <div class="col-lg-8">
-                                                    <h4 class="job-title">{{ job.title }}</h4>
-                                                    {% if job.company_url %}
-                                                    <h5 class="company-name">
-                                                        <a href="{{ job.company_url }}" target="_blank" class="company-link">
-                                                            {{ job.company }}
-                                                            <i class="fas fa-external-link-alt ms-1"></i>
-                                                        </a>
-                                                    </h5>
-                                                    {% else %}
-                                                    <h5 class="company-name">{{ job.company }}</h5>
-                                                    {% endif %}
-                                                    <div class="job-meta">
-                                                        <span class="timeline-date">
-                                                            <i class="fas fa-calendar-alt me-1"></i>
-                                                            {{ job.period }}
-                                                        </span>
-                                                        <span class="timeline-location">
-                                                            <i class="fas fa-map-marker-alt me-1"></i>
-                                                            {{ job.location }}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                {% if job.logo %}
-                                                <div class="col-lg-4 text-center">
-                                                    <div class="company-logo-wrapper">
-                                                        {% if job.company_url %}
-                                                        <a href="{{ job.company_url }}" target="_blank">
-                                                            <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
-                                                        </a>
-                                                        {% else %}
-                                                        <img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo">
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="job-description">{{ job.description }}</p>
-                                            <div class="technologies">
-                                                <h6 class="tech-title">Technologies & Skills:</h6>
-                                                <div class="tech-tags">
-                                                    {% for tech in job.technologies %}
-                                                    <span class="tech-tag">{{ tech }}</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+<main class="page-section">
+	<div class="container-narrow">
+		<div class="section-header">
+			<h2>The Journey So Far</h2>
+			<p>From Haryana to Tallinn, building things along the way<span class="blink_text">_</span></p>
+		</div>
 
-                    <!-- Education Section -->
-                    <div class="mb-4">
-                        <h3 class="section-title mb-5 text-center">
-                            <i class="fas fa-university me-2"></i>
-                            Education
-                        </h3>
-                        <div class="education-timeline">
-                            <div class="timeline-line"></div>
-                            {% for edu in education %}
-                            <div class="timeline-entry education-entry" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
-                                <div class="timeline-marker {{ edu.type }}">
-                                    <i class="{{ edu.icon }}"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <div class="timeline-card">
-                                        <div class="card-header">
-                                            <div class="row align-items-center">
-                                                <div class="col-lg-8">
-                                                    <h4 class="degree-title">{{ edu.degree }}</h4>
-                                                    {% if edu.institution_url %}
-                                                    <h5 class="institution-name">
-                                                        <a href="{{ edu.institution_url }}" target="_blank" class="company-link">
-                                                            {{ edu.institution }}
-                                                            <i class="fas fa-external-link-alt ms-1"></i>
-                                                        </a>
-                                                    </h5>
-                                                    {% else %}
-                                                    <h5 class="institution-name">{{ edu.institution }}</h5>
-                                                    {% endif %}
-                                                    <div class="edu-meta">
-                                                        <span class="timeline-date">
-                                                            <i class="fas fa-calendar-alt me-1"></i>
-                                                            {{ edu.period }}
-                                                        </span>
-                                                        <span class="timeline-location">
-                                                            <i class="fas fa-map-marker-alt me-1"></i>
-                                                            {{ edu.location }}
-                                                        </span>
-                                                        {% if edu.gpa %}
-                                                        <span class="timeline-gpa">
-                                                            <i class="fas fa-star me-1"></i>
-                                                            {{ edu.gpa }}
-                                                        </span>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                {% if edu.logo %}
-                                                <div class="col-lg-4 text-center">
-                                                    <div class="company-logo-wrapper">
-                                                        {% if edu.institution_url %}
-                                                        <a href="{{ edu.institution_url }}" target="_blank">
-                                                            <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
-                                                        </a>
-                                                        {% else %}
-                                                        <img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo">
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="edu-description">{{ edu.description }}</p>
-                                            <div class="focus-areas">
-                                                <h6 class="focus-title">Focus Areas:</h6>
-                                                <div class="focus-tags">
-                                                    {% for focus in edu.focus %}
-                                                    <span class="focus-tag">{{ focus }}</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+		<!-- Geographic journey -->
+		<div class="journey-map">
+			<div class="journey-stop">
+				<span class="journey-dot"></span>
+				<span class="journey-place">Delhi</span>
+				<span class="journey-year">Home</span>
+			</div>
+			<div class="journey-line"></div>
+			<div class="journey-stop">
+				<span class="journey-dot"></span>
+				<span class="journey-place">Haryana</span>
+				<span class="journey-year">2013</span>
+			</div>
+			<div class="journey-line"></div>
+			<div class="journey-stop">
+				<span class="journey-dot"></span>
+				<span class="journey-place">Bengaluru</span>
+				<span class="journey-year">2021</span>
+			</div>
+			<div class="journey-line"></div>
+			<div class="journey-stop">
+				<span class="journey-dot"></span>
+				<span class="journey-place">Tallinn</span>
+				<span class="journey-year">2022</span>
+			</div>
+			<div class="journey-line"></div>
+			<div class="journey-stop">
+				<span class="journey-dot active"></span>
+				<span class="journey-place">Bergen</span>
+				<span class="journey-year">2023</span>
+			</div>
+			<div class="journey-line"></div>
+			<div class="journey-stop">
+				<span class="journey-dot active"></span>
+				<span class="journey-place">Tallinn</span>
+				<span class="journey-year">Now</span>
+			</div>
+		</div>
+
+		<!-- Work Experience -->
+		<div class="timeline-section">
+			<h3 class="timeline-section-title">
+				<i class="fas fa-briefcase"></i> Work
+			</h3>
+			<div class="timeline">
+				{% for job in work_experience %}
+				<div class="timeline-entry">
+					<div class="timeline-marker {{ job.type }}">
+						<i class="{{ job.icon }}"></i>
+					</div>
+					<div class="timeline-card">
+						<div class="timeline-card-header">
+							<div class="timeline-card-header-text">
+								<h4>{{ job.title }}</h4>
+								<h5>
+									{% if job.company_url %}
+									<a href="{{ job.company_url }}" target="_blank">
+										{{ job.company }} <i class="fas fa-external-link-alt" style="font-size: 0.7rem"></i>
+									</a>
+									{% else %}
+									{{ job.company }}
+									{% endif %}
+								</h5>
+								<div class="timeline-meta">
+									<span class="date">{{ job.period }}</span>
+									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+								</div>
+							</div>
+							{% if job.logo %}
+							{% if job.company_url %}
+							<a href="{{ job.company_url }}" target="_blank">
+								<img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo" loading="lazy">
+							</a>
+							{% else %}
+							<img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo" loading="lazy">
+							{% endif %}
+							{% endif %}
+						</div>
+						<div class="timeline-card-body">
+							<p>{{ job.description }}</p>
+							<div class="tech-label">Stack</div>
+							<div class="tech-tags">
+								{% for tech in job.technologies %}
+								<span class="tech-tag">{{ tech }}</span>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- Education -->
+		<div class="timeline-section">
+			<h3 class="timeline-section-title">
+				<i class="fas fa-graduation-cap"></i> Education
+			</h3>
+			<div class="timeline">
+				{% for edu in education %}
+				<div class="timeline-entry">
+					<div class="timeline-marker {{ edu.type }}">
+						<i class="{{ edu.icon }}"></i>
+					</div>
+					<div class="timeline-card">
+						<div class="timeline-card-header">
+							<div class="timeline-card-header-text">
+								<h4>{{ edu.degree }}</h4>
+								<h5>
+									{% if edu.institution_url %}
+									<a href="{{ edu.institution_url }}" target="_blank">
+										{{ edu.institution }} <i class="fas fa-external-link-alt" style="font-size: 0.7rem"></i>
+									</a>
+									{% else %}
+									{{ edu.institution }}
+									{% endif %}
+								</h5>
+								<div class="timeline-meta">
+									<span class="date">{{ edu.period }}</span>
+									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ edu.location }}</span>
+									{% if edu.gpa %}
+									<span class="gpa"><i class="fas fa-star"></i> {{ edu.gpa }}</span>
+									{% endif %}
+								</div>
+							</div>
+							{% if edu.logo %}
+							{% if edu.institution_url %}
+							<a href="{{ edu.institution_url }}" target="_blank">
+								<img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo" loading="lazy">
+							</a>
+							{% else %}
+							<img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo" loading="lazy">
+							{% endif %}
+							{% endif %}
+						</div>
+						<div class="timeline-card-body">
+							<p>{{ edu.description }}</p>
+							<div class="tech-label">Focus</div>
+							<div class="tech-tags">
+								{% for focus in edu.focus %}
+								<span class="tech-tag">{{ focus }}</span>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- Community & Open Source -->
+		<div class="timeline-section">
+			<h3 class="timeline-section-title">
+				<i class="fab fa-linux"></i> Community & Open Source
+			</h3>
+			<div class="community-grid">
+				{% for vol in volunteer %}
+				<div class="community-card">
+					<div class="community-icon {{ vol.color }}">
+						<i class="{{ vol.icon }}"></i>
+					</div>
+					<div>
+						<h4>{{ vol.role }}</h4>
+						<p class="community-org">{{ vol.org }}</p>
+						<p class="community-period">{{ vol.period }}</p>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="text-center" style="padding-bottom: 2rem;">
+			<a href="/static/files/tony.sh" class="btn btn-outline btn-sm" target="_blank">
+				<i class="fas fa-download"></i> Download my SSH key (yes, really)
+			</a>
+		</div>
+	</div>
 </main>
 
-<style>
-/* Modern Timeline Styles */
-.modern-timeline, .education-timeline {
-    position: relative;
-    padding: 2rem 0;
-}
+{% endblock %}
 
-.timeline-line {
-    position: absolute;
-    left: 30px;
-    top: 50px;
-    height: calc(100% - 100px);
-    width: 4px;
-    background: linear-gradient(180deg, #00ff41, rgba(0, 255, 65, 0.3));
-    border-radius: 2px;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-}
-
-body.light-theme .timeline-line {
-    background: linear-gradient(180deg, #2aa198, rgba(42, 161, 152, 0.3));
-    box-shadow: 0 0 20px rgba(42, 161, 152, 0.3);
-}
-
-.timeline-entry {
-    position: relative;
-    margin-bottom: 3rem;
-    padding-left: 80px;
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.timeline-entry.animate {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.timeline-marker {
-    position: absolute;
-    left: -49px;
-    top: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: #000;
-    border: 4px solid #00ff41;
-    box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
-    z-index: 10;
-    transition: all 0.3s ease;
-    background-clip: padding-box;
-}
-
-.timeline-marker.leadership {
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    border-color: #ffd700;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-}
-
-.timeline-marker.entrepreneurship {
-    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-    border-color: #ff6b6b;
-    box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
-}
-
-.timeline-marker.engineering {
-    background: linear-gradient(135deg, #4ecdc4, #7fdbda);
-    border-color: #4ecdc4;
-    box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
-}
-
-.timeline-marker.masters {
-    background: linear-gradient(135deg, #9b59b6, #bb7ec0);
-    border-color: #9b59b6;
-    box-shadow: 0 0 30px rgba(155, 89, 182, 0.5);
-}
-
-.timeline-marker.exchange {
-    background: linear-gradient(135deg, #3498db, #5dade2);
-    border-color: #3498db;
-    box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
-}
-
-.timeline-marker.bachelors {
-    background: linear-gradient(135deg, #e67e22, #f39c12);
-    border-color: #e67e22;
-    box-shadow: 0 0 30px rgba(230, 126, 34, 0.5);
-}
-
-.timeline-marker:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 40px rgba(0, 255, 65, 0.8);
-}
-
-/* Light theme marker adjustments */
-body.light-theme .timeline-marker {
-    border-color: #2aa198;
-    box-shadow: 0 0 30px rgba(42, 161, 152, 0.5);
-}
-
-body.light-theme .timeline-marker:hover {
-    box-shadow: 0 0 40px rgba(42, 161, 152, 0.8);
-}
-
-.timeline-content {
-    position: relative;
-}
-
-.timeline-card {
-    background: rgba(0, 20, 40, 0.8);
-    border: 1px solid rgba(0, 255, 65, 0.3);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.timeline-card:hover {
-    transform: translateY(-5px);
-    border-color: #00ff41;
-    box-shadow: 0 20px 40px rgba(0, 255, 65, 0.2);
-}
-
-body.light-theme .timeline-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(42, 161, 152, 0.3);
-}
-
-body.light-theme .timeline-card:hover {
-    border-color: #2aa198;
-    box-shadow: 0 20px 40px rgba(42, 161, 152, 0.2);
-}
-
-.card-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 255, 65, 0.2);
-}
-
-body.light-theme .card-header {
-    border-bottom-color: rgba(42, 161, 152, 0.2);
-}
-
-.card-body {
-    padding: 1.5rem;
-}
-
-.job-title, .degree-title {
-    color: #00ff41;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 1.4rem;
-}
-
-body.light-theme .job-title,
-body.light-theme .degree-title {
-    color: #2aa198;
-}
-
-.company-name, .institution-name {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-}
-
-.company-link {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.company-link:hover {
-    color: #00ff41;
-    text-decoration: underline;
-}
-
-body.light-theme .company-link:hover {
-    color: #2aa198;
-}
-
-.job-meta, .edu-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-}
-
-.timeline-date {
-    color: #00ff41;
-    font-weight: 500;
-}
-
-.timeline-location {
-    color: #999;
-}
-
-.timeline-gpa {
-    color: #ffd700;
-    font-weight: 500;
-}
-
-body.light-theme .timeline-date {
-    color: #2aa198;
-}
-
-body.light-theme .timeline-location {
-    color: #666;
-}
-
-.company-logo-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.company-logo {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    border-radius: 12px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(0, 255, 65, 0.3);
-    transition: all 0.3s ease;
-}
-
-.company-logo:hover {
-    transform: scale(1.05) rotate(5deg);
-    border-color: #00ff41;
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 30px rgba(0, 255, 65, 0.3);
-}
-
-body.light-theme .company-logo {
-    background: rgba(42, 161, 152, 0.1);
-    border-color: rgba(42, 161, 152, 0.3);
-}
-
-body.light-theme .company-logo:hover {
-    border-color: #2aa198;
-    background: rgba(42, 161, 152, 0.15);
-    box-shadow: 0 10px 30px rgba(42, 161, 152, 0.3);
-}
-
-.job-description, .edu-description {
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    color: #e0e0e0;
-}
-
-body.light-theme .job-description,
-body.light-theme .edu-description {
-    color: #444;
-}
-
-.technologies, .focus-areas {
-    margin-top: 1rem;
-}
-
-.tech-title, .focus-title {
-    font-size: 0.9rem;
-    color: #00ff41;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-body.light-theme .tech-title,
-body.light-theme .focus-title {
-    color: #2aa198;
-}
-
-.tech-tags, .focus-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.tech-tag, .focus-tag {
-    background: rgba(0, 255, 65, 0.1);
-    border: 1px solid rgba(0, 255, 65, 0.3);
-    color: #00ff41;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.tech-tag:hover, .focus-tag:hover {
-    background: rgba(0, 255, 65, 0.2);
-    border-color: #00ff41;
-    transform: translateY(-2px);
-}
-
-body.light-theme .tech-tag,
-body.light-theme .focus-tag {
-    background: rgba(42, 161, 152, 0.1);
-    border-color: rgba(42, 161, 152, 0.3);
-    color: #2aa198;
-}
-
-body.light-theme .tech-tag:hover,
-body.light-theme .focus-tag:hover {
-    background: rgba(42, 161, 152, 0.2);
-    border-color: #2aa198;
-}
-
-.section-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #00ff41;
-    text-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-}
-
-body.light-theme .section-title {
-    color: #2aa198;
-    text-shadow: 0 0 20px rgba(42, 161, 152, 0.3);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .timeline-line {
-        left: 25px;
-    }
-    
-    .timeline-entry {
-        padding-left: 70px;
-    }
-    
-    .timeline-marker {
-        left: -44px;
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
-    }
-    
-    .job-meta, .edu-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-}
-
-/* Scroll animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.timeline-entry.visible {
-    animation: fadeInUp 0.6s ease forwards;
-}
-
-/* Pulse animation for markers */
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 20px rgba(0, 255, 65, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0);
-    }
-}
-
-.timeline-marker {
-    animation: pulse 2s infinite;
-}
-
-body.light-theme .timeline-marker {
-    animation: pulse-light 2s infinite;
-}
-
-@keyframes pulse-light {
-    0% {
-        box-shadow: 0 0 0 0 rgba(42, 161, 152, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 20px rgba(42, 161, 152, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(42, 161, 152, 0);
-    }
-}
-</style>
-
+{% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Scroll-triggered animations for work experience
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.2
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions);
-    
-    // Observe work experience entries
-    const workEntries = document.querySelectorAll('.modern-timeline .timeline-entry');
-    workEntries.forEach(entry => {
-        observer.observe(entry);
-    });
-    
-    // Observe education entries
-    const educationEntries = document.querySelectorAll('.education-timeline .timeline-entry');
-    educationEntries.forEach(entry => {
-        observer.observe(entry);
-    });
-    
-    // Add staggered animation delay
-    workEntries.forEach((entry, index) => {
-        entry.style.animationDelay = `${index * 0.2}s`;
-    });
-    
-    educationEntries.forEach((entry, index) => {
-        entry.style.animationDelay = `${index * 0.2}s`;
-    });
-    
-    // Smooth scrolling for internal links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-    
-    // Remove parallax effect that was causing line overflow
-    
-    // Add hover effects for better interactivity
-    const timelineCards = document.querySelectorAll('.timeline-card');
-    timelineCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) entry.target.classList.add('visible');
+		});
+	}, { threshold: 0.1 });
+
+	document.querySelectorAll('.timeline-entry').forEach((entry, i) => {
+		entry.style.transitionDelay = `${i * 0.08}s`;
+		observer.observe(entry);
+	});
 });
 </script>
-
 {% endblock %}
