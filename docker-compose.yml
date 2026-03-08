@@ -16,7 +16,7 @@ volumes:
 
 services:
   nginx:
-    image: nginx:1.25-alpine
+    image: nginx:1.28-alpine
     container_name: tonybenoy-nginx
     restart: unless-stopped
     ports:
