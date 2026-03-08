@@ -3,14 +3,10 @@
 # create-env.sh - Generate environment configuration files
 # Usage: ./scripts/create-env.sh [env_type] [options]
 
-set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+# Source common functions
+source "$SCRIPT_DIR/common.sh"
 
 # Default values
 DEFAULT_GITHUB_USERNAME="tonybenoy"
@@ -75,8 +71,6 @@ ALLOWED_HOSTS=["*"]
 
 # Development Mode - Volume mount source code for live reload
 CODE_MOUNT=./app
-
-# Redis settings removed
 EOF
 
     echo -e "${GREEN}✓ Created $file${NC}"
@@ -114,8 +108,6 @@ ALLOWED_HOSTS=["localhost","127.0.0.1"]
 
 # Production Mode - No code mounting
 CODE_MOUNT=/tmp/empty
-
-# Redis settings removed
 EOF
 
     echo -e "${GREEN}✓ Created $file${NC}"
@@ -154,8 +146,6 @@ ALLOWED_HOSTS=["$domain","www.$domain"]
 
 # Production Mode - No code mounting
 CODE_MOUNT=/tmp/empty
-
-# Redis settings removed
 EOF
 
     echo -e "${GREEN}✓ Created $file${NC}"
