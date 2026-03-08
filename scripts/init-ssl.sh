@@ -4,18 +4,13 @@
 # This script automates Let's Encrypt SSL certificate setup using your existing infrastructure
 # It tests with staging first, then issues production certificates
 
-set -euo pipefail
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
 # Script configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Source common functions
+source "$SCRIPT_DIR/common.sh"
+
 ENV_FILE="$PROJECT_DIR/.env.prod"
 
 # Default values
@@ -23,22 +18,11 @@ STAGING=true
 FORCE_RENEWAL=false
 SKIP_STAGING=false
 
-# Function to print colored output
-print_status() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
-
-print_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+# Aliases for this script's style
+print_status() { info "$1"; }
+print_success() { log "$1"; }
+print_warning() { warn "$1"; }
+print_error() { error "$1"; }
 
 # Function to show usage
 usage() {
@@ -113,7 +97,7 @@ check_domain_dns() {
     
     if [[ -z "$DOMAIN_IP" ]]; then
         print_warning "Could not resolve domain $domain. Please ensure DNS is configured correctly."
-        read -p "Continue anyway? [y/N]: " -n 1 -r
+        read -p "Continue anyway? [y/N]: " -n 1 -r -t 30 || REPLY="N"
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             print_error "Aborting due to DNS issues"
@@ -134,7 +118,7 @@ check_existing_certificates() {
         print_warning "Certificates already exist for $domain"
         
         if [[ "$FORCE_RENEWAL" == "false" ]]; then
-            read -p "Renew existing certificates? [y/N]: " -n 1 -r
+            read -p "Renew existing certificates? [y/N]: " -n 1 -r -t 30 || REPLY="N"
             echo
             if [[ ! $REPLY =~ ^[Yy]$ ]]; then
                 print_status "Using existing certificates"
@@ -244,21 +228,14 @@ switch_to_production_config() {
     # Start all services with production config
     docker-compose --env-file "$ENV_FILE" up -d
     
-    # Wait for services to be ready
-    print_status "Waiting for services to start..."
-    sleep 10
-    
     # Test HTTPS
     local domain="$1"
-    for i in {1..30}; do
-        if curl -sf "https://$domain/test" 2>/dev/null; then
-            print_success "HTTPS is working correctly!"
-            return 0
-        fi
-        sleep 2
-    done
-    
-    print_warning "HTTPS test failed, but certificates may still be working"
+    print_status "Waiting for HTTPS to be ready..."
+    if retry 30 2 curl -sf "https://$domain/test"; then
+        print_success "HTTPS is working correctly!"
+    else
+        print_warning "HTTPS test failed, but certificates may still be working"
+    fi
     return 0
 }
 
