@@ -4,38 +4,72 @@
 <main class="page-section">
 	<div class="container">
 		<div class="section-header">
-			<h2><i class="fas fa-code me-2"></i> My Projects</h2>
-			<p>Here are some of the projects I'm working on<span class="blink_text">_</span></p>
+			<h2>Projects</h2>
+			<p>Things I've built, shipped, or am tinkering with<span class="blink_text">_</span></p>
 		</div>
 
-		<div class="grid grid-3">
-			{% for repo in repos %}
-			<div class="card">
-				<h3 class="card-title">{{ repo.name }}</h3>
-				<div class="card-meta">
-					{% if repo.language %}
-					<strong style="color: var(--accent)">{{ repo.language }}</strong>
-					{% endif %}
-					<div style="margin-top: 0.5rem">
-						<span class="badge badge-stars">
-							<i class="fas fa-star"></i> {{ repo.stargazers_count }}
-						</span>
-						<span class="badge badge-forks">
-							<i class="fas fa-code-branch"></i> {{ repo.forks }}
-						</span>
+		<!-- Featured / curated projects -->
+		{% if featured_projects %}
+		<div class="featured-projects">
+			{% for project in featured_projects %}
+			<a href="{{ project.url }}" target="_blank" class="featured-card">
+				<div class="featured-card-inner">
+					<div class="featured-card-header">
+						<span class="featured-label">{{ project.label }}</span>
+						{% if project.language %}
+						<span class="lang-tag">{{ project.language }}</span>
+						{% endif %}
 					</div>
+					<h3 class="featured-title">{{ project.name }}</h3>
+					<p class="featured-description">{{ project.description }}</p>
+					{% if project.stats %}
+					<div class="featured-stats">
+						{% for stat in project.stats %}
+						<span class="featured-stat">{{ stat }}</span>
+						{% endfor %}
+					</div>
+					{% endif %}
 				</div>
-				{% if repo.description %}
-				<p class="card-description">{{ repo.description[:100] }}{% if repo.description|length > 100 %}...{% endif %}</p>
-				{% endif %}
-				<a href="{{ repo.html_url }}" class="btn btn-primary" target="_blank" style="margin-top: auto">View Project</a>
-			</div>
+				<i class="fas fa-arrow-right featured-arrow"></i>
+			</a>
 			{% endfor %}
 		</div>
+		{% endif %}
+
+		<!-- Auto-fetched GitHub repos -->
+		{% if repos %}
+		<div style="margin-top: 2.5rem;">
+			<h3 style="font-size: 0.88rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; text-align: center;">More on GitHub</h3>
+			<div class="grid grid-3">
+				{% for repo in repos %}
+				<div class="card">
+					<h3 class="card-title">{{ repo.name }}</h3>
+					<div class="card-meta">
+						{% if repo.language %}
+						<strong style="color: var(--accent)">{{ repo.language }}</strong>
+						{% endif %}
+						<div style="margin-top: 0.5rem">
+							<span class="badge badge-stars">
+								<i class="fas fa-star"></i> {{ repo.stargazers_count }}
+							</span>
+							<span class="badge badge-forks">
+								<i class="fas fa-code-branch"></i> {{ repo.forks }}
+							</span>
+						</div>
+					</div>
+					{% if repo.description %}
+					<p class="card-description">{{ repo.description[:120] }}{% if repo.description|length > 120 %}...{% endif %}</p>
+					{% endif %}
+					<a href="{{ repo.html_url }}" class="btn btn-outline btn-sm" target="_blank" style="margin-top: auto">View on GitHub</a>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+		{% endif %}
 
 		<div class="text-center mt-3">
 			<a href="https://github.com/tonybenoy?tab=repositories" class="btn btn-outline btn-lg" target="_blank">
-				<i class="fab fa-github"></i> More on GitHub
+				<i class="fab fa-github"></i> All Repositories
 			</a>
 		</div>
 	</div>

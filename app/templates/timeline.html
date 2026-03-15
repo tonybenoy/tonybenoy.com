@@ -50,7 +50,7 @@
 		<!-- Work Experience -->
 		<div class="timeline-section">
 			<h3 class="timeline-section-title">
-				<i class="fas fa-briefcase"></i> Work
+				<i class="fas fa-briefcase"></i> Work Experience
 			</h3>
 			<div class="timeline">
 				{% for job in work_experience %}
@@ -65,7 +65,7 @@
 								<h5>
 									{% if job.company_url %}
 									<a href="{{ job.company_url }}" target="_blank">
-										{{ job.company }} <i class="fas fa-external-link-alt" style="font-size: 0.7rem"></i>
+										{{ job.company }} <i class="fas fa-external-link-alt" style="font-size: 0.65rem"></i>
 									</a>
 									{% else %}
 									{{ job.company }}
@@ -119,7 +119,7 @@
 								<h5>
 									{% if edu.institution_url %}
 									<a href="{{ edu.institution_url }}" target="_blank">
-										{{ edu.institution }} <i class="fas fa-external-link-alt" style="font-size: 0.7rem"></i>
+										{{ edu.institution }} <i class="fas fa-external-link-alt" style="font-size: 0.65rem"></i>
 									</a>
 									{% else %}
 									{{ edu.institution }}

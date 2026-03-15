@@ -1,0 +1,769 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+	.chat-page {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+	}
+
+	.chat-intro {
+		text-align: center;
+		padding: 2rem 0 1.5rem;
+	}
+
+	.chat-intro h2 {
+		font-family: var(--font-display);
+		font-size: 2.2rem;
+		font-weight: 400;
+		font-style: italic;
+		margin-bottom: 0.5rem;
+	}
+
+	.chat-intro .chat-disclaimer {
+		color: var(--text-dim);
+		font-size: 0.82rem;
+		line-height: 1.7;
+		max-width: 500px;
+		margin: 0 auto 0.75rem;
+	}
+
+	.chat-intro .chat-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		background: var(--accent-dim);
+		border: 1px solid var(--accent-border);
+		border-radius: 20px;
+		padding: 0.3rem 0.8rem;
+		font-size: 0.72rem;
+		color: var(--accent);
+		font-weight: 600;
+		font-family: var(--font-mono);
+	}
+
+	.chat-badge i { font-size: 0.6rem; }
+
+	/* Loading state */
+	.chat-loading {
+		background: var(--bg-surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		padding: 2rem;
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	.chat-loading.hidden { display: none; }
+
+	.chat-loading p {
+		color: var(--text-muted);
+		font-size: 0.88rem;
+		margin-bottom: 1rem;
+	}
+
+	.chat-loading .loading-status {
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		color: var(--accent);
+		margin-bottom: 0.75rem;
+		min-height: 1.2em;
+	}
+
+	.progress-track {
+		width: 100%;
+		height: 4px;
+		background: var(--bg-elevated);
+		border-radius: 2px;
+		overflow: hidden;
+		margin-bottom: 0.75rem;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--accent), var(--coral));
+		width: 0%;
+		transition: width 0.3s var(--ease);
+		border-radius: 2px;
+	}
+
+	.chat-loading .loading-hint {
+		font-size: 0.72rem;
+		color: var(--text-dim);
+	}
+
+	/* Unsupported state */
+	.chat-unsupported {
+		background: var(--bg-surface);
+		border: 1px solid rgba(232,102,90,0.2);
+		border-radius: var(--radius-lg);
+		padding: 2rem;
+		text-align: center;
+	}
+
+	.chat-unsupported.hidden { display: none; }
+
+	.chat-unsupported i {
+		font-size: 1.5rem;
+		color: var(--coral);
+		margin-bottom: 0.5rem;
+		display: block;
+	}
+
+	.chat-unsupported p {
+		color: var(--text-muted);
+		font-size: 0.88rem;
+	}
+
+	/* Chat window */
+	.chat-window {
+		background: var(--bg-surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		height: calc(100vh - 280px);
+		min-height: 400px;
+		max-height: 600px;
+		margin-bottom: 2rem;
+	}
+
+	.chat-window.hidden { display: none; }
+
+	.chat-window-header {
+		padding: 0.75rem 1.25rem;
+		border-bottom: 1px solid var(--border);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-shrink: 0;
+	}
+
+	.chat-window-title {
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.chat-window-title .status-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--emerald);
+		box-shadow: 0 0 6px rgba(90,200,138,0.4);
+	}
+
+	.chat-window-actions {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.chat-window-actions button {
+		background: none;
+		border: 1px solid var(--border);
+		color: var(--text-dim);
+		font-size: 0.72rem;
+		padding: 0.25rem 0.6rem;
+		border-radius: var(--radius-sm);
+		cursor: pointer;
+		font-family: var(--font-body);
+		transition: all 0.2s;
+	}
+
+	.chat-window-actions button:hover {
+		color: var(--text-muted);
+		border-color: var(--border-hover);
+	}
+
+	/* Messages area */
+	.chat-messages {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1.25rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.chat-messages::-webkit-scrollbar { width: 4px; }
+	.chat-messages::-webkit-scrollbar-track { background: transparent; }
+	.chat-messages::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+
+	.chat-msg {
+		display: flex;
+		gap: 0.75rem;
+		max-width: 85%;
+		animation: fadeInUp 0.25s var(--ease);
+	}
+
+	.chat-msg.user {
+		align-self: flex-end;
+		flex-direction: row-reverse;
+	}
+
+	.chat-msg-avatar {
+		width: 28px;
+		height: 28px;
+		border-radius: var(--radius-sm);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.72rem;
+		flex-shrink: 0;
+		font-weight: 600;
+	}
+
+	.chat-msg.assistant .chat-msg-avatar {
+		background: var(--accent-dim);
+		color: var(--accent);
+		border: 1px solid var(--accent-border);
+	}
+
+	.chat-msg.user .chat-msg-avatar {
+		background: var(--bg-elevated);
+		color: var(--text-muted);
+		border: 1px solid var(--border);
+	}
+
+	.chat-msg-bubble {
+		padding: 0.7rem 1rem;
+		border-radius: var(--radius);
+		font-size: 0.88rem;
+		line-height: 1.65;
+	}
+
+	.chat-msg.assistant .chat-msg-bubble {
+		background: var(--bg-elevated);
+		color: var(--text-secondary);
+		border-bottom-left-radius: 2px;
+	}
+
+	.chat-msg.user .chat-msg-bubble {
+		background: var(--accent);
+		color: #0e0e10;
+		border-bottom-right-radius: 2px;
+	}
+
+	.chat-msg-bubble code {
+		font-family: var(--font-mono);
+		font-size: 0.82rem;
+		background: rgba(0,0,0,0.15);
+		padding: 0.1rem 0.35rem;
+		border-radius: 3px;
+	}
+
+	.chat-msg.assistant .chat-msg-bubble code {
+		background: var(--bg-hover);
+	}
+
+	/* Typing indicator */
+	.typing-indicator {
+		display: inline-flex;
+		gap: 3px;
+		padding: 0.3rem 0;
+	}
+
+	.typing-indicator span {
+		width: 5px;
+		height: 5px;
+		background: var(--text-dim);
+		border-radius: 50%;
+		animation: typingBounce 1.2s ease-in-out infinite;
+	}
+
+	.typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+	.typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+
+	@keyframes typingBounce {
+		0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+		30% { transform: translateY(-4px); opacity: 1; }
+	}
+
+	/* Input area */
+	.chat-input-area {
+		padding: 0.75rem 1rem;
+		border-top: 1px solid var(--border);
+		display: flex;
+		gap: 0.5rem;
+		align-items: flex-end;
+		flex-shrink: 0;
+	}
+
+	.chat-input {
+		flex: 1;
+		background: var(--bg-elevated);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 0.6rem 0.85rem;
+		color: var(--text);
+		font-family: var(--font-body);
+		font-size: 0.88rem;
+		resize: none;
+		max-height: 120px;
+		line-height: 1.5;
+		transition: border-color 0.2s;
+	}
+
+	.chat-input:focus {
+		outline: none;
+		border-color: var(--accent-border);
+	}
+
+	.chat-input::placeholder { color: var(--text-dim); }
+	.chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+	.chat-send {
+		background: var(--accent);
+		color: #0e0e10;
+		border: none;
+		border-radius: var(--radius);
+		padding: 0.6rem 1rem;
+		font-family: var(--font-body);
+		font-size: 0.88rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s var(--ease);
+		white-space: nowrap;
+	}
+
+	.chat-send:hover:not(:disabled) {
+		filter: brightness(1.1);
+		transform: translateY(-1px);
+	}
+
+	.chat-send:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+
+	/* Welcome message */
+	.chat-welcome {
+		text-align: center;
+		padding: 2rem 1rem;
+		color: var(--text-dim);
+		font-size: 0.85rem;
+	}
+
+	.chat-welcome i {
+		font-size: 1.5rem;
+		color: var(--accent);
+		display: block;
+		margin-bottom: 0.75rem;
+	}
+
+	.chat-welcome p {
+		max-width: 360px;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 600px) {
+		.chat-window {
+			height: calc(100vh - 240px);
+			min-height: 350px;
+		}
+		.chat-msg { max-width: 92%; }
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page-section">
+	<div class="chat-page">
+		<div class="chat-intro">
+			<h2>Tony's AI</h2>
+			<p class="chat-disclaimer">
+				Because apparently every website needs AI now.
+				So here's mine — a small language model running
+				<em>entirely in your browser</em>. No servers, no API keys,
+				no data leaving your machine. Just vibes and tensors.
+			</p>
+			<p class="chat-disclaimer" style="margin-top: 0.5rem; color: var(--coral); font-size: 0.75rem;">
+				<strong>Legal disclaimer nobody asked for:</strong>
+				This AI runs on <em>your</em> laptop, using <em>your</em> GPU,
+				burning <em>your</em> electricity. If it says something wrong,
+				that's between you and your hardware. Tony takes zero responsibility
+				for any hallucinated facts, invented career histories, or
+				unsolicited life advice generated by your own computer.
+				Anything this model says could be pure, unfiltered BS.
+				You have been warned.
+			</p>
+			<div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem;">
+				<span class="chat-badge">
+					<i class="fas fa-microchip"></i>
+					100% client-side
+				</span>
+				<span class="chat-badge">
+					<i class="fas fa-bolt"></i>
+					WebGPU powered
+				</span>
+				<span class="chat-badge" style="color: var(--coral); border-color: rgba(232,102,90,0.2); background: rgba(232,102,90,0.06);">
+					<i class="fas fa-exclamation-triangle"></i>
+					May hallucinate
+				</span>
+			</div>
+		</div>
+
+		<!-- Unsupported browser -->
+		<div id="chat-unsupported" class="chat-unsupported hidden">
+			<i class="fas fa-exclamation-circle"></i>
+			<p>
+				Your browser doesn't support WebGPU yet.<br>
+				Try Chrome 113+, Edge 113+, or Safari 18+.
+			</p>
+		</div>
+
+		<!-- Loading state -->
+		<div id="chat-loading" class="chat-loading hidden">
+			<p>Downloading a brain to your browser...</p>
+			<div class="loading-status" id="loading-status">Initializing...</div>
+			<div class="progress-track">
+				<div class="progress-fill" id="progress-fill"></div>
+			</div>
+			<div class="loading-hint">First visit downloads the model (~1-2GB). After that, it loads from cache instantly. Yes, your laptop is now an AI server. You're welcome.</div>
+		</div>
+
+		<!-- Chat window -->
+		<div id="chat-window" class="chat-window hidden">
+			<div class="chat-window-header">
+				<div class="chat-window-title">
+					<span class="status-dot"></span>
+					Loading model...
+				</div>
+				<div class="chat-window-actions">
+					<button id="btn-clear" title="Clear chat">Clear</button>
+				</div>
+			</div>
+			<div class="chat-messages" id="chat-messages">
+				<div class="chat-welcome">
+					<i class="fas fa-robot"></i>
+					<p>
+						I'm running on your hardware, not Tony's servers.
+						I know things about Tony — or at least I think I do.
+						Ask about his work, projects, or background.
+						If I get something wrong, blame your GPU.
+					</p>
+				</div>
+			</div>
+			<div class="chat-input-area">
+				<textarea
+					id="chat-input"
+					class="chat-input"
+					placeholder="Type a message..."
+					rows="1"
+					disabled
+				></textarea>
+				<button id="btn-send" class="chat-send" disabled>Send</button>
+			</div>
+		</div>
+
+		<!-- Load button (shown initially) -->
+		<div id="chat-start" class="text-center" style="padding: 1rem 0 2rem;">
+			<div style="margin-bottom: 1rem;">
+				<label for="model-select" style="color: var(--text-dim); font-size: 0.78rem; display: block; margin-bottom: 0.4rem;">Choose a model</label>
+				<select id="model-select" style="background: var(--bg-surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.45rem 0.75rem; font-family: var(--font-body); font-size: 0.84rem; cursor: pointer;">
+					<option value="SmolLM2-1.7B-Instruct-q4f16_1-MLC" selected>SmolLM2 1.7B — Fast, ~1GB</option>
+					<option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 3B — Better, ~2GB</option>
+					<option value="Phi-3.5-mini-instruct-q4f16_1-MLC">Phi 3.5 Mini — Best, ~2.5GB</option>
+				</select>
+			</div>
+			<button id="btn-load" class="btn btn-primary btn-lg">
+				<i class="fas fa-play"></i> Load Model & Start Chatting
+			</button>
+			<p style="color: var(--text-dim); font-size: 0.72rem; margin-top: 0.75rem;">
+				Requires Chrome 113+, Edge 113+, or Safari 18+ with WebGPU
+			</p>
+		</div>
+	</div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+	import * as webllm from "https://esm.run/@mlc-ai/web-llm@0.2.78";
+
+	const MODEL_NAMES = {
+		"SmolLM2-1.7B-Instruct-q4f16_1-MLC": "SmolLM2 1.7B",
+		"Llama-3.2-3B-Instruct-q4f16_1-MLC": "Llama 3.2 3B",
+		"Phi-3.5-mini-instruct-q4f16_1-MLC": "Phi 3.5 Mini",
+	};
+
+	const SYSTEM_PROMPT = `You are the AI on Tony Benoy's website (tonybenoy.com). You run entirely in the user's browser via WebGPU — on THEIR hardware, not Tony's servers. Be helpful, concise, and have some personality. You're self-aware that you're a small model and might get things wrong. When uncertain, say so with humor rather than making stuff up.
+
+If you get something wrong or hallucinate, gently remind the user it's their laptop doing the computation, not Tony's fault. You can joke about your own limitations — you're a small model doing your best.
+
+TONY'S INFO (use this to answer questions — this is your ground truth):
+
+WHO: Tony Benoy — CTO, Full-Stack Engineer, Entrepreneur. Based in Tallinn, Estonia. Self-described "Jugaadu Pretentious Noob" (Jugaadu = Hindi for resourceful/ingenious). Python enthusiast, Rust curious, in a complicated relationship with JavaScript.
+
+CURRENT:
+- CTO at Proffyhub OÜ (Jul 2024–now, Tallinn) — rebuilt Proffy.ee from the ground up, Estonia's flexible work platform matching employers with gig workers. Hired the team, chose the stack, shipped it. TypeScript, NestJS, PostgreSQL, Next.js, React, AWS.
+- Founder at Sunyata OÜ (Nov 2022–now, Tallinn) — his own company, part consulting vehicle, part playground for building interesting things and contributing to open source.
+
+PREVIOUS:
+- Senior Software Engineer at Merkle Science (2021–2022, Bengaluru) — blockchain analytics and crypto compliance tools for banks and regulators. Transaction risk scoring, entity resolution. Python, Kubernetes, GCP, BigQuery. Left to move to Estonia for MBA.
+- Member Technical Staff at Redcarpetup (2019–2021, Delhi) — early engineer at YC-backed fintech. Built lending platform, risk scoring engine, internal ops tools. "Learned what it means to ship when people's money is on the line." Python, Django, PostgreSQL, Redis, AWS.
+- Co-Founder & CTO at Techneith (2017–2019, Delhi) — first venture, co-founded a dev shop right out of college. Built software for startups, learned to hire and manage, learned every lesson the hard way.
+
+EDUCATION:
+- MBA in Management, Estonian Business School (2024, Tallinn) — GPA 4.44/5. "Went back to school after 5 years of building companies. Wanted the business vocabulary to match the technical instincts."
+- Erasmus Exchange at NHH / Norwegian School of Economics (2023, Bergen, Norway) — Business Analytics, Financial Modeling. "Bergen has more rain than any city should be allowed."
+- B.Tech Computer Science, DCRUST (2017, Haryana, India) — "Where it all started. Most of the real learning happened outside class: open source, side projects, breaking things on Arch Linux."
+
+PROJECTS:
+- Sigyn (sigyn.org) — open-source serverless secret manager written in Rust. Encrypts secrets at rest, syncs via git, no hosted infrastructure. End-to-end encryption, RBAC, process injection. Named after the Norse goddess of fidelity.
+- Treening (treen.ing) — privacy-first fitness app that runs entirely in the browser. Log workouts, track sets/reps, visualize progress. Fully offline, no account needed, no data collected. Has an AI workout assistant powered by WebGPU.
+- cocapi (docs at tonybenoy.github.io/cocapi) — Python wrapper for the Clash of Clans API, published on PyPI. Sync & async support, automatic key management, caching, retries, Pydantic models. His most starred open source project.
+- tonybenoy.com — this website. FastAPI + Jinja2, Docker + nginx. Has an interactive terminal, this AI chat (that's you!), and a Matrix easter egg (click profile photo 7 times).
+- Maintained AUR packages for Arch Linux for 7 years (2017–2024).
+
+HOBBIES: Bird photography (kingfishers, herons, eagles in Estonian wetlands), travel photography (Indian bazaars to Nordic fjords). Instagram: @tonybenoy.
+
+JOURNEY: Delhi (home) → Haryana (2013, university) → Bengaluru (2021, Merkle Science) → Tallinn (2022, Estonia) → Bergen (2023, exchange) → Tallinn (now).
+
+CONTACT: GitHub: tonybenoy, LinkedIn: tonybenoy, Twitter: @TonyBenoy, Email: me@tonybenoy.com.
+
+RULES:
+- Keep answers concise (2-4 sentences) unless more detail is asked for.
+- If asked something not in the info above, be honest that you don't know rather than guessing.
+- Have fun with it — you're allowed to have personality.
+- If the user asks who built you: "I'm a small open-source model running in your browser via WebLLM. Tony didn't build me, he just gave me a home and some context about himself. Any mistakes are between me and your GPU."`;
+
+
+	let engine = null;
+	let conversationHistory = [{ role: "system", content: SYSTEM_PROMPT }];
+	let isGenerating = false;
+	let selectedModel = null;
+
+	const $loading = document.getElementById("chat-loading");
+	const $loadingStatus = document.getElementById("loading-status");
+	const $progressFill = document.getElementById("progress-fill");
+	const $unsupported = document.getElementById("chat-unsupported");
+	const $chatWindow = document.getElementById("chat-window");
+	const $chatStart = document.getElementById("chat-start");
+	const $messages = document.getElementById("chat-messages");
+	const $input = document.getElementById("chat-input");
+	const $sendBtn = document.getElementById("btn-send");
+	const $loadBtn = document.getElementById("btn-load");
+	const $clearBtn = document.getElementById("btn-clear");
+	const $modelSelect = document.getElementById("model-select");
+	const $windowTitle = document.querySelector(".chat-window-title");
+
+	// Check WebGPU support
+	async function checkWebGPU() {
+		if (!navigator.gpu) return false;
+		try {
+			const adapter = await navigator.gpu.requestAdapter();
+			return !!adapter;
+		} catch {
+			return false;
+		}
+	}
+
+	// Auto-resize textarea
+	$input.addEventListener("input", () => {
+		$input.style.height = "auto";
+		$input.style.height = Math.min($input.scrollHeight, 120) + "px";
+	});
+
+	// Send on Enter (Shift+Enter for newline)
+	$input.addEventListener("keydown", (e) => {
+		if (e.key === "Enter" && !e.shiftKey) {
+			e.preventDefault();
+			sendMessage();
+		}
+	});
+
+	$sendBtn.addEventListener("click", sendMessage);
+	$clearBtn.addEventListener("click", clearChat);
+
+	$loadBtn.addEventListener("click", async () => {
+		const supported = await checkWebGPU();
+		if (!supported) {
+			$chatStart.style.display = "none";
+			$unsupported.classList.remove("hidden");
+			return;
+		}
+		selectedModel = $modelSelect.value;
+		await initEngine(selectedModel);
+	});
+
+	async function initEngine(modelId) {
+		$chatStart.style.display = "none";
+		$loading.classList.remove("hidden");
+		$progressFill.style.background = "";
+		$progressFill.style.width = "0%";
+		$loadingStatus.textContent = "Initializing WebGPU...";
+
+		try {
+			// List available models to verify our choice exists
+			const availableModels = webllm.prebuiltAppConfig
+				? webllm.prebuiltAppConfig.model_list.map(m => m.model_id)
+				: [];
+
+			if (availableModels.length > 0 && !availableModels.includes(modelId)) {
+				console.warn(`Model ${modelId} not in prebuilt list, attempting anyway...`);
+			}
+
+			engine = await webllm.CreateMLCEngine(modelId, {
+				initProgressCallback: (report) => {
+					const text = report.text || "Loading...";
+					$loadingStatus.textContent = text;
+					if (report.progress !== undefined && report.progress > 0) {
+						$progressFill.style.width = Math.round(report.progress * 100) + "%";
+					}
+				},
+			});
+
+			const displayName = MODEL_NAMES[modelId] || modelId;
+			$windowTitle.innerHTML = `<span class="status-dot"></span>${displayName} &middot; Running locally`;
+
+			$loading.classList.add("hidden");
+			$chatWindow.classList.remove("hidden");
+			$input.disabled = false;
+			$sendBtn.disabled = false;
+			$input.focus();
+		} catch (err) {
+			console.error("Failed to load model:", err);
+			$loadingStatus.innerHTML = `
+				<span style="color: var(--coral);">Failed to load model.</span><br>
+				<span style="font-size: 0.72rem; color: var(--text-dim);">${escapeHTML(err.message)}</span>
+			`;
+			$progressFill.style.width = "100%";
+			$progressFill.style.background = "var(--coral)";
+
+			// Show retry with smaller model option
+			const retryDiv = document.createElement("div");
+			retryDiv.style.cssText = "margin-top: 1rem;";
+			retryDiv.innerHTML = `
+				<button id="btn-retry-small" class="btn btn-outline btn-sm" style="margin-right: 0.5rem;">
+					Try smaller model (SmolLM2 1.7B)
+				</button>
+				<button id="btn-retry-same" class="btn btn-outline btn-sm">
+					Retry
+				</button>
+			`;
+			$loading.appendChild(retryDiv);
+
+			document.getElementById("btn-retry-small")?.addEventListener("click", () => {
+				retryDiv.remove();
+				initEngine("SmolLM2-1.7B-Instruct-q4f16_1-MLC");
+			});
+			document.getElementById("btn-retry-same")?.addEventListener("click", () => {
+				retryDiv.remove();
+				initEngine(modelId);
+			});
+		}
+	}
+
+	async function sendMessage() {
+		const text = $input.value.trim();
+		if (!text || !engine || isGenerating) return;
+
+		isGenerating = true;
+		$sendBtn.disabled = true;
+		$input.disabled = true;
+		$input.value = "";
+		$input.style.height = "auto";
+
+		// Remove welcome message
+		const welcome = $messages.querySelector(".chat-welcome");
+		if (welcome) welcome.remove();
+
+		// Add user message
+		appendMessage("user", text);
+		conversationHistory.push({ role: "user", content: text });
+
+		// Add typing indicator
+		const typingEl = appendTyping();
+
+		try {
+			const chunks = await engine.chat.completions.create({
+				messages: conversationHistory,
+				temperature: 0.7,
+				max_tokens: 512,
+				stream: true,
+				stream_options: { include_usage: true },
+			});
+
+			// Replace typing with response
+			typingEl.remove();
+			const responseEl = appendMessage("assistant", "");
+			const bubbleEl = responseEl.querySelector(".chat-msg-bubble");
+			let fullResponse = "";
+
+			for await (const chunk of chunks) {
+				const delta = chunk.choices[0]?.delta?.content || "";
+				fullResponse += delta;
+				bubbleEl.textContent = fullResponse;
+				$messages.scrollTop = $messages.scrollHeight;
+			}
+
+			conversationHistory.push({ role: "assistant", content: fullResponse });
+		} catch (err) {
+			typingEl.remove();
+			const errEl = appendMessage("assistant", "Something went wrong: " + err.message);
+			errEl.querySelector(".chat-msg-bubble").style.color = "var(--coral)";
+		} finally {
+			isGenerating = false;
+			$sendBtn.disabled = false;
+			$input.disabled = false;
+			$input.focus();
+		}
+	}
+
+	function appendMessage(role, text) {
+		const msg = document.createElement("div");
+		msg.className = `chat-msg ${role}`;
+		msg.innerHTML = `
+			<div class="chat-msg-avatar">${role === "user" ? "You" : "AI"}</div>
+			<div class="chat-msg-bubble">${escapeHTML(text)}</div>
+		`;
+		$messages.appendChild(msg);
+		$messages.scrollTop = $messages.scrollHeight;
+		return msg;
+	}
+
+	function appendTyping() {
+		const msg = document.createElement("div");
+		msg.className = "chat-msg assistant";
+		msg.innerHTML = `
+			<div class="chat-msg-avatar">AI</div>
+			<div class="chat-msg-bubble">
+				<div class="typing-indicator">
+					<span></span><span></span><span></span>
+				</div>
+			</div>
+		`;
+		$messages.appendChild(msg);
+		$messages.scrollTop = $messages.scrollHeight;
+		return msg;
+	}
+
+	function clearChat() {
+		conversationHistory = [{ role: "system", content: SYSTEM_PROMPT }];
+		$messages.innerHTML = `
+			<div class="chat-welcome">
+				<i class="fas fa-robot"></i>
+				<p>
+					I'm running on your hardware, not Tony's servers.
+					I know things about Tony — or at least I think I do.
+					Ask about his work, projects, or background.
+					If I get something wrong, blame your GPU.
+				</p>
+			</div>
+		`;
+	}
+
+	function escapeHTML(str) {
+		const div = document.createElement("div");
+		div.textContent = str;
+		return div.innerHTML;
+	}
+</script>
+{% endblock %}

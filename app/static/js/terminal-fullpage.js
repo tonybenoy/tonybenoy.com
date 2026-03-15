@@ -1,13 +1,11 @@
 // Full-page terminal specific code
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize fullpage terminal with existing WebTerminal class
     const terminal = new WebTerminal();
-    
-    // Override methods to use fullpage elements
+
     terminal.isFullPage = true;
     terminal.isMinimized = false;
-    
-    // Override addOutput method
+
+    // Override addOutput to use fullpage elements
     terminal.addOutput = function(text, type = 'info') {
         const output = document.getElementById('terminal-output-fullpage');
         const line = document.createElement('div');
@@ -15,27 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
         line.textContent = text;
         output.appendChild(line);
     };
-    
-    // Override clearTerminal method
+
     terminal.clearTerminal = function() {
         document.getElementById('terminal-output-fullpage').innerHTML = '';
-        return 'Terminal cleared.';
     };
-    
-    // Override executeCommand to use fullpage input
+
     const originalExecuteCommand = terminal.executeCommand.bind(terminal);
     terminal.executeCommand = function(commandLine) {
         originalExecuteCommand(commandLine);
         this.scrollToBottom();
     };
-    
-    // Override scrollToBottom for fullpage
+
     terminal.scrollToBottom = function() {
         const body = document.querySelector('.terminal-body-fullpage');
         body.scrollTop = body.scrollHeight;
     };
-    
-    // Set up input handling for fullpage
+
+    // Input handling
     const input = document.getElementById('terminal-input-fullpage');
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -48,13 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (e.key === 'ArrowDown') {
             e.preventDefault();
             terminal.navigateHistory('down', input);
+        } else if (e.key === 'Tab') {
+            e.preventDefault();
+            // Simple tab completion
+            const val = input.value.trim();
+            const cmds = Object.keys(terminal.commands);
+            const matches = cmds.filter(c => c.startsWith(val));
+            if (matches.length === 1) {
+                input.value = matches[0] + ' ';
+            } else if (matches.length > 1) {
+                terminal.addOutput(matches.join('  '), 'info');
+                terminal.scrollToBottom();
+            }
         }
     });
-    
-    // Override navigateHistory for fullpage
+
     terminal.navigateHistory = function(direction, inputElement = null) {
         const targetInput = inputElement || document.getElementById('terminal-input-fullpage');
-        
         if (direction === 'up' && this.historyIndex < this.history.length - 1) {
             this.historyIndex++;
             targetInput.value = this.history[this.historyIndex];
@@ -66,21 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
             targetInput.value = '';
         }
     };
-    
-    // Add welcome message
-    terminal.addOutput('Welcome to Tony\'s Full-Page Terminal! Type "help" for available commands.', 'success');
-    
-    // Update current path
-    const path = window.location.pathname;
-    terminal.currentPath = path === '/' ? '~' : path;
-    const prompt = document.querySelector('.terminal-prompt');
-    if (prompt) {
-        prompt.textContent = `tony@tonybenoy.com:${terminal.currentPath}$`;
-    }
-    
-    // Focus input
+
+    // SSH-style welcome banner
+    terminal.addOutput(`Last login: ${new Date().toDateString()} from your-browser`, 'info');
+    terminal.addOutput('', 'info');
+    terminal.addOutput('Welcome to Tony\'s server (tonybenoy.com)', 'success');
+    terminal.addOutput('  OS:     TonyOS 2024.1 / Tallinn Edition', 'info');
+    terminal.addOutput('  Status: All systems operational', 'info');
+    terminal.addOutput('  Access: Read-only guest session', 'info');
+    terminal.addOutput('', 'info');
+    terminal.addOutput('Type "help" for commands, "man tony" for the full manual,', 'info');
+    terminal.addOutput('or "neofetch" if you just want the vibes.', 'info');
+    terminal.addOutput('', 'info');
+
+    terminal.currentPath = '~';
     input.focus();
-    
-    // Store terminal instance globally
+
     window.fullpageTerminal = terminal;
 });

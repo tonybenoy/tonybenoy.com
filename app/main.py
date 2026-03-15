@@ -88,16 +88,19 @@ async def internal_server_error_handler(request: Request, exc: Exception):
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    """Log all incoming requests."""
+    """Log incoming requests (skip static files and health checks)."""
+    path = request.url.path
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time
 
-    logger.info(
-        f"{request.method} {request.url.path} - "
-        f"Status: {response.status_code} - "
-        f"Time: {process_time:.3f}s"
-    )
+    # Don't log static file or health check requests
+    if not path.startswith("/static") and path != "/health":
+        logger.info(
+            f"{request.method} {path} - "
+            f"Status: {response.status_code} - "
+            f"Time: {process_time:.3f}s"
+        )
     return response
 
 

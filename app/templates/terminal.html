@@ -2,91 +2,252 @@
 
 {% block head %}
 <link href="/static/css/terminal.css" rel="stylesheet">
-{% endblock %}
-
-{% block content %}
-<main style="padding: 1rem 1rem 0;">
-	<div id="fullpage-terminal" class="fullpage-terminal">
-		<div class="terminal-header-fullpage">
-			<span class="terminal-title">tony@tonybenoy.com:~$ - Full Terminal</span>
-			<div class="terminal-controls">
-				<button class="terminal-btn" id="clear-terminal" title="Clear">Clear</button>
-				<button class="terminal-btn" id="minimize-terminal" title="Minimize">Minimize</button>
-			</div>
-		</div>
-		<div class="terminal-body-fullpage">
-			<div class="terminal-output" id="terminal-output-fullpage"></div>
-			<div class="terminal-input-line">
-				<span class="terminal-prompt">tony@tonybenoy.com:~$</span>
-				<input type="text" class="terminal-input" id="terminal-input-fullpage" autocomplete="off" spellcheck="false" autofocus>
-			</div>
-		</div>
-	</div>
-</main>
-
 <style>
-.fullpage-terminal {
-	background: #000;
-	border: 1px solid #00ff00;
-	box-shadow: 0 0 20px #00ff0050;
-	min-height: calc(100vh - 120px);
+/* Desktop-like container — terminal floats centered */
+.terminal-desktop {
 	display: flex;
 	flex-direction: column;
-}
-.terminal-header-fullpage {
-	background: #000;
-	color: #00ff00;
-	padding: 10px 16px;
-	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	border-bottom: 1px solid #00ff00;
-	text-shadow: 0 0 5px #00ff00;
-	font-weight: bold;
+	justify-content: center;
+	min-height: calc(100vh - 120px);
+	padding: 2rem 1.5rem;
 }
+
+/* Terminal window — proper proportions, not full-bleed */
+.terminal-window {
+	background: #1e1e2e;
+	border-radius: 10px;
+	overflow: hidden;
+	width: 100%;
+	max-width: 780px;
+	height: 520px;
+	display: flex;
+	flex-direction: column;
+	box-shadow:
+		0 25px 60px rgba(0,0,0,0.45),
+		0 8px 20px rgba(0,0,0,0.2),
+		0 0 0 1px rgba(255,255,255,0.06);
+	animation: terminalOpen 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes terminalOpen {
+	from {
+		opacity: 0;
+		transform: scale(0.96) translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+/* Title bar */
+.terminal-titlebar {
+	background: #181825;
+	padding: 11px 16px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	border-bottom: 1px solid rgba(255,255,255,0.06);
+	user-select: none;
+	flex-shrink: 0;
+}
+
+.terminal-dots {
+	display: flex;
+	gap: 7px;
+}
+
+.terminal-dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: filter 0.15s, opacity 0.15s;
+	opacity: 0.85;
+}
+
+.terminal-dot:hover { filter: brightness(1.3); opacity: 1; }
+
+.terminal-dot-close { background: #f38ba8; }
+.terminal-dot-minimize { background: #f9e2af; }
+.terminal-dot-maximize { background: #a6e3a1; }
+
+.terminal-titlebar-text {
+	flex: 1;
+	text-align: center;
+	font-family: var(--font-mono);
+	font-size: 0.76rem;
+	color: #585b70;
+	font-weight: 500;
+	letter-spacing: 0.01em;
+}
+
+.terminal-titlebar-actions {
+	display: flex;
+	gap: 6px;
+}
+
+.terminal-titlebar-btn {
+	background: none;
+	border: 1px solid rgba(255,255,255,0.06);
+	color: #585b70;
+	font-size: 0.68rem;
+	padding: 3px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-family: var(--font-mono);
+	transition: all 0.15s;
+}
+
+.terminal-titlebar-btn:hover {
+	color: #a6adc8;
+	border-color: rgba(255,255,255,0.12);
+	background: rgba(255,255,255,0.04);
+}
+
+/* Terminal body */
 .terminal-body-fullpage {
-	background: #000;
-	color: #00ff00;
-	font-family: 'Courier New', monospace;
-	font-size: 14px;
-	padding: 16px;
+	background: #1e1e2e;
+	color: #cdd6f4;
+	font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+	font-size: 13px;
+	line-height: 1.6;
+	padding: 14px 18px;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	text-shadow: 0 0 2px #00ff00;
 	overflow-y: auto;
 }
-.fullpage-terminal .terminal-output {
+
+/* Scrollbar */
+.terminal-body-fullpage::-webkit-scrollbar { width: 5px; }
+.terminal-body-fullpage::-webkit-scrollbar-track { background: transparent; }
+.terminal-body-fullpage::-webkit-scrollbar-thumb { background: #313244; border-radius: 3px; }
+.terminal-body-fullpage::-webkit-scrollbar-thumb:hover { background: #45475a; }
+
+.terminal-window .terminal-output {
 	flex-grow: 1;
-	margin-bottom: 12px;
+	margin-bottom: 8px;
 	white-space: pre-wrap;
 	overflow-wrap: break-word;
-	min-height: 200px;
 }
-.fullpage-terminal .terminal-input-line {
+
+/* Prompt */
+.terminal-window .terminal-input-line {
 	display: flex;
 	align-items: center;
 	margin-top: auto;
-	border-top: 1px solid #00ff0030;
-	padding-top: 8px;
+	padding-top: 6px;
 }
-.fullpage-terminal .terminal-input {
+
+.terminal-window .terminal-prompt {
+	color: #89b4fa;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.prompt-user { color: #a6e3a1; }
+.prompt-at { color: #585b70; }
+.prompt-host { color: #f9e2af; }
+.prompt-sep { color: #45475a; }
+.prompt-path { color: #89b4fa; }
+.prompt-arrow { color: #cba6f7; font-weight: bold; }
+
+.terminal-window .terminal-input {
 	background: transparent;
 	border: none;
-	color: #00ff00;
+	color: #cdd6f4;
 	font-family: inherit;
 	font-size: inherit;
 	flex-grow: 1;
 	outline: none;
-	margin-left: 8px;
-	text-shadow: 0 0 2px #00ff00;
-	font-weight: bold;
+	margin-left: 6px;
+	caret-color: #a6e3a1;
 }
+
+.terminal-window .terminal-input::selection {
+	background: rgba(137,180,250,0.2);
+}
+
+/* Output line colors */
+.terminal-window .terminal-line { color: #bac2de; margin-bottom: 1px; }
+.terminal-window .terminal-error { color: #f38ba8; }
+.terminal-window .terminal-success { color: #a6e3a1; }
+.terminal-window .terminal-info { color: #bac2de; }
+.terminal-window .terminal-command { color: #a6e3a1; }
+
+/* Hint below terminal */
+.terminal-hint {
+	margin-top: 1.25rem;
+	text-align: center;
+	color: var(--text-dim);
+	font-size: 0.78rem;
+}
+
+.terminal-hint kbd {
+	display: inline-block;
+	background: var(--bg-elevated);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	padding: 0.1rem 0.4rem;
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	color: var(--text-muted);
+}
+
+/* Responsive — go taller on mobile since it's the main content */
 @media (max-width: 768px) {
-	.fullpage-terminal { min-height: calc(100vh - 100px); }
-	.terminal-body-fullpage { padding: 12px; font-size: 12px; }
+	.terminal-desktop {
+		padding: 1rem 0.75rem;
+		justify-content: flex-start;
+	}
+	.terminal-window {
+		height: calc(100vh - 140px);
+		max-height: 600px;
+		border-radius: 8px;
+	}
+	.terminal-body-fullpage { padding: 10px 12px; font-size: 12px; }
+	.terminal-dot { width: 10px; height: 10px; }
+	.terminal-titlebar-actions { display: none; }
+	.terminal-hint { display: none; }
+}
+
+/* Large screens — don't let it get too small */
+@media (min-height: 800px) {
+	.terminal-window { height: 560px; }
 }
 </style>
+{% endblock %}
+
+{% block content %}
+<main>
+	<div class="terminal-desktop">
+		<div id="fullpage-terminal" class="terminal-window">
+			<div class="terminal-titlebar">
+				<div class="terminal-dots">
+					<span class="terminal-dot terminal-dot-close" id="minimize-terminal" title="Go back home"></span>
+					<span class="terminal-dot terminal-dot-minimize" title="Minimize"></span>
+					<span class="terminal-dot terminal-dot-maximize" title="Maximize"></span>
+				</div>
+				<span class="terminal-titlebar-text">tony@tonybenoy.com: ~</span>
+				<div class="terminal-titlebar-actions">
+					<button class="terminal-titlebar-btn" id="clear-terminal">clear</button>
+				</div>
+			</div>
+			<div class="terminal-body-fullpage">
+				<div class="terminal-output" id="terminal-output-fullpage"></div>
+				<div class="terminal-input-line">
+					<span class="terminal-prompt"><span class="prompt-user">tony</span><span class="prompt-at">@</span><span class="prompt-host">tonybenoy.com</span><span class="prompt-sep">:</span><span class="prompt-path">~</span> <span class="prompt-arrow">❯</span></span>
+					<input type="text" class="terminal-input" id="terminal-input-fullpage" autocomplete="off" spellcheck="false" autofocus>
+				</div>
+			</div>
+		</div>
+		<p class="terminal-hint">
+			Type <kbd>help</kbd> for commands &middot; <kbd>whoami</kbd> &middot; <kbd>skills</kbd> &middot; <kbd>cd apps</kbd>
+		</p>
+	</div>
+</main>
 {% endblock %}
 
 {% block scripts %}

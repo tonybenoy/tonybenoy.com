@@ -52,18 +52,7 @@ async def get_repo_data_for_user(
 ) -> list[dict[str, str]]:
     """
     Fetch GitHub repository data for a user with proper error handling.
-
-    Args:
-        url: GitHub API URL to fetch repos from
-        response: Existing response list (for pagination)
-        github_token: Optional GitHub token for higher rate limits
-
-    Returns:
-        List of repository data dictionaries
-
-    Raises:
-        httpx.HTTPError: For HTTP-related errors
-        ValueError: For invalid response data
+    Uses a single httpx client for all paginated requests.
     """
     if response is None:
         response = []
@@ -76,44 +65,45 @@ async def get_repo_data_for_user(
 
     try:
         async with httpx.AsyncClient(timeout=timeout, headers=headers) as client:
-            resp = await client.get(url)
-            resp.raise_for_status()
+            next_url: str | None = url
+            while next_url:
+                resp = await client.get(next_url)
+                resp.raise_for_status()
 
-            repos = resp.json()
-            if not isinstance(repos, list):
-                logger.error(
-                    f"Unexpected response format from GitHub API: {type(repos)}"
-                )
-                return response
+                repos = resp.json()
+                if not isinstance(repos, list):
+                    logger.error(
+                        f"Unexpected response format from GitHub API: {type(repos)}"
+                    )
+                    break
 
-            link = resp.headers.get("link", "")
-            links = parse(link) if link else {}
+                for repo in repos:
+                    if not repo.get("fork", True):  # Skip forks
+                        try:
+                            response.append(
+                                {
+                                    "clone_url": repo.get("clone_url", ""),
+                                    "forks": repo.get("forks", 0),
+                                    "name": repo.get("name", "Unknown"),
+                                    "language": repo.get("language")
+                                    or "Not specified",
+                                    "stargazers_count": repo.get(
+                                        "stargazers_count", 0
+                                    ),
+                                    "html_url": repo.get("html_url", ""),
+                                    "description": repo.get("description", ""),
+                                    "updated_at": repo.get("updated_at", ""),
+                                }
+                            )
+                        except KeyError as e:
+                            logger.warning(
+                                f"Missing expected field in repo data: {e}"
+                            )
+                            continue
 
-            for repo in repos:
-                if not repo.get("fork", True):  # Skip forks
-                    try:
-                        response.append(
-                            {
-                                "clone_url": repo.get("clone_url", ""),
-                                "forks": repo.get("forks", 0),
-                                "name": repo.get("name", "Unknown"),
-                                "language": repo.get("language") or "Not specified",
-                                "stargazers_count": repo.get("stargazers_count", 0),
-                                "html_url": repo.get("html_url", ""),
-                                "description": repo.get("description", ""),
-                                "updated_at": repo.get("updated_at", ""),
-                            }
-                        )
-                    except KeyError as e:
-                        logger.warning(f"Missing expected field in repo data: {e}")
-                        continue
-
-            if "next" in links:
-                response = await get_repo_data_for_user(
-                    url=links["next"]["url"],
-                    response=response,
-                    github_token=github_token,
-                )
+                link = resp.headers.get("link", "")
+                links = parse(link) if link else {}
+                next_url = links["next"]["url"] if "next" in links else None
 
     except httpx.TimeoutException:
         logger.error(f"Timeout while fetching data from {url}")

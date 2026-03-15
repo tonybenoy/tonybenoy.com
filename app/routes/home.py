@@ -27,11 +27,12 @@ async def index(request: Request):
         request,
         "index.html",
         {
-            "title": "Tony Benoy - Chief Technology Officer & Full-Stack Engineer",
+            "title": "Tony Benoy — CTO, Builder, Jugaadu",
             "description": (
-                "Tony Benoy - CTO at Proffyhub, Full-Stack Engineer, and "
-                "Entrepreneur. Expert in Python, JavaScript, cloud architecture, "
-                "and team leadership. Based in Tallinn, Estonia."
+                "CTO at Proffyhub, founder of Sunyata, previously Merkle Science "
+                "and Redcarpetup (YC). Building things for the web from Tallinn, "
+                "Estonia. Python enthusiast, Rust curious, MBA from Estonian "
+                "Business School."
             ),
             "active_page": "home",
             "structured_data": get_structured_data(),
@@ -122,11 +123,11 @@ async def contact_page(request: Request):
         request,
         "contact.html",
         {
-            "title": "Contact Tony Benoy - Chief Technology Officer",
+            "title": "Contact — Tony Benoy",
             "description": (
-                "Get in touch with Tony Benoy, CTO and Full-Stack Engineer. "
-                "Available for consulting, speaking engagements, and technology "
-                "leadership opportunities."
+                "Send Tony a message or find him on LinkedIn, Twitter, and "
+                "GitHub. Open to interesting conversations about tech, "
+                "startups, or collaboration."
             ),
             "active_page": "contact",
         },
@@ -137,7 +138,7 @@ async def contact_page(request: Request):
 @limiter.limit("30/minute")
 async def timeline_page(request: Request):
     """Timeline page with work experience and education."""
-    # Work experience data from CV
+    # Work experience data
     work_experience = [
         {
             "title": "Chief Technology Officer",
@@ -147,11 +148,12 @@ async def timeline_page(request: Request):
             "company_url": "https://proffy.ee",
             "logo": "/static/img/logos/proffyhub.png",
             "description": (
-                "Leading technical strategy and product development for Proffy.ee, "
-                "Estonia's flexible work platform. Building scalable job marketplace "
-                "connecting employers with workers seeking part-time and gig "
-                "opportunities, while developing features for schedule flexibility "
-                "and skill development."
+                "Took over as CTO to rebuild Proffy.ee from the ground up — "
+                "an Estonian marketplace that matches employers with flexible "
+                "workers. Hired the engineering team, chose the stack, and "
+                "shipped the platform from zero to production. Day-to-day "
+                "is a mix of architecture decisions, code reviews, and making "
+                "sure the product actually solves the problem it claims to."
             ),
             "technologies": [
                 "TypeScript",
@@ -159,10 +161,7 @@ async def timeline_page(request: Request):
                 "PostgreSQL",
                 "Next.js",
                 "React",
-                "Technical Leadership",
-                "Marketplace Platforms",
-                "Product Strategy",
-                "AWS Cloud",
+                "AWS",
             ],
             "type": "leadership",
             "icon": "fas fa-crown",
@@ -175,18 +174,17 @@ async def timeline_page(request: Request):
             "company_url": "https://github.com/Sunyata-OU",
             "logo": "/static/img/logos/sunyata.png",
             "description": (
-                "Founded and operating an independent software development company "
-                "in Estonia. Focusing on cutting-edge technology solutions and "
-                "open-source contributions while building sustainable business "
-                "practices."
+                "My own company in Estonia — part consulting vehicle, part "
+                "playground for building things I find interesting. Lets me "
+                "take on projects that excite me and contribute to open source "
+                "without asking anyone for permission."
             ),
             "technologies": [
-                "Full-Stack Engineering",
-                "Cloud Architecture",
-                "DevOps & CI/CD",
-                "Open Source Contributions",
-                "Team Leadership",
-                "Business Strategy",
+                "Python",
+                "Rust",
+                "FastAPI",
+                "Docker",
+                "CI/CD",
             ],
             "type": "entrepreneurship",
             "icon": "fas fa-rocket",
@@ -199,20 +197,19 @@ async def timeline_page(request: Request):
             "company_url": "https://merklescience.com",
             "logo": "/static/img/logos/merkle-science.png",
             "description": (
-                "Developed blockchain analytics and cryptocurrency compliance "
-                "solutions for financial institutions and government agencies. "
-                "Built predictive risk monitoring systems and transaction analysis "
-                "tools for crypto crime detection."
+                "Built tools that help banks and regulators figure out who's "
+                "doing what on the blockchain. Worked on transaction risk "
+                "scoring, entity resolution across chains, and data pipelines "
+                "that could handle the firehose of on-chain activity. Left "
+                "to move to Estonia for my MBA."
             ),
             "technologies": [
                 "Python",
-                "Blockchain Analytics",
-                "Data Engineering",
                 "Kubernetes",
-                "Google Cloud Platform",
-                "Regulatory Compliance",
-                "Risk Management",
-                "Cryptocurrency Security",
+                "GCP",
+                "BigQuery",
+                "Redis",
+                "Celery",
             ],
             "type": "engineering",
             "icon": "fas fa-shield-alt",
@@ -225,55 +222,55 @@ async def timeline_page(request: Request):
             "company_url": "https://www.ycombinator.com/companies/redcarpetup",
             "logo": "/static/img/logos/redcarpetup.png",
             "description": (
-                "Core engineering team member at Y Combinator-backed fintech "
-                "startup. Built scalable lending platform infrastructure, "
-                "implemented risk assessment algorithms, and developed "
-                "customer-facing financial products."
+                "Early engineer at a YC-backed fintech building credit products "
+                "for underserved borrowers in India. Built the lending platform, "
+                "risk scoring engine, and the internal tools the ops team lived "
+                "in. Learned what it means to ship when it actually matters — "
+                "people's money was on the line."
             ),
             "technologies": [
                 "Python",
-                "Django Framework",
+                "Django",
                 "PostgreSQL",
                 "Redis",
-                "AWS Cloud",
-                "Machine Learning",
-                "Financial Technology",
+                "AWS",
+                "Celery",
                 "REST APIs",
-                "Microservices Architecture",
             ],
             "type": "engineering",
             "icon": "fas fa-chart-line",
         },
         {
-            "title": "Co-Founder & Chief Technology Officer",
+            "title": "Co-Founder & CTO",
             "company": "Techneith",
             "period": "Oct. 2017 – Apr. 2019",
             "location": "Delhi, India",
             "company_url": "https://techneith.com/",
             "logo": "/static/img/logos/techneith.png",
             "description": (
-                "Co-founded technology consulting company, leading technical vision "
-                "and team building. Delivered end-to-end software solutions for "
-                "startups and enterprises while establishing engineering best "
-                "practices and company culture."
+                "First real venture — co-founded a dev shop right out of "
+                "college. We built software for startups and small businesses, "
+                "figured out how to hire and manage a team, and learned every "
+                "lesson about running a company the hard way. Eventually moved "
+                "on, but it shaped how I think about building things."
             ),
             "technologies": [
-                "Full-Stack Engineering",
-                "Team Leadership",
-                "Strategic Planning",
-                "Client Relations",
-                "System Architecture",
-                "Startup Operations",
+                "Python",
+                "Django",
+                "React",
+                "Node.js",
+                "AWS",
+                "PostgreSQL",
             ],
             "type": "leadership",
             "icon": "fas fa-users",
         },
     ]
 
-    # Education data from CV
+    # Education data
     education = [
         {
-            "degree": "Master of Business Administration (Management)",
+            "degree": "MBA in Management",
             "institution": "Estonian Business School",
             "period": "June 2024",
             "location": "Tallinn, Estonia",
@@ -281,62 +278,62 @@ async def timeline_page(request: Request):
             "institution_url": "https://ebs.ee",
             "logo": "/static/img/logos/ebs.png",
             "description": (
-                "Completed comprehensive MBA program focusing on strategic "
-                "management, digital transformation, and entrepreneurship. "
-                "Achieved distinction with 4.44/5 GPA while building "
-                "international business network."
+                "Went back to school after 5 years of building companies and "
+                "writing code. Wanted the business vocabulary to match the "
+                "technical instincts. Focused on strategy and digital "
+                "transformation — basically learning to talk about what I "
+                "was already doing, but better."
             ),
             "focus": [
-                "Strategic Management",
+                "Strategy",
                 "Digital Transformation",
                 "Entrepreneurship",
-                "International Business",
+                "Finance",
             ],
             "type": "masters",
             "icon": "fas fa-graduation-cap",
         },
         {
-            "degree": "Erasmus Exchange (Business Analytics and Financial Modeling)",
-            "institution": "Norwegian School of Economics",
+            "degree": "Erasmus Exchange — Business Analytics",
+            "institution": "Norwegian School of Economics (NHH)",
             "period": "December 2023",
             "location": "Bergen, Norway",
             "gpa": None,
             "institution_url": "https://nhh.no",
             "logo": "/static/img/logos/nhh.png",
             "description": (
-                "Intensive exchange program at Norway's leading business school, "
-                "specializing in advanced business analytics and quantitative "
-                "financial modeling techniques for strategic decision making."
+                "Semester abroad at one of the top business schools in the "
+                "Nordics. Deep dive into financial modeling and data-driven "
+                "decision making. Also discovered that Bergen has more rain "
+                "than any city should be allowed."
             ),
             "focus": [
-                "Business Analytics",
                 "Financial Modeling",
+                "Business Analytics",
                 "Data Science",
-                "Quantitative Analysis",
             ],
             "type": "exchange",
             "icon": "fas fa-chart-bar",
         },
         {
-            "degree": "Bachelor of Technology (Computer Science and Engineering)",
-            "institution": "Deenbandhu Chottu Ram University of Science and Technology",
+            "degree": "B.Tech in Computer Science",
+            "institution": "DCRUST",
             "period": "September 2017",
             "location": "Haryana, India",
             "gpa": None,
             "institution_url": "https://dcrustm.ac.in",
             "logo": "/static/img/logos/dcrust.png",
             "description": (
-                "Comprehensive engineering program covering software development, "
-                "algorithms, data structures, and system design. Built strong "
-                "foundation in computer science principles and practical "
-                "programming skills."
+                "Where it all started. Algorithms, data structures, OS internals "
+                "— the usual CS curriculum. But most of the real learning "
+                "happened outside class: contributing to open source, building "
+                "side projects, and breaking things on my Arch Linux install."
             ),
             "focus": [
-                "Software Engineering",
-                "Data Structures",
                 "Algorithms",
-                "System Design",
-                "Programming",
+                "Data Structures",
+                "OS & Systems",
+                "Networking",
             ],
             "type": "bachelors",
             "icon": "fas fa-code",
@@ -351,17 +348,33 @@ async def timeline_page(request: Request):
             "icon": "fab fa-linux",
             "color": "vol-blue",
         },
+        {
+            "role": "PyPI Package Author",
+            "org": "cocapi — Clash of Clans API wrapper",
+            "period": "2018 – Present",
+            "icon": "fab fa-python",
+            "color": "vol-orange",
+        },
+        {
+            "role": "Open Source Contributor",
+            "org": "Various Python & Rust projects",
+            "period": "2017 – Present",
+            "icon": "fas fa-code-branch",
+            "color": "vol-cyan",
+        },
     ]
 
     return templates.TemplateResponse(
         request,
         "timeline.html",
         {
-            "title": "Tony Benoy Timeline - CTO Career & Education Journey",
+            "title": "Timeline — Tony Benoy",
             "description": (
-                "Explore Tony Benoy's professional timeline: from Computer "
-                "Science graduate to CTO at Proffyhub. Experience at Merkle "
-                "Science, Redcarpetup, and MBA from Estonian Business School."
+                "From Delhi to Tallinn — CTO at Proffyhub, co-founded "
+                "Techneith, built fintech at Redcarpetup (YC), blockchain "
+                "analytics at Merkle Science. MBA from Estonian Business "
+                "School, B.Tech from DCRUST. 7 years maintaining Arch Linux "
+                "packages."
             ),
             "active_page": "timeline",
             "work_experience": work_experience,
@@ -379,13 +392,33 @@ async def terminal_page(request: Request):
         request,
         "terminal.html",
         {
-            "title": "Interactive Terminal - Tony Benoy",
+            "title": "Terminal — Tony Benoy",
             "description": (
-                "Explore Tony Benoy's interactive web terminal. Execute commands, "
-                "learn about his experience, and discover hidden easter eggs in "
-                "this unique developer interface."
+                "An interactive browser terminal on Tony Benoy's website. "
+                "Run commands like whoami, ls, skills, and more. Navigate "
+                "the site, check the time, or find easter eggs."
             ),
             "active_page": "terminal",
+        },
+    )
+
+
+@home.get("/chat")
+@limiter.limit("30/minute")
+async def chat_page(request: Request):
+    """AI chat page with in-browser LLM."""
+    return templates.TemplateResponse(
+        request,
+        "chat.html",
+        {
+            "title": "Tony's AI — Tony Benoy",
+            "description": (
+                "Because every website needs AI now. A small language model "
+                "runs entirely in your browser via WebGPU — no servers, no "
+                "API keys, no data leaves your machine. Ask it about Tony "
+                "or just chat."
+            ),
+            "active_page": "chat",
         },
     )
 
