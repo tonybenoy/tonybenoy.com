@@ -39,7 +39,9 @@
 		<!-- Auto-fetched GitHub repos -->
 		{% if repos %}
 		<div style="margin-top: 2.5rem;">
-			<h3 style="font-size: 0.88rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; text-align: center;">More on GitHub</h3>
+			<h3
+				style="font-size: 0.88rem; color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; text-align: center;">
+				More on GitHub</h3>
 			<div class="grid grid-3">
 				{% for repo in repos %}
 				<div class="card">
@@ -58,9 +60,11 @@
 						</div>
 					</div>
 					{% if repo.description %}
-					<p class="card-description">{{ repo.description[:120] }}{% if repo.description|length > 120 %}...{% endif %}</p>
+					<p class="card-description">{{ repo.description[:120] }}{% if repo.description|length > 120 %}...{%
+						endif %}</p>
 					{% endif %}
-					<a href="{{ repo.html_url }}" class="btn btn-outline btn-sm" target="_blank" style="margin-top: auto">View on GitHub</a>
+					<a href="{{ repo.html_url }}" class="btn btn-outline btn-sm" target="_blank"
+						style="margin-top: auto">View on GitHub</a>
 				</div>
 				{% endfor %}
 			</div>

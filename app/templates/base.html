@@ -15,11 +15,13 @@
 	{% if description %}
 	<meta name="description" content="{{description}}">
 	{% else %}
-	<meta name="description" content="CTO at Proffyhub, founder of Sunyata, previously Merkle Science and Redcarpetup (YC). Building things for the web from Tallinn, Estonia.">
+	<meta name="description"
+		content="CTO at Proffyhub, founder of Sunyata, previously Merkle Science and Redcarpetup (YC). Building things for the web from Tallinn, Estonia.">
 	{% endif %}
 
 	<meta name="author" content="Tony Benoy">
-	<meta name="keywords" content="Tony Benoy, CTO, Proffyhub, Sunyata, Python, Rust, TypeScript, Tallinn, Estonia, Full-Stack Engineer">
+	<meta name="keywords"
+		content="Tony Benoy, CTO, Proffyhub, Sunyata, Python, Rust, TypeScript, Tallinn, Estonia, Full-Stack Engineer">
 	<meta name="robots" content="index, follow">
 	<meta name="theme-color" content="#000000">
 	<link rel="canonical" href="https://tonybenoy.com{{ request.url.path if request else '/' }}">
@@ -29,7 +31,8 @@
 	<meta property="og:site_name" content="Tony Benoy">
 	<meta property="og:url" content="https://tonybenoy.com{{ request.url.path if request else '/' }}">
 	<meta property="og:title" content="{{ og_title or title or 'Tony Benoy — CTO, Builder, Jugaadu' }}">
-	<meta property="og:description" content="{{ og_description or description or 'CTO at Proffyhub, founder of Sunyata. Building things for the web from Tallinn, Estonia.' }}">
+	<meta property="og:description"
+		content="{{ og_description or description or 'CTO at Proffyhub, founder of Sunyata. Building things for the web from Tallinn, Estonia.' }}">
 	<meta property="og:image" content="https://tonybenoy.com/static/img/me.jpg">
 	<meta property="og:image:width" content="400">
 	<meta property="og:image:height" content="400">
@@ -39,7 +42,8 @@
 	<meta name="twitter:site" content="@TonyBenoy">
 	<meta name="twitter:creator" content="@TonyBenoy">
 	<meta name="twitter:title" content="{{ twitter_title or title or 'Tony Benoy — CTO, Builder, Jugaadu' }}">
-	<meta name="twitter:description" content="{{ twitter_description or description or 'CTO at Proffyhub, founder of Sunyata. Building things for the web from Tallinn, Estonia.' }}">
+	<meta name="twitter:description"
+		content="{{ twitter_description or description or 'CTO at Proffyhub, founder of Sunyata. Building things for the web from Tallinn, Estonia.' }}">
 	<meta name="twitter:image" content="https://tonybenoy.com/static/img/me.jpg">
 
 	<!-- Favicon -->
@@ -48,13 +52,22 @@
 	<!-- Fonts (non-render-blocking) -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+	<link rel="preload" as="style"
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap"
+		onload="this.onload=null;this.rel='stylesheet'">
+	<noscript>
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap"
+			rel="stylesheet">
+	</noscript>
 
 	<!-- Icons (Font Awesome - solid + brands, loaded async) -->
 	<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-	<link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+	<link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+		onload="this.onload=null;this.rel='stylesheet'">
+	<noscript>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	</noscript>
 
 	<!-- Site CSS -->
 	<link href="/static/css/style.css" rel="stylesheet">
@@ -75,24 +88,24 @@
 			<button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
 			<div class="nav-right">
 				<ul class="nav-links" id="nav-links">
-					<li><a href="/" {% if active_page == 'home' %}class="active"{% endif %}>
-						Home{% if active_page == "home" %}<span class="blink_text">_</span>{% endif %}
-					</a></li>
-					<li><a href="/app" {% if active_page == 'apps' %}class="active"{% endif %}>
-						Projects{% if active_page == "apps" %}<span class="blink_text">_</span>{% endif %}
-					</a></li>
-					<li><a href="/timeline" {% if active_page == 'timeline' %}class="active"{% endif %}>
-						Timeline{% if active_page == "timeline" %}<span class="blink_text">_</span>{% endif %}
-					</a></li>
-					<li><a href="/photography" {% if active_page == 'photography' %}class="active"{% endif %}>
-						Photography{% if active_page == "photography" %}<span class="blink_text">_</span>{% endif %}
-					</a></li>
-						<li><a href="/terminal" {% if active_page == 'terminal' %}class="active"{% endif %}>
-						Terminal{% if active_page == "terminal" %}<span class="blink_text">_</span>{% endif %}
-					</a></li>
-					<li><a href="/chat" {% if active_page == 'chat' %}class="active"{% endif %}>
-						Tony's AI{% if active_page == "chat" %}<span class="blink_text">_</span>{% endif %}
-					</a></li>
+					<li><a href="/" {% if active_page=='home' %}class="active" {% endif %}>
+							Home{% if active_page == "home" %}<span class="blink_text">_</span>{% endif %}
+						</a></li>
+					<li><a href="/app" {% if active_page=='apps' %}class="active" {% endif %}>
+							Projects{% if active_page == "apps" %}<span class="blink_text">_</span>{% endif %}
+						</a></li>
+					<li><a href="/timeline" {% if active_page=='timeline' %}class="active" {% endif %}>
+							Timeline{% if active_page == "timeline" %}<span class="blink_text">_</span>{% endif %}
+						</a></li>
+					<li><a href="/photography" {% if active_page=='photography' %}class="active" {% endif %}>
+							Photography{% if active_page == "photography" %}<span class="blink_text">_</span>{% endif %}
+						</a></li>
+					<li><a href="/terminal" {% if active_page=='terminal' %}class="active" {% endif %}>
+							Terminal{% if active_page == "terminal" %}<span class="blink_text">_</span>{% endif %}
+						</a></li>
+					<li><a href="/chat" {% if active_page=='chat' %}class="active" {% endif %}>
+							Tony's AI{% if active_page == "chat" %}<span class="blink_text">_</span>{% endif %}
+						</a></li>
 				</ul>
 				<div class="theme-toggle-container" title="Toggle Dark/Light Mode">
 					<input type="checkbox" id="theme-toggle" class="theme-toggle-input">
@@ -121,16 +134,17 @@
 			document.body.classList.add('light-theme');
 			themeToggle.checked = true;
 		}
-		themeToggle.addEventListener('change', function() {
+		themeToggle.addEventListener('change', function () {
 			document.body.classList.toggle('light-theme', this.checked);
 			localStorage.setItem('theme', this.checked ? 'light' : 'dark');
 		});
 
 		// Mobile nav toggle
-		document.getElementById('nav-toggle').addEventListener('click', function() {
+		document.getElementById('nav-toggle').addEventListener('click', function () {
 			document.getElementById('nav-links').classList.toggle('open');
 		});
 	</script>
 	{% block scripts %}{% endblock %}
 </body>
+
 </html>

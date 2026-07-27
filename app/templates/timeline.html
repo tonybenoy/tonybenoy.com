@@ -5,7 +5,7 @@
 	<div class="container-narrow">
 		<div class="section-header">
 			<h2>The Journey So Far</h2>
-			<p>From Haryana to Tallinn, building things along the way<span class="blink_text">_</span></p>
+			<p>From Delhi to Tallinn, building things along the way<span class="blink_text">_</span></p>
 		</div>
 
 		<!-- Geographic journey -->
@@ -20,6 +20,17 @@
 				<span class="journey-dot"></span>
 				<span class="journey-place">Haryana</span>
 				<span class="journey-year">2013</span>
+			</div>
+			<div class="journey-line"></div>
+			<div class="journey-stop">
+				<span class="journey-dot"></span>
+				<span class="journey-place">Chandigarh</span>
+				<span class="journey-year">2017</span>
+			</div>
+			<div class="journey-stop">
+				<span class="journey-dot"></span>
+				<span class="journey-place">Delhi</span>
+				<span class="journey-year">2018</span>
 			</div>
 			<div class="journey-line"></div>
 			<div class="journey-stop">
@@ -65,7 +76,8 @@
 								<h5>
 									{% if job.company_url %}
 									<a href="{{ job.company_url }}" target="_blank">
-										{{ job.company }} <i class="fas fa-external-link-alt" style="font-size: 0.65rem"></i>
+										{{ job.company }} <i class="fas fa-external-link-alt"
+											style="font-size: 0.65rem"></i>
 									</a>
 									{% else %}
 									{{ job.company }}
@@ -73,13 +85,15 @@
 								</h5>
 								<div class="timeline-meta">
 									<span class="date">{{ job.period }}</span>
-									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ job.location
+										}}</span>
 								</div>
 							</div>
 							{% if job.logo %}
 							{% if job.company_url %}
 							<a href="{{ job.company_url }}" target="_blank">
-								<img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo" loading="lazy">
+								<img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo"
+									loading="lazy">
 							</a>
 							{% else %}
 							<img src="{{ job.logo }}" alt="{{ job.company }} logo" class="company-logo" loading="lazy">
@@ -119,7 +133,8 @@
 								<h5>
 									{% if edu.institution_url %}
 									<a href="{{ edu.institution_url }}" target="_blank">
-										{{ edu.institution }} <i class="fas fa-external-link-alt" style="font-size: 0.65rem"></i>
+										{{ edu.institution }} <i class="fas fa-external-link-alt"
+											style="font-size: 0.65rem"></i>
 									</a>
 									{% else %}
 									{{ edu.institution }}
@@ -127,7 +142,8 @@
 								</h5>
 								<div class="timeline-meta">
 									<span class="date">{{ edu.period }}</span>
-									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ edu.location }}</span>
+									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ edu.location
+										}}</span>
 									{% if edu.gpa %}
 									<span class="gpa"><i class="fas fa-star"></i> {{ edu.gpa }}</span>
 									{% endif %}
@@ -136,10 +152,12 @@
 							{% if edu.logo %}
 							{% if edu.institution_url %}
 							<a href="{{ edu.institution_url }}" target="_blank">
-								<img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo" loading="lazy">
+								<img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo"
+									loading="lazy">
 							</a>
 							{% else %}
-							<img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo" loading="lazy">
+							<img src="{{ edu.logo }}" alt="{{ edu.institution }} logo" class="company-logo"
+								loading="lazy">
 							{% endif %}
 							{% endif %}
 						</div>
@@ -191,17 +209,17 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) entry.target.classList.add('visible');
-		});
-	}, { threshold: 0.1 });
+	document.addEventListener('DOMContentLoaded', function () {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) entry.target.classList.add('visible');
+			});
+		}, { threshold: 0.1 });
 
-	document.querySelectorAll('.timeline-entry').forEach((entry, i) => {
-		entry.style.transitionDelay = `${i * 0.08}s`;
-		observer.observe(entry);
+		document.querySelectorAll('.timeline-entry').forEach((entry, i) => {
+			entry.style.transitionDelay = `${i * 0.08}s`;
+			observer.observe(entry);
+		});
 	});
-});
 </script>
 {% endblock %}

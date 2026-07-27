@@ -31,7 +31,9 @@
 			</div>
 		</div>
 		<div class="profile-img-wrapper">
-			<img src="/static/img/me.jpg" class="profile-img easter-egg-trigger" alt="Tony Benoy" onclick="handleEasterEggClick()" title="Something's here... try tapping me!" loading="eager" width="200" height="200">
+			<img src="/static/img/me.jpg" class="profile-img easter-egg-trigger" alt="Tony Benoy"
+				onclick="handleEasterEggClick()" title="Something's here... try tapping me!" loading="eager" width="200"
+				height="200">
 		</div>
 	</section>
 
@@ -41,17 +43,21 @@
 			<div class="currently-card">
 				<span class="card-emoji">&#x1F6E0;&#xFE0F;</span>
 				<h3>Building Proffy.ee</h3>
-				<p>Leading tech at <a href="https://proffy.ee" target="_blank">Proffyhub</a> — a marketplace connecting employers with flexible workers across Estonia. TypeScript, NestJS, Next.js.</p>
+				<p>Leading tech at <a href="https://proffy.ee" target="_blank">Proffyhub</a> — a marketplace connecting
+					employers with flexible workers across Estonia. TypeScript, NestJS, Next.js.</p>
 			</div>
 			<div class="currently-card">
 				<span class="card-emoji">&#x1F980;</span>
 				<h3>Open Source & Rust</h3>
-				<p>Published libs on <a href="https://pypi.org/project/cocapi/" target="_blank">PyPI</a>. Maintained <a href="https://aur.archlinux.org" target="_blank">AUR packages</a> for 7 years. Currently writing Rust with <a href="https://github.com/tonybenoy/sigyn" target="_blank">sigyn</a>.</p>
+				<p>Published libs on <a href="https://pypi.org/project/cocapi/" target="_blank">PyPI</a>. Maintained <a
+						href="https://aur.archlinux.org" target="_blank">AUR packages</a> for 7 years. Currently writing
+					Rust with <a href="https://github.com/tonybenoy/sigyn" target="_blank">sigyn</a>.</p>
 			</div>
 			<div class="currently-card">
 				<span class="card-emoji">&#x1F426;</span>
 				<h3>Wildlife & Travel</h3>
-				<p>Birding, travel photography, and the occasional moon shot. A visual diary from jungles to European cities. More on <a href="https://instagram.com/tonybenoy" target="_blank">Instagram</a>.</p>
+				<p>Birding, travel photography, and the occasional moon shot. A visual diary from jungles to European
+					cities. More on <a href="https://instagram.com/tonybenoy" target="_blank">Instagram</a>.</p>
 			</div>
 		</div>
 		<div class="currently-cta">
@@ -76,12 +82,12 @@
 		</div>
 	</section>
 	<script>
-	function revealEmail(el) {
-		var u = 'me', d = 'tonybenoy.com';
-		el.href = 'mailto:' + u + '@' + d;
-		el.innerHTML = '<i class="fas fa-envelope"></i> ' + u + '@' + d;
-		return true;
-	}
+		function revealEmail(el) {
+			var u = 'me', d = 'tonybenoy.com';
+			el.href = 'mailto:' + u + '@' + d;
+			el.innerHTML = '<i class="fas fa-envelope"></i> ' + u + '@' + d;
+			return true;
+		}
 	</script>
 </main>
 
@@ -100,54 +106,53 @@
 </div>
 
 <script>
-let easterEggCount = 0, matrixInterval = null;
+	let easterEggCount = 0, matrixInterval = null;
 
-function handleEasterEggClick() {
-	easterEggCount++;
-	const img = document.querySelector('.easter-egg-trigger');
-	img.style.transform = 'scale(0.95)';
-	setTimeout(() => { img.style.transform = 'scale(1.04)'; setTimeout(() => { img.style.transform = ''; }, 120); }, 100);
-	if (easterEggCount === 7) startMatrixAnimation();
-	else if (easterEggCount < 7) img.title = `${7 - easterEggCount} more...`;
-}
+	function handleEasterEggClick() {
+		easterEggCount++;
+		const img = document.querySelector('.easter-egg-trigger');
+		img.style.transform = 'scale(0.95)';
+		setTimeout(() => { img.style.transform = 'scale(1.04)'; setTimeout(() => { img.style.transform = ''; }, 120); }, 100);
+		if (easterEggCount === 7) startMatrixAnimation();
+		else if (easterEggCount < 7) img.title = `${7 - easterEggCount} more...`;
+	}
 
-function startMatrixAnimation() {
-	const overlay = document.getElementById('matrix-overlay');
-	const canvas = document.getElementById('matrix-canvas');
-	const ctx = canvas.getContext('2d');
-	canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-	overlay.classList.remove('hidden');
-	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*'.split('');
-	const fontSize = 14, columns = canvas.width / fontSize;
-	const drops = Array.from({length: Math.floor(columns)}, () => 1);
-	matrixInterval = setInterval(() => {
-		ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-		ctx.fillStyle = '#00ff41'; ctx.font = fontSize + 'px monospace';
-		for (let i = 0; i < drops.length; i++) {
-			ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fontSize, drops[i]*fontSize);
-			if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-			drops[i]++;
-		}
-	}, 35);
-	setTimeout(() => { document.getElementById('matrix-controls').style.opacity = '1'; }, 3000);
-}
+	function startMatrixAnimation() {
+		const overlay = document.getElementById('matrix-overlay');
+		const canvas = document.getElementById('matrix-canvas');
+		const ctx = canvas.getContext('2d');
+		canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+		overlay.classList.remove('hidden');
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*'.split('');
+		const fontSize = 14, columns = canvas.width / fontSize;
+		const drops = Array.from({ length: Math.floor(columns) }, () => 1);
+		matrixInterval = setInterval(() => {
+			ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = '#00ff41'; ctx.font = fontSize + 'px monospace';
+			for (let i = 0; i < drops.length; i++) {
+				ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
+				if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+				drops[i]++;
+			}
+		}, 35);
+		setTimeout(() => { document.getElementById('matrix-controls').style.opacity = '1'; }, 3000);
+	}
 
-function endMatrixAnimation() {
-	if (matrixInterval) { clearInterval(matrixInterval); matrixInterval = null; }
-	document.getElementById('matrix-overlay').classList.add('hidden');
-	document.getElementById('matrix-end-screen').classList.remove('hidden');
-}
+	function endMatrixAnimation() {
+		if (matrixInterval) { clearInterval(matrixInterval); matrixInterval = null; }
+		document.getElementById('matrix-overlay').classList.add('hidden');
+		document.getElementById('matrix-end-screen').classList.remove('hidden');
+	}
 
-function goHome() {
-	document.getElementById('matrix-end-screen').classList.add('hidden');
-	easterEggCount = 0;
-}
+	function goHome() {
+		document.getElementById('matrix-end-screen').classList.add('hidden');
+		easterEggCount = 0;
+	}
 
-window.addEventListener('resize', () => {
-	const c = document.getElementById('matrix-canvas');
-	if (c && !document.getElementById('matrix-overlay').classList.contains('hidden'))
-		{ c.width = window.innerWidth; c.height = window.innerHeight; }
-});
+	window.addEventListener('resize', () => {
+		const c = document.getElementById('matrix-canvas');
+		if (c && !document.getElementById('matrix-overlay').classList.contains('hidden')) { c.width = window.innerWidth; c.height = window.innerHeight; }
+	});
 </script>
 
 {% endblock %}

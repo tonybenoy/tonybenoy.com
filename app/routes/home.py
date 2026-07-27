@@ -141,7 +141,7 @@ async def timeline_page(request: Request):
     # Work experience data
     work_experience = [
         {
-            "title": "Chief Technology Officer",
+            "title": "Co-Founder & Chief Technology Officer",
             "company": "Proffyhub OÜ",
             "period": "Jul. 2024 – Present",
             "location": "Tallinn, Estonia",
@@ -162,6 +162,8 @@ async def timeline_page(request: Request):
                 "Next.js",
                 "React",
                 "AWS",
+                "LLMs",
+                "Tool-Call Agents",
             ],
             "type": "leadership",
             "icon": "fas fa-crown",
@@ -215,7 +217,7 @@ async def timeline_page(request: Request):
             "icon": "fas fa-shield-alt",
         },
         {
-            "title": "Member Technical Staff",
+            "title": "Engineering Manager",
             "company": "Redcarpetup",
             "period": "May. 2019 – Apr. 2021",
             "location": "Delhi, India",

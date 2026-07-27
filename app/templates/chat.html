@@ -43,7 +43,9 @@
 		font-family: var(--font-mono);
 	}
 
-	.chat-badge i { font-size: 0.6rem; }
+	.chat-badge i {
+		font-size: 0.6rem;
+	}
 
 	/* Loading state */
 	.chat-loading {
@@ -55,7 +57,9 @@
 		margin-bottom: 1rem;
 	}
 
-	.chat-loading.hidden { display: none; }
+	.chat-loading.hidden {
+		display: none;
+	}
 
 	.chat-loading p {
 		color: var(--text-muted);
@@ -96,13 +100,15 @@
 	/* Unsupported state */
 	.chat-unsupported {
 		background: var(--bg-surface);
-		border: 1px solid rgba(232,102,90,0.2);
+		border: 1px solid rgba(232, 102, 90, 0.2);
 		border-radius: var(--radius-lg);
 		padding: 2rem;
 		text-align: center;
 	}
 
-	.chat-unsupported.hidden { display: none; }
+	.chat-unsupported.hidden {
+		display: none;
+	}
 
 	.chat-unsupported i {
 		font-size: 1.5rem;
@@ -130,7 +136,9 @@
 		margin-bottom: 2rem;
 	}
 
-	.chat-window.hidden { display: none; }
+	.chat-window.hidden {
+		display: none;
+	}
 
 	.chat-window-header {
 		padding: 0.75rem 1.25rem;
@@ -155,7 +163,7 @@
 		height: 7px;
 		border-radius: 50%;
 		background: var(--emerald);
-		box-shadow: 0 0 6px rgba(90,200,138,0.4);
+		box-shadow: 0 0 6px rgba(90, 200, 138, 0.4);
 	}
 
 	.chat-window-actions {
@@ -190,9 +198,18 @@
 		gap: 1rem;
 	}
 
-	.chat-messages::-webkit-scrollbar { width: 4px; }
-	.chat-messages::-webkit-scrollbar-track { background: transparent; }
-	.chat-messages::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+	.chat-messages::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	.chat-messages::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.chat-messages::-webkit-scrollbar-thumb {
+		background: var(--border-hover);
+		border-radius: 2px;
+	}
 
 	.chat-msg {
 		display: flex;
@@ -252,7 +269,7 @@
 	.chat-msg-bubble code {
 		font-family: var(--font-mono);
 		font-size: 0.82rem;
-		background: rgba(0,0,0,0.15);
+		background: rgba(0, 0, 0, 0.15);
 		padding: 0.1rem 0.35rem;
 		border-radius: 3px;
 	}
@@ -276,12 +293,27 @@
 		animation: typingBounce 1.2s ease-in-out infinite;
 	}
 
-	.typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-	.typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+	.typing-indicator span:nth-child(2) {
+		animation-delay: 0.15s;
+	}
+
+	.typing-indicator span:nth-child(3) {
+		animation-delay: 0.3s;
+	}
 
 	@keyframes typingBounce {
-		0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-		30% { transform: translateY(-4px); opacity: 1; }
+
+		0%,
+		60%,
+		100% {
+			transform: translateY(0);
+			opacity: 0.4;
+		}
+
+		30% {
+			transform: translateY(-4px);
+			opacity: 1;
+		}
 	}
 
 	/* Input area */
@@ -314,8 +346,14 @@
 		border-color: var(--accent-border);
 	}
 
-	.chat-input::placeholder { color: var(--text-dim); }
-	.chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
+	.chat-input::placeholder {
+		color: var(--text-dim);
+	}
+
+	.chat-input:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
 
 	.chat-send {
 		background: var(--accent);
@@ -367,7 +405,10 @@
 			height: calc(100vh - 240px);
 			min-height: 350px;
 		}
-		.chat-msg { max-width: 92%; }
+
+		.chat-msg {
+			max-width: 92%;
+		}
 	}
 </style>
 {% endblock %}
@@ -393,10 +434,11 @@
 				Anything this model says could be pure, unfiltered BS.
 				You have been warned.
 			</p>
-			<p class="chat-disclaimer" style="margin-top: 0.5rem; color: var(--text-dim); font-size: 0.72rem; background: var(--bg-surface); border: 1px dashed var(--border-hover); border-radius: var(--radius); padding: 0.75rem 1rem;">
+			<p class="chat-disclaimer"
+				style="margin-top: 0.5rem; color: var(--text-dim); font-size: 0.72rem; background: var(--bg-surface); border: 1px dashed var(--border-hover); border-radius: var(--radius); padding: 0.75rem 1rem;">
 				<strong style="color: var(--coral);">⚠️ IT'S NOT A BUG, IT'S YOUR HARDWARE ⚠️</strong><br>
 				Slow? Wrong? Speaking in tongues? That's a <em>you</em> problem.
-				This runs on YOUR device. Tony's server served a webpage, clocked out, and is sipping chai unbothered.
+				This runs on YOUR device. Tony's server served a webpage, clocked out, and is sipping coffee unbothered.
 				Your CPU is the unpaid intern. Your GPU is screaming internally. Your RAM is a cramped cubicle.
 				Before you rage-tweet @ Tony:<br>
 				☐ Close your 47 Chrome tabs<br>
@@ -420,7 +462,8 @@
 					<i class="fas fa-bolt"></i>
 					WebGPU powered
 				</span>
-				<span class="chat-badge" style="color: var(--coral); border-color: rgba(232,102,90,0.2); background: rgba(232,102,90,0.06);">
+				<span class="chat-badge"
+					style="color: var(--coral); border-color: rgba(232,102,90,0.2); background: rgba(232,102,90,0.06);">
 					<i class="fas fa-exclamation-triangle"></i>
 					May hallucinate
 				</span>
@@ -443,7 +486,8 @@
 			<div class="progress-track">
 				<div class="progress-fill" id="progress-fill"></div>
 			</div>
-			<div class="loading-hint">First visit downloads the model (~1-2GB). After that, it loads from cache instantly. Yes, your laptop is now an AI server. You're welcome.</div>
+			<div class="loading-hint">First visit downloads the model (~1-2GB). After that, it loads from cache
+				instantly. Yes, your laptop is now an AI server. You're welcome.</div>
 		</div>
 
 		<!-- Chat window -->
@@ -469,13 +513,8 @@
 				</div>
 			</div>
 			<div class="chat-input-area">
-				<textarea
-					id="chat-input"
-					class="chat-input"
-					placeholder="Type a message..."
-					rows="1"
-					disabled
-				></textarea>
+				<textarea id="chat-input" class="chat-input" placeholder="Type a message..." rows="1"
+					disabled></textarea>
 				<button id="btn-send" class="chat-send" disabled>Send</button>
 			</div>
 		</div>
@@ -483,8 +522,11 @@
 		<!-- Load button (shown initially) -->
 		<div id="chat-start" class="text-center" style="padding: 1rem 0 2rem;">
 			<div style="margin-bottom: 1rem;">
-				<label for="model-select" style="color: var(--text-dim); font-size: 0.78rem; display: block; margin-bottom: 0.4rem;">Choose a model</label>
-				<select id="model-select" style="background: var(--bg-surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.45rem 0.75rem; font-family: var(--font-body); font-size: 0.84rem; cursor: pointer;">
+				<label for="model-select"
+					style="color: var(--text-dim); font-size: 0.78rem; display: block; margin-bottom: 0.4rem;">Choose a
+					model</label>
+				<select id="model-select"
+					style="background: var(--bg-surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.45rem 0.75rem; font-family: var(--font-body); font-size: 0.84rem; cursor: pointer;">
 					<option value="SmolLM2-1.7B-Instruct-q4f16_1-MLC" selected>SmolLM2 1.7B — Fast, ~1GB</option>
 					<option value="Llama-3.2-3B-Instruct-q4f16_1-MLC">Llama 3.2 3B — Better, ~2GB</option>
 					<option value="Phi-3.5-mini-instruct-q4f16_1-MLC">Phi 3.5 Mini — Best, ~2.5GB</option>

@@ -12,7 +12,7 @@
 			<p>
 				I like pointing cameras at things. Mostly birds and wildlife, sometimes
 				European cities and architecture, occasionally the moon. No uniform aesthetic,
-				no heavy filters — just the world as I find it.
+				no heavy filters(mostly) — just the world as I find it.
 			</p>
 		</div>
 
@@ -20,12 +20,14 @@
 			<div class="photo-cat">
 				<span class="photo-cat-emoji">&#x1F426;</span>
 				<h3>Wildlife</h3>
-				<p>Kingfishers, birds of prey, monkeys, deer, elephants — from jungles to city parks. Patient telephoto work meets lucky phone shots.</p>
+				<p>Kingfishers, birds of prey, monkeys, deer, elephants — from jungles to city parks. Patient telephoto
+					work meets lucky phone shots.</p>
 			</div>
 			<div class="photo-cat">
 				<span class="photo-cat-emoji">&#x2708;&#xFE0F;</span>
 				<h3>Travel</h3>
-				<p>Cobblestone streets, canals, medieval towers, coastal towns. Paris, Amsterdam, Copenhagen, Bergen, Riga, Tallinn, and beyond.</p>
+				<p>Cobblestone streets, canals, medieval towers, coastal towns. Paris, Amsterdam, Copenhagen, Bergen,
+					Riga, Tallinn, and beyond.</p>
 			</div>
 			<div class="photo-cat">
 				<span class="photo-cat-emoji">&#x1F311;</span>
@@ -50,9 +52,11 @@
 						<a href="https://www.instagram.com/{{ instagram_username }}/"
 							style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-weight:550; text-decoration:none;"
 							target="_blank">View this profile on Instagram</a>
-						<p style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; margin-top:8px; text-align:center;">
+						<p
+							style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; margin-top:8px; text-align:center;">
 							<a href="https://www.instagram.com/{{ instagram_username }}/"
-								style="color:#c9c8cd; text-decoration:none;" target="_blank">@{{ instagram_username }}</a>
+								style="color:#c9c8cd; text-decoration:none;" target="_blank">@{{ instagram_username
+								}}</a>
 						</p>
 					</div>
 				</blockquote>
@@ -74,12 +78,12 @@
 {% block scripts %}
 <script async src="//www.instagram.com/embed.js"></script>
 <script>
-window.addEventListener('load', function() {
-	setTimeout(function() {
-		const iframe = document.querySelector('.instagram-media-rendered');
-		const fallback = document.querySelector('.instagram-fallback');
-		if (iframe && fallback) fallback.style.display = 'none';
-	}, 3000);
-});
+	window.addEventListener('load', function () {
+		setTimeout(function () {
+			const iframe = document.querySelector('.instagram-media-rendered');
+			const fallback = document.querySelector('.instagram-fallback');
+			if (iframe && fallback) fallback.style.display = 'none';
+		}, 3000);
+	});
 </script>
 {% endblock %}
