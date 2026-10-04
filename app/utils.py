@@ -174,6 +174,7 @@ def get_structured_data() -> str:
             "https://twitter.com/TonyBenoy",
             "https://github.com/tonybenoy",
             "https://instagram.com/tonybenoy",
+            "https://vsco.co/tonybenoy",
         ],
         "knowsAbout": [
             "Software Engineering",

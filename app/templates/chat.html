@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 
 {% block head %}
 <style>
@@ -43,7 +44,7 @@
 		font-family: var(--font-mono);
 	}
 
-	.chat-badge i {
+	.chat-badge .icon {
 		font-size: 0.6rem;
 	}
 
@@ -110,7 +111,7 @@
 		display: none;
 	}
 
-	.chat-unsupported i {
+	.chat-unsupported .icon {
 		font-size: 1.5rem;
 		color: var(--coral);
 		margin-bottom: 0.5rem;
@@ -387,7 +388,7 @@
 		font-size: 0.85rem;
 	}
 
-	.chat-welcome i {
+	.chat-welcome .icon {
 		font-size: 1.5rem;
 		color: var(--accent);
 		display: block;
@@ -455,16 +456,16 @@
 			</p>
 			<div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem;">
 				<span class="chat-badge">
-					<i class="fas fa-microchip"></i>
+					{{ icon("cpu") }}
 					100% client-side
 				</span>
 				<span class="chat-badge">
-					<i class="fas fa-bolt"></i>
+					{{ icon("zap") }}
 					WebGPU powered
 				</span>
 				<span class="chat-badge"
 					style="color: var(--coral); border-color: rgba(232,102,90,0.2); background: rgba(232,102,90,0.06);">
-					<i class="fas fa-exclamation-triangle"></i>
+					{{ icon("triangle-alert") }}
 					May hallucinate
 				</span>
 			</div>
@@ -472,7 +473,7 @@
 
 		<!-- Unsupported browser -->
 		<div id="chat-unsupported" class="chat-unsupported hidden">
-			<i class="fas fa-exclamation-circle"></i>
+			{{ icon("circle-alert") }}
 			<p>
 				Your browser doesn't support WebGPU yet.<br>
 				Try Chrome 113+, Edge 113+, or Safari 18+.
@@ -503,7 +504,7 @@
 			</div>
 			<div class="chat-messages" id="chat-messages">
 				<div class="chat-welcome">
-					<i class="fas fa-robot"></i>
+					{{ icon("bot") }}
 					<p>
 						I'm running on your hardware, not Tony's servers.
 						I know things about Tony — or at least I think I do.
@@ -533,7 +534,7 @@
 				</select>
 			</div>
 			<button id="btn-load" class="btn btn-primary btn-lg">
-				<i class="fas fa-play"></i> Load Model & Start Chatting
+				{{ icon("play") }} Load Model & Start Chatting
 			</button>
 			<p style="color: var(--text-dim); font-size: 0.72rem; margin-top: 0.75rem;">
 				Requires Chrome 113+, Edge 113+, or Safari 18+ with WebGPU
@@ -809,7 +810,7 @@ RULES:
 		conversationHistory = [{ role: "system", content: SYSTEM_PROMPT }];
 		$messages.innerHTML = `
 			<div class="chat-welcome">
-				<i class="fas fa-robot"></i>
+				{{ icon("bot") }}
 				<p>
 					I'm running on your hardware, not Tony's servers.
 					I know things about Tony — or at least I think I do.

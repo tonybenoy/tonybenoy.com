@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 {% block content %}
 
 <main>
@@ -17,16 +18,19 @@
 			</p>
 			<div class="social-links">
 				<a href="https://github.com/tonybenoy" class="social-link" aria-label="GitHub">
-					<i class="fab fa-github"></i>
+					{{ icon("github") }}
 				</a>
 				<a href="https://www.linkedin.com/in/tonybenoy/" class="social-link" aria-label="LinkedIn">
-					<i class="fab fa-linkedin-in"></i>
+					{{ icon("linkedin") }}
 				</a>
 				<a href="https://twitter.com/TonyBenoy" class="social-link" aria-label="Twitter">
-					<i class="fab fa-twitter"></i>
+					{{ icon("x") }}
 				</a>
 				<a href="https://instagram.com/tonybenoy" class="social-link" aria-label="Instagram">
-					<i class="fab fa-instagram"></i>
+					{{ icon("instagram") }}
+				</a>
+				<a href="https://vsco.co/tonybenoy" class="social-link" aria-label="VSCO" target="_blank" rel="noopener">
+					{{ icon("vsco") }}
 				</a>
 			</div>
 		</div>
@@ -57,15 +61,15 @@
 				<span class="card-emoji">&#x1F426;</span>
 				<h3>Wildlife & Travel</h3>
 				<p>Birding, travel photography, and the occasional moon shot. A visual diary from jungles to European
-					cities. More on <a href="https://instagram.com/tonybenoy" target="_blank">Instagram</a>.</p>
+					cities. More on <a href="https://vsco.co/tonybenoy" target="_blank" rel="noopener">VSCO</a>.</p>
 			</div>
 		</div>
 		<div class="currently-cta">
 			<a href="/timeline" class="btn btn-primary">
-				<i class="fas fa-route"></i> My Journey
+				{{ icon("route") }} My Journey
 			</a>
 			<a href="/app" class="btn btn-outline">
-				<i class="fab fa-github"></i> Projects
+				{{ icon("github") }} Projects
 			</a>
 		</div>
 	</section>
@@ -74,10 +78,10 @@
 		<p>Want to work together, chat about tech, or just say hi?</p>
 		<div class="contact-strip-links">
 			<a href="#" id="email-btn" class="btn btn-primary btn-sm" onclick="return revealEmail(this)">
-				<i class="fas fa-envelope"></i> Click to reveal email
+				{{ icon("mail") }} Click to reveal email
 			</a>
 			<a href="https://www.linkedin.com/in/tonybenoy/" class="btn btn-outline btn-sm" target="_blank">
-				<i class="fab fa-linkedin-in"></i> LinkedIn
+				{{ icon("linkedin") }} LinkedIn
 			</a>
 		</div>
 	</section>
@@ -85,7 +89,7 @@
 		function revealEmail(el) {
 			var u = 'me', d = 'tonybenoy.com';
 			el.href = 'mailto:' + u + '@' + d;
-			el.innerHTML = '<i class="fas fa-envelope"></i> ' + u + '@' + d;
+			el.innerHTML = '{{ icon("mail") }} ' + u + '@' + d;
 			return true;
 		}
 	</script>

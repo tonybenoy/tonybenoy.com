@@ -28,14 +28,6 @@
         <priority>0.8</priority>
     </url>
 
-    <!-- Photography page -->
-    <url>
-        <loc>https://tonybenoy.com/photography</loc>
-        <lastmod>2025-08-08</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
     <!-- Contact page -->
     <url>
         <loc>https://tonybenoy.com/contact</loc>

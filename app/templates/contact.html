@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 {% block content %}
 
 <main class="page-section">
@@ -10,13 +11,13 @@
 
 		{% if success_message %}
 		<div class="alert alert-success">
-			<i class="fas fa-check-circle"></i> {{ success_message }}
+			{{ icon("circle-check") }} {{ success_message }}
 		</div>
 		{% endif %}
 
 		{% if error_message %}
 		<div class="alert alert-error">
-			<i class="fas fa-exclamation-triangle"></i> {{ error_message }}
+			{{ icon("triangle-alert") }} {{ error_message }}
 		</div>
 		{% endif %}
 
@@ -43,7 +44,7 @@
 			</div>
 			<div class="text-center">
 				<button type="submit" class="btn btn-primary btn-lg">
-					<i class="fas fa-paper-plane"></i> Send Message
+					{{ icon("send") }} Send Message
 				</button>
 			</div>
 		</form>
@@ -54,16 +55,16 @@
 			<h5 style="margin-bottom: 1rem; color: var(--text)">Other Ways to Reach Me</h5>
 			<div class="social-links">
 				<a href="https://www.linkedin.com/in/tonybenoy/" class="social-link" aria-label="LinkedIn">
-					<i class="fab fa-linkedin-in"></i>
+					{{ icon("linkedin") }}
 				</a>
 				<a href="https://twitter.com/TonyBenoy" class="social-link" aria-label="Twitter">
-					<i class="fab fa-twitter"></i>
+					{{ icon("x") }}
 				</a>
 				<a href="https://github.com/tonybenoy" class="social-link" aria-label="GitHub">
-					<i class="fab fa-github"></i>
+					{{ icon("github") }}
 				</a>
 				<a href="mailto:me@tonybenoy.com" class="social-link" aria-label="Email">
-					<i class="fas fa-envelope"></i>
+					{{ icon("mail") }}
 				</a>
 			</div>
 		</div>

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 {% block content %}
 
 <main class="page-section">
@@ -30,7 +31,7 @@
 					</div>
 					{% endif %}
 				</div>
-				<i class="fas fa-arrow-right featured-arrow"></i>
+				{{ icon("arrow-right", "featured-arrow") }}
 			</a>
 			{% endfor %}
 		</div>
@@ -52,10 +53,10 @@
 						{% endif %}
 						<div style="margin-top: 0.5rem">
 							<span class="badge badge-stars">
-								<i class="fas fa-star"></i> {{ repo.stargazers_count }}
+								{{ icon("star") }} {{ repo.stargazers_count }}
 							</span>
 							<span class="badge badge-forks">
-								<i class="fas fa-code-branch"></i> {{ repo.forks }}
+								{{ icon("git-branch") }} {{ repo.forks }}
 							</span>
 						</div>
 					</div>
@@ -73,7 +74,7 @@
 
 		<div class="text-center mt-3">
 			<a href="https://github.com/tonybenoy?tab=repositories" class="btn btn-outline btn-lg" target="_blank">
-				<i class="fab fa-github"></i> All Repositories
+				{{ icon("github") }} All Repositories
 			</a>
 		</div>
 	</div>

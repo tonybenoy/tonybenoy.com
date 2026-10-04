@@ -166,7 +166,7 @@ async def timeline_page(request: Request):
                 "Tool-Call Agents",
             ],
             "type": "leadership",
-            "icon": "fas fa-crown",
+            "icon": "crown",
         },
         {
             "title": "Founder",
@@ -189,7 +189,7 @@ async def timeline_page(request: Request):
                 "CI/CD",
             ],
             "type": "entrepreneurship",
-            "icon": "fas fa-rocket",
+            "icon": "rocket",
         },
         {
             "title": "Senior Software Engineer",
@@ -214,7 +214,7 @@ async def timeline_page(request: Request):
                 "Celery",
             ],
             "type": "engineering",
-            "icon": "fas fa-shield-alt",
+            "icon": "shield",
         },
         {
             "title": "Engineering Manager",
@@ -240,7 +240,7 @@ async def timeline_page(request: Request):
                 "REST APIs",
             ],
             "type": "engineering",
-            "icon": "fas fa-chart-line",
+            "icon": "chart-line",
         },
         {
             "title": "Co-Founder & CTO",
@@ -265,7 +265,7 @@ async def timeline_page(request: Request):
                 "PostgreSQL",
             ],
             "type": "leadership",
-            "icon": "fas fa-users",
+            "icon": "users",
         },
     ]
 
@@ -293,7 +293,7 @@ async def timeline_page(request: Request):
                 "Finance",
             ],
             "type": "masters",
-            "icon": "fas fa-graduation-cap",
+            "icon": "graduation-cap",
         },
         {
             "degree": "Erasmus Exchange — Business Analytics",
@@ -315,7 +315,7 @@ async def timeline_page(request: Request):
                 "Data Science",
             ],
             "type": "exchange",
-            "icon": "fas fa-chart-bar",
+            "icon": "chart-column",
         },
         {
             "degree": "B.Tech in Computer Science",
@@ -338,7 +338,7 @@ async def timeline_page(request: Request):
                 "Networking",
             ],
             "type": "bachelors",
-            "icon": "fas fa-code",
+            "icon": "code",
         },
     ]
 
@@ -347,21 +347,21 @@ async def timeline_page(request: Request):
             "role": "AUR Package Maintainer",
             "org": "Arch Linux",
             "period": "2017 – 2024 (7 years)",
-            "icon": "fab fa-linux",
+            "icon": "linux",
             "color": "vol-blue",
         },
         {
             "role": "PyPI Package Author",
             "org": "cocapi — Clash of Clans API wrapper",
             "period": "2018 – Present",
-            "icon": "fab fa-python",
+            "icon": "python",
             "color": "vol-orange",
         },
         {
             "role": "Open Source Contributor",
             "org": "Various Python & Rust projects",
             "period": "2017 – Present",
-            "icon": "fas fa-code-branch",
+            "icon": "git-branch",
             "color": "vol-cyan",
         },
     ]

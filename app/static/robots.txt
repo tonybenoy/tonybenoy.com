@@ -5,7 +5,6 @@ Allow: /
 Allow: /static/
 Allow: /app
 Allow: /timeline
-Allow: /photography
 Allow: /contact
 Allow: /terminal
 

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 {% block content %}
 
 <main class="page-section">
@@ -62,13 +63,13 @@
 		<!-- Work Experience -->
 		<div class="timeline-section">
 			<h3 class="timeline-section-title">
-				<i class="fas fa-briefcase"></i> Work Experience
+				{{ icon("briefcase") }} Work Experience
 			</h3>
 			<div class="timeline">
 				{% for job in work_experience %}
 				<div class="timeline-entry">
 					<div class="timeline-marker {{ job.type }}">
-						<i class="{{ job.icon }}"></i>
+						{{ icon(job.icon) }}
 					</div>
 					<div class="timeline-card">
 						<div class="timeline-card-header">
@@ -77,8 +78,7 @@
 								<h5>
 									{% if job.company_url %}
 									<a href="{{ job.company_url }}" target="_blank">
-										{{ job.company }} <i class="fas fa-external-link-alt"
-											style="font-size: 0.65rem"></i>
+										{{ job.company }} <span style="font-size: 0.65rem">{{ icon("external-link") }}</span>
 									</a>
 									{% else %}
 									{{ job.company }}
@@ -86,7 +86,7 @@
 								</h5>
 								<div class="timeline-meta">
 									<span class="date">{{ job.period }}</span>
-									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ job.location
+									<span class="location">{{ icon("map-pin") }} {{ job.location
 										}}</span>
 								</div>
 							</div>
@@ -119,13 +119,13 @@
 		<!-- Education -->
 		<div class="timeline-section">
 			<h3 class="timeline-section-title">
-				<i class="fas fa-graduation-cap"></i> Education
+				{{ icon("graduation-cap") }} Education
 			</h3>
 			<div class="timeline">
 				{% for edu in education %}
 				<div class="timeline-entry">
 					<div class="timeline-marker {{ edu.type }}">
-						<i class="{{ edu.icon }}"></i>
+						{{ icon(edu.icon) }}
 					</div>
 					<div class="timeline-card">
 						<div class="timeline-card-header">
@@ -134,8 +134,7 @@
 								<h5>
 									{% if edu.institution_url %}
 									<a href="{{ edu.institution_url }}" target="_blank">
-										{{ edu.institution }} <i class="fas fa-external-link-alt"
-											style="font-size: 0.65rem"></i>
+										{{ edu.institution }} <span style="font-size: 0.65rem">{{ icon("external-link") }}</span>
 									</a>
 									{% else %}
 									{{ edu.institution }}
@@ -143,10 +142,10 @@
 								</h5>
 								<div class="timeline-meta">
 									<span class="date">{{ edu.period }}</span>
-									<span class="location"><i class="fas fa-map-marker-alt"></i> {{ edu.location
+									<span class="location">{{ icon("map-pin") }} {{ edu.location
 										}}</span>
 									{% if edu.gpa %}
-									<span class="gpa"><i class="fas fa-star"></i> {{ edu.gpa }}</span>
+									<span class="gpa">{{ icon("star") }} {{ edu.gpa }}</span>
 									{% endif %}
 								</div>
 							</div>
@@ -180,13 +179,13 @@
 		<!-- Community & Open Source -->
 		<div class="timeline-section">
 			<h3 class="timeline-section-title">
-				<i class="fab fa-linux"></i> Community & Open Source
+				{{ icon("linux") }} Community & Open Source
 			</h3>
 			<div class="community-grid">
 				{% for vol in volunteer %}
 				<div class="community-card">
 					<div class="community-icon {{ vol.color }}">
-						<i class="{{ vol.icon }}"></i>
+						{{ icon(vol.icon) }}
 					</div>
 					<div>
 						<h4>{{ vol.role }}</h4>
@@ -200,7 +199,7 @@
 
 		<div class="text-center" style="padding-bottom: 2rem;">
 			<a href="/static/files/tony.sh" class="btn btn-outline btn-sm" target="_blank">
-				<i class="fas fa-download"></i> Download my SSH key (yes, really)
+				{{ icon("download") }} Download my SSH key (yes, really)
 			</a>
 		</div>
 	</div>

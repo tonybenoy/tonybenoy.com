@@ -1,33 +1,12 @@
-import logging
+from fastapi import APIRouter
+from fastapi.responses import RedirectResponse
 
-from fastapi import APIRouter, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-
-from app.utils import templates
-
-# Use the same limiter instance as main app
-limiter = Limiter(key_func=get_remote_address)
-
-logger = logging.getLogger(__name__)
 photography = APIRouter()
 
+VSCO_URL = "https://vsco.co/tonybenoy"
 
-@photography.get("/photography")
-@limiter.limit("30/minute")
-async def photography_page(request: Request):
-    """Photography gallery page with embedded Instagram feed."""
-    return templates.TemplateResponse(
-        request,
-        "photography.html",
-        {
-            "title": "Photography — Tony Benoy",
-            "description": (
-                "Wildlife, travel, and night sky photography. Birds, "
-                "European cities, moon shots, and everything in between. "
-                "All on Instagram @tonybenoy."
-            ),
-            "active_page": "photography",
-            "instagram_username": "tonybenoy",
-        },
-    )
+
+@photography.get("/photography", include_in_schema=False)
+async def photography_redirect():
+    """Photos live on VSCO; keep old /photography links working."""
+    return RedirectResponse(url=VSCO_URL, status_code=302)

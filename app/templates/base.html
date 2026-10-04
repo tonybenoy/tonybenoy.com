@@ -1,3 +1,4 @@
+{% from "_icons.html" import icon %}
 <!DOCTYPE html>
 <html lang='en'>
 
@@ -61,14 +62,6 @@
 			rel="stylesheet">
 	</noscript>
 
-	<!-- Icons (Font Awesome - solid + brands, loaded async) -->
-	<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-	<link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-		onload="this.onload=null;this.rel='stylesheet'">
-	<noscript>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-	</noscript>
-
 	<!-- Site CSS -->
 	<link href="/static/css/style.css" rel="stylesheet">
 	{% block head %}{% endblock %}
@@ -97,8 +90,8 @@
 					<li><a href="/timeline" {% if active_page=='timeline' %}class="active" {% endif %}>
 							Timeline{% if active_page == "timeline" %}<span class="blink_text">_</span>{% endif %}
 						</a></li>
-					<li><a href="/photography" {% if active_page=='photography' %}class="active" {% endif %}>
-							Photography{% if active_page == "photography" %}<span class="blink_text">_</span>{% endif %}
+					<li><a href="https://vsco.co/tonybenoy" target="_blank" rel="noopener">
+							Photography
 						</a></li>
 					<li><a href="/terminal" {% if active_page=='terminal' %}class="active" {% endif %}>
 							Terminal{% if active_page == "terminal" %}<span class="blink_text">_</span>{% endif %}
@@ -111,8 +104,8 @@
 					<input type="checkbox" id="theme-toggle" class="theme-toggle-input">
 					<label for="theme-toggle" class="theme-toggle-label">
 						<span class="theme-toggle-slider">
-							<i class="theme-icon-dark fas fa-moon"></i>
-							<i class="theme-icon-light fas fa-sun"></i>
+							{{ icon("moon", "theme-icon-dark") }}
+							{{ icon("sun", "theme-icon-light") }}
 						</span>
 					</label>
 				</div>
