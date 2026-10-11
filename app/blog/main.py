@@ -1,6 +1,6 @@
-"""Blog (from blog-inker): single-user blog with long posts and tweet-like notes.
+"""Musings (from blog-inker): single-user blog with long posts and tweet-like notes.
 
-Exposed as ``blog_app`` and mounted at ``/blog`` by ``app.main``.
+Exposed as ``blog_app`` and mounted at ``/musings`` by ``app.main``.
 """
 
 import hashlib
@@ -33,7 +33,7 @@ from PIL import Image, ImageOps
 from starlette.middleware.sessions import SessionMiddleware
 
 BASE = Path(__file__).parent
-PREFIX = "/blog"  # mount point; every URL the blog emits is prefixed with this
+PREFIX = "/musings"  # mount point; every URL the blog emits is prefixed with this
 DATA = Path(os.environ.get("BLOG_DATA", BASE.parents[1] / "blog-data"))
 UPLOADS = DATA / "uploads"
 UPLOADS.mkdir(parents=True, exist_ok=True)
@@ -490,7 +490,7 @@ def index(
     page = max(1, page)
     posts, total = query_posts(kind, tag, q, sort, page)
     pages = max(1, -(-total // PER_PAGE))
-    title = SITE["name"] + " — Blog"
+    title = SITE["name"] + " — Musings"
     if q:
         title = f"Search: {q}"
     elif tag:

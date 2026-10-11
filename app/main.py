@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -109,8 +109,17 @@ async def log_requests(request: Request, call_next):
 static_dir = pathlib.Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-# Blog (sub-application; own sessions, templates and static files)
-app.mount("/blog", blog_app, name="blog")
+# Musings (blog sub-application; own sessions, templates and static files)
+app.mount("/musings", blog_app, name="musings")
+
+
+@app.get("/blog", include_in_schema=False)
+@app.get("/blog/{path:path}", include_in_schema=False)
+async def legacy_blog_redirect(request: Request, path: str = ""):
+    """The blog used to live at /blog; keep old links working."""
+    target = f"/musings/{path}" + (f"?{request.url.query}" if request.url.query else "")
+    return RedirectResponse(target, status_code=308)
+
 
 # Include routers
 app.include_router(home, tags=["home"])

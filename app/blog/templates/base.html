@@ -44,7 +44,7 @@
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
     <div class="nav-right">
       <ul class="nav-links" id="nav-links">
-        <li><a href="{{ base }}/" class="{{ 'active' if cur == '/' and not request.query_params.get('type') }}">Blog<span class="blink_text">_</span></a></li>
+        <li><a href="{{ base }}/" class="{{ 'active' if cur == '/' and not request.query_params.get('type') }}">Musings<span class="blink_text">_</span></a></li>
         <li><a href="{{ base }}/?type=post" class="{{ 'active' if request.query_params.get('type') == 'post' }}">Posts</a></li>
         <li><a href="{{ base }}/?type=note" class="{{ 'active' if request.query_params.get('type') == 'note' }}">Notes</a></li>
         <li><a href="{{ base }}/tags" class="{{ 'active' if cur == '/tags' }}">Tags</a></li>

@@ -13,14 +13,14 @@ Disallow: /test
 Disallow: /client_ip
 Disallow: /metrics
 Disallow: /health
-Disallow: /blog/login
-Disallow: /blog/drafts
-Disallow: /blog/edit/
-Disallow: /blog/new/
+Disallow: /musings/login
+Disallow: /musings/drafts
+Disallow: /musings/edit/
+Disallow: /musings/new/
 
 # Sitemap location
 Sitemap: https://tonybenoy.com/sitemap.xml
-Sitemap: https://tonybenoy.com/blog/sitemap.xml
+Sitemap: https://tonybenoy.com/musings/sitemap.xml
 
 # Crawl delay (optional - be respectful)
 Crawl-delay: 1
