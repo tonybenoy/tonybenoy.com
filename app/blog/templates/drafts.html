@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container-narrow page-head"><p class="eyebrow">Private</p><h1 class="display"><em>Drafts</em></h1></section>
+<div class="container-narrow"><div class="stack">{% for p in posts %}{% include "_card.html" %}{% else %}<p class="muted">No drafts.</p>{% endfor %}</div></div>
+{% endblock %}

@@ -13,6 +13,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
+from app.blog.main import blog_app
 from app.config import get_settings
 from app.routes.apps import apps
 from app.routes.home import home
@@ -107,6 +108,9 @@ async def log_requests(request: Request, call_next):
 # Mount static files using consistent path
 static_dir = pathlib.Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+# Blog (sub-application; own sessions, templates and static files)
+app.mount("/blog", blog_app, name="blog")
 
 # Include routers
 app.include_router(home, tags=["home"])

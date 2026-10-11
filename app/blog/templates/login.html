@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container-narrow page-head"><p class="eyebrow">Admin</p><h1 class="display">Sign <em>in</em></h1></section>
+<div class="container-narrow"><form method="post" class="panel" style="max-width:380px">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <label>Password<input type="password" name="password" autofocus required></label>
+  <button class="btn btn-primary">Sign in</button>
+</form></div>
+{% endblock %}

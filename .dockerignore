@@ -52,6 +52,7 @@ certs/
 logs/
 *.log
 data/
+blog-data/
 
 # Documentation and development
 README.md

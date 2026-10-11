@@ -41,7 +41,7 @@ COPY --from=builder /app/.venv /app/.venv
 COPY app/ /app/app/
 
 # Create necessary directories and set permissions
-RUN mkdir -p /app/logs && chown -R appuser:appuser /app
+RUN mkdir -p /app/logs /app/blog-data && chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser

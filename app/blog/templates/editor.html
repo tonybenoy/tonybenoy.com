@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+{% set is_note = p.kind == 'note' %}
+<section class="container-narrow page-head"><p class="eyebrow">{{ 'Edit' if p.id else 'New' }}</p><h1 class="display"><em>{{ 'Note' if is_note else 'Post' }}</em></h1></section>
+<div class="container-narrow">
+<form method="post" class="editor" id="editor" data-kind="{{ p.kind }}">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% if not is_note %}
+  <label>Title<input name="title" value="{{ p.title or '' }}" required maxlength="200" class="title-input"></label>
+  {% endif %}
+  <div class="tabs"><button type="button" class="chip on" data-tab="write">Write</button><button type="button" class="chip" data-tab="preview">Preview</button>
+    <span class="grow"></span>
+    <button type="button" class="btn btn-outline btn-sm" id="ed-img">🖼 Add image</button><input type="file" id="ed-file" accept="image/*" multiple hidden>
+    {% if is_note %}<span class="counter" id="ed-count"></span>{% endif %}</div>
+  <textarea name="body" id="ed-body" rows="{{ 6 if is_note else 20 }}" required placeholder="{{ 'What is on your mind? #tags work.' if is_note else 'Write in Markdown. Drop or paste images here.' }}">{{ p.body or '' }}</textarea>
+  <div class="prose preview" id="ed-preview" hidden></div>
+  <label>Tags <small>comma separated</small><input name="tags" value="{{ p.tags.replace(',', ', ') if p.tags else '' }}" placeholder="python, rust, startups"></label>
+  {% if not is_note %}
+  <details class="seo" {{ 'open' if p.excerpt or p.cover or p.slug }}><summary>SEO &amp; cover</summary>
+    <label>Meta description <small id="ex-count"></small><input name="excerpt" maxlength="200" value="{{ p.excerpt or '' }}" placeholder="~155 chars shown in Google and social cards"></label>
+    <label>URL slug<input name="slug" value="{{ p.slug or '' }}" placeholder="auto from title"></label>
+    <label>Cover image URL <small>blank = first image in post</small><input name="cover" id="ed-cover" value="{{ p.cover or '' }}"></label>
+  </details>
+  {% endif %}
+  <label class="check"><input type="checkbox" name="pinned" {{ 'checked' if p.pinned }}> Pin to top</label>
+  <div class="actions">
+    <button class="btn btn-outline" name="action" value="draft">Save draft</button>
+    <button class="btn btn-primary" name="action" value="publish">{{ 'Update' if p.id and p.published else 'Publish' }}</button>
+  </div>
+</form></div>
+{% endblock %}
+{% block scripts %}<script>window.CSRF="{{ csrf }}"; window.NOTE_MAX={{ NOTE_MAX }};</script><script src="{{ base }}/static/js/admin.js" defer></script>{% endblock %}

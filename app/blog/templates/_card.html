@@ -1,0 +1,25 @@
+{% set tl = p.tags|taglist %}
+{% if p.kind == 'note' %}
+<article class="note-card {{ 'pinned' if p.pinned }}">
+  <div class="note-avatar">{{ site.name[0] }}</div>
+  <div class="note-main">
+    <header class="note-head"><strong>{{ site.name }}</strong>
+      <a class="note-time" href="{{ base }}/p/{{ p.slug }}"><time datetime="{{ p.created_at|iso }}">{{ p.created_at|ago }}</time></a>
+      {% if p.pinned %}<span class="pin">📌 pinned</span>{% endif %}
+      {% if not p.published %}<span class="badge">draft</span>{% endif %}</header>
+    <div class="prose note-body">{{ p.html|safe }}</div>
+    {% if is_admin %}<div class="admin-row"><a href="{{ base }}/edit/{{ p.id }}">Edit</a></div>{% endif %}
+  </div>
+</article>
+{% else %}
+<article class="card post-card {{ 'pinned' if p.pinned }}">
+  {% if p.image %}<a class="card-img" href="{{ base }}/p/{{ p.slug }}" tabindex="-1" aria-hidden="true"><img src="{{ p.image }}" alt="" loading="lazy"></a>{% endif %}
+  <div class="card-body">
+    <div class="card-meta"><time datetime="{{ p.created_at|iso }}">{{ p.created_at|date }}</time> · {{ p.reading }} min read
+      {% if p.pinned %}· <span class="pin">📌 pinned</span>{% endif %}{% if not p.published %} · <span class="badge">draft</span>{% endif %}</div>
+    <h2 class="card-title"><a href="{{ base }}/p/{{ p.slug }}">{{ p.title }}</a></h2>
+    <p class="card-description">{{ p.summary }}</p>
+    {% if tl %}<div class="tech-tags">{% for t in tl %}<a class="tech-tag" href="{{ base }}/?tag={{ t }}">{{ t }}</a>{% endfor %}</div>{% endif %}
+  </div>
+</article>
+{% endif %}

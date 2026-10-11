@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container page-head">
+  <p class="eyebrow">{{ site.name }}</p>
+  <h1 class="display">{% if q %}Search <em>“{{ q }}”</em>{% elif tag %}<em>#{{ tag }}</em>{% elif kind == 'note' %}Notes{% elif kind == 'post' %}Posts{% else %}Writing <em>&amp; notes</em>{% endif %}</h1>
+  <p class="lede">{{ site.tagline if not (q or tag) else (total ~ (' result' if total == 1 else ' results')) }}</p>
+</section>
+
+<div class="container layout">
+  <div class="feed">
+    {% if is_admin and not (q or tag or kind) and page == 1 %}
+    <form class="composer" method="post" action="{{ base }}/new/note" id="quick-note">
+      <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="publish">
+      <textarea name="body" id="qn-body" rows="2" maxlength="{{ NOTE_MAX + 400 }}" placeholder="What's on your mind? Use #tags…" required></textarea>
+      <div class="composer-bar">
+        <button type="button" class="btn btn-outline btn-sm" id="qn-img">🖼 Image</button>
+        <span class="counter" id="qn-count">{{ NOTE_MAX }}</span>
+        <a class="btn btn-outline btn-sm" href="{{ base }}/new/post">Long post</a>
+        <button class="btn btn-primary btn-sm">Post</button>
+      </div>
+      <input type="file" id="qn-file" accept="image/*" multiple hidden>
+    </form>
+    {% endif %}
+
+    <form class="toolbar" method="get" action="{{ base }}/" role="search">
+      <div class="search"><input type="search" name="q" value="{{ q }}" placeholder="Search…" aria-label="Search"></div>
+      <select name="sort" aria-label="Sort" onchange="this.form.submit()">
+        {% if q %}<option value="rel" {{ 'selected' if sort == 'rel' }}>Relevance</option>{% endif %}
+        {% for k, (label, _) in sorts.items() %}<option value="{{ k }}" {{ 'selected' if sort == k }}>{{ label }}</option>{% endfor %}
+      </select>
+      {% if kind %}<input type="hidden" name="type" value="{{ kind }}">{% endif %}
+      {% if tag %}<input type="hidden" name="tag" value="{{ tag }}">{% endif %}
+      <noscript><button class="btn btn-outline btn-sm">Go</button></noscript>
+    </form>
+    <div class="chips">
+      {% for k, label in [('', 'All'), ('post', 'Posts'), ('note', 'Notes')] %}
+      <a class="chip {{ 'on' if kind == k }}" href="{{ url_for('index', type=k, tag=tag, q=q, sort=sort if sort != 'new' else '') }}">{{ label }}</a>
+      {% endfor %}
+      {% if tag %}<a class="chip on" href="{{ url_for('index', type=kind) }}">#{{ tag }} ✕</a>{% endif %}
+    </div>
+
+    {% if posts %}
+      <div class="stack">{% for p in posts %}{% include "_card.html" %}{% endfor %}</div>
+      {% if pages > 1 %}
+      <nav class="pager" aria-label="Pagination">
+        {% if page > 1 %}<a class="btn btn-outline btn-sm" rel="prev" href="{{ url_for('index', type=kind, tag=tag, q=q, sort=sort, page=page-1 if page > 2 else None) }}">← Newer</a>{% else %}<span></span>{% endif %}
+        <span class="muted">Page {{ page }} of {{ pages }}</span>
+        {% if page < pages %}<a class="btn btn-outline btn-sm" rel="next" href="{{ url_for('index', type=kind, tag=tag, q=q, sort=sort, page=page+1) }}">Older →</a>{% else %}<span></span>{% endif %}
+      </nav>
+      {% endif %}
+    {% else %}
+      <div class="empty"><p>{{ 'Nothing matches.' if (q or tag or kind) else 'Nothing here yet.' }}</p>
+        {% if is_admin and not (q or tag) %}<a class="btn btn-primary" href="{{ base }}/new/post">Write the first post</a>{% endif %}</div>
+    {% endif %}
+  </div>
+
+  <aside class="sidebar">
+    {% if tags %}<div class="side-block"><h3 class="side-title">Topics</h3>
+      <div class="tech-tags">{% for t in tags %}<a class="tech-tag {{ 'on' if t.tag == tag }}" href="{{ base }}/?tag={{ t.tag }}">{{ t.tag }} <small>{{ t.n }}</small></a>{% endfor %}</div>
+      <a class="more" href="{{ base }}/tags">All tags →</a></div>{% endif %}
+    <div class="side-block"><h3 class="side-title">Follow</h3><p class="muted"><a href="{{ base }}/feed.xml">RSS feed</a> · <a href="{{ site.home }}">tonybenoy.com</a></p></div>
+    {% if drafts %}<div class="side-block"><a href="{{ base }}/drafts">{{ drafts }} draft{{ 's' if drafts != 1 }} →</a></div>{% endif %}
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}{% if is_admin %}<script>window.CSRF="{{ csrf }}"; window.NOTE_MAX={{ NOTE_MAX }};</script><script src="{{ base }}/static/js/admin.js" defer></script>{% endif %}{% endblock %}

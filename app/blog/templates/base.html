@@ -1,0 +1,73 @@
+{%- set m = meta or {} -%}
+{%- set full_title = (m.title ~ ' · ' ~ site.name) if m.title and not m.home else (m.title or site.name) -%}
+{%- set desc = m.description or site.tagline -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ full_title }}</title>
+<meta name="description" content="{{ desc }}">
+<meta name="author" content="{{ site.name }}">
+<meta name="robots" content="{{ 'noindex, follow' if m.noindex else 'index, follow, max-image-preview:large' }}">
+<meta name="theme-color" content="#0e0e10">
+{% if m.canonical %}<link rel="canonical" href="{{ m.canonical }}">{% endif %}
+<link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ base }}/feed.xml">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:type" content="{{ m.type or 'website' }}">
+<meta property="og:title" content="{{ m.title or site.name }}">
+<meta property="og:description" content="{{ desc }}">
+{% if m.canonical %}<meta property="og:url" content="{{ m.canonical }}">{% endif %}
+{% if m.image %}<meta property="og:image" content="{{ m.image }}">{% endif %}
+{% if m.type == 'article' %}
+<meta property="article:published_time" content="{{ m.published }}">
+<meta property="article:modified_time" content="{{ m.modified }}">
+{% for t in m.tags %}<meta property="article:tag" content="{{ t }}">{% endfor %}
+{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if m.image else 'summary' }}">
+<meta name="twitter:site" content="{{ site.twitter }}">
+<meta name="twitter:title" content="{{ m.title or site.name }}">
+<meta name="twitter:description" content="{{ desc }}">
+{% if m.image %}<meta name="twitter:image" content="{{ m.image }}">{% endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="{{ base }}/static/css/style.css" rel="stylesheet">
+<script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light-theme')}catch(e){}</script>
+<script>window.BLOG_BASE="{{ base }}";</script>
+{% block head %}{% endblock %}
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="{{ base }}/">{{ site.name }}</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <div class="nav-right">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="{{ base }}/" class="{{ 'active' if cur == '/' and not request.query_params.get('type') }}">Blog<span class="blink_text">_</span></a></li>
+        <li><a href="{{ base }}/?type=post" class="{{ 'active' if request.query_params.get('type') == 'post' }}">Posts</a></li>
+        <li><a href="{{ base }}/?type=note" class="{{ 'active' if request.query_params.get('type') == 'note' }}">Notes</a></li>
+        <li><a href="{{ base }}/tags" class="{{ 'active' if cur == '/tags' }}">Tags</a></li>
+        <li><a href="{{ site.home }}" rel="noopener">tonybenoy.com ↗</a></li>
+        {% if is_admin %}<li><a href="{{ base }}/drafts" class="{{ 'active' if cur == '/drafts' }}">Drafts</a></li>{% endif %}
+      </ul>
+      {% if is_admin %}<a class="btn btn-primary btn-sm" href="{{ base }}/new/post">+ Write</a>{% endif %}
+      <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle dark/light"></button>
+    </div>
+  </div>
+</nav>
+<main>
+  {% if flashes %}<div class="container-narrow">{% for cat, msg in flashes %}<div class="flash flash-{{ cat }}">{{ msg }}</div>{% endfor %}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer>
+  <div class="container footer-inner">
+    <span>© {{ current_year }} {{ site.name }}</span>
+    <span><a href="{{ base }}/feed.xml">RSS</a> · <a href="{{ base }}/sitemap.xml">Sitemap</a> ·
+    {% if is_admin %}<form method="post" action="{{ base }}/logout" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="linklike">Sign out</button></form>{% else %}<a href="{{ base }}/login" rel="nofollow">Sign in</a>{% endif %}</span>
+  </div>
+</footer>
+<script src="{{ base }}/static/js/site.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

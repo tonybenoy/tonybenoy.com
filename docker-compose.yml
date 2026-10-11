@@ -11,6 +11,8 @@ volumes:
     driver: local
   app-logs:
     driver: local
+  blog-data:
+    driver: local
   nginx-logs:
     driver: local
 
@@ -68,8 +70,11 @@ services:
       - CORS_ORIGINS=${CORS_ORIGINS:-["*"]}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-["*"]}
       - APP_ENV=${APP_ENV:-local}
+      - BLOG_PASSWORD=${BLOG_PASSWORD:-}
+      - BLOG_HTTPS=${BLOG_HTTPS:-}
     volumes:
       - app-logs:/app/logs
+      - blog-data:/app/blog-data
       # Uncomment next line for development code mounting:
       # - ${CODE_MOUNT}:/app/app
     networks:

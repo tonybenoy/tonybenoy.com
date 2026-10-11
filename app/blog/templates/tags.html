@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container-narrow page-head"><p class="eyebrow">Browse</p><h1 class="display">All <em>tags</em></h1></section>
+<div class="container-narrow"><div class="tech-tags big">
+{% for t in tags %}<a class="tech-tag" href="{{ base }}/?tag={{ t.tag }}">{{ t.tag }} <small>{{ t.n }}</small></a>{% else %}<p class="muted">No tags yet.</p>{% endfor %}
+</div></div>
+{% endblock %}

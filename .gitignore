@@ -159,3 +159,6 @@ logs/
 
 
 !uv.lock
+
+# Blog data (SQLite DB, uploads, session secret)
+/blog-data/

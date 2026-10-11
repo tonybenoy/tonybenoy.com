@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block head %}
+<script type="application/ld+json">{{ {
+ "@context":"https://schema.org","@type":"BlogPosting",
+ "headline": meta.title, "description": meta.description,
+ "datePublished": meta.published, "dateModified": meta.modified,
+ "mainEntityOfPage": meta.canonical,
+ "author": {"@type":"Person","name":site.name,"url":site.home},
+ "image": [meta.image] if meta.image else [],
+ "keywords": tags|join(", ")
+}|tojson }}</script>
+{% endblock %}
+{% block content %}
+<article class="container-narrow article {{ 'is-note' if p.kind == 'note' }}">
+  <header class="article-head">
+    <a class="back" href="{{ base }}/">← All writing</a>
+    <div class="card-meta"><time datetime="{{ p.created_at|iso }}">{{ p.created_at|date('%B %d, %Y') }}</time>{% if p.kind == 'post' %} · {{ p.reading }} min read{% endif %}
+      {% if not p.published %} · <span class="badge">draft</span>{% endif %}</div>
+    {% if p.kind == 'post' %}<h1 class="display">{{ p.title }}</h1>{% if p.excerpt %}<p class="lede">{{ p.excerpt }}</p>{% endif %}{% endif %}
+  </header>
+  {% if p.kind == 'post' and p.cover %}<img class="cover" src="{{ p.cover }}" alt="">{% endif %}
+  <div class="prose {{ 'note-big' if p.kind == 'note' }}">{{ p.html|safe }}</div>
+  {% if tags %}<div class="tech-tags post-tags">{% for t in tags %}<a class="tech-tag" href="{{ base }}/?tag={{ t }}">{{ t }}</a>{% endfor %}</div>{% endif %}
+  {% if is_admin %}
+  <div class="admin-row"><a class="btn btn-outline btn-sm" href="{{ base }}/edit/{{ p.id }}">Edit</a>
+    <form method="post" action="{{ base }}/delete/{{ p.id }}" onsubmit="return confirm('Delete permanently?')"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn btn-outline btn-sm danger">Delete</button></form></div>
+  {% endif %}
+  <nav class="adjacent">
+    {% if newer %}<a href="{{ base }}/p/{{ newer.slug }}"><small>Newer</small><span>{{ newer.title or (newer.body|strip_text)[:60] }}</span></a>{% else %}<span></span>{% endif %}
+    {% if older %}<a class="r" href="{{ base }}/p/{{ older.slug }}"><small>Older</small><span>{{ older.title or (older.body|strip_text)[:60] }}</span></a>{% endif %}
+  </nav>
+</article>
+{% if related %}
+<section class="container related"><h3 class="side-title">Related</h3><div class="grid grid-3">{% for p in related %}{% include "_card.html" %}{% endfor %}</div></section>
+{% endif %}
+{% endblock %}
