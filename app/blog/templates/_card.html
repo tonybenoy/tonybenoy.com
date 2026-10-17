@@ -8,7 +8,7 @@
       {% if p.pinned %}<span class="pin">📌 pinned</span>{% endif %}
       {% if not p.published %}<span class="badge">draft</span>{% endif %}</header>
     <div class="prose note-body">{{ p.html|safe }}</div>
-    {% if is_admin %}<div class="admin-row"><a href="{{ base }}/edit/{{ p.id }}">Edit</a></div>{% endif %}
+    {% if is_admin %}<div class="admin-row"><a href="{{ base }}/edit/{{ p.id }}">Edit</a> <form method="post" action="{{ base }}/delete/{{ p.id }}" onsubmit="return confirm('Delete permanently?')" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="linklike danger">Delete</button></form></div>{% endif %}
   </div>
 </article>
 {% else %}
@@ -20,6 +20,7 @@
     <h2 class="card-title"><a href="{{ base }}/p/{{ p.slug }}">{{ p.title }}</a></h2>
     <p class="card-description">{{ p.summary }}</p>
     {% if tl %}<div class="tech-tags">{% for t in tl %}<a class="tech-tag" href="{{ base }}/?tag={{ t }}">{{ t }}</a>{% endfor %}</div>{% endif %}
+    {% if is_admin %}<div class="admin-row"><a href="{{ base }}/edit/{{ p.id }}">Edit</a> <form method="post" action="{{ base }}/delete/{{ p.id }}" onsubmit="return confirm('Delete permanently?')" class="inline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="linklike danger">Delete</button></form></div>{% endif %}
   </div>
 </article>
 {% endif %}
