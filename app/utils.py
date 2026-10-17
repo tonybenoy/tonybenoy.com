@@ -85,20 +85,15 @@ async def get_repo_data_for_user(
                                     "clone_url": repo.get("clone_url", ""),
                                     "forks": repo.get("forks", 0),
                                     "name": repo.get("name", "Unknown"),
-                                    "language": repo.get("language")
-                                    or "Not specified",
-                                    "stargazers_count": repo.get(
-                                        "stargazers_count", 0
-                                    ),
+                                    "language": repo.get("language") or "Not specified",
+                                    "stargazers_count": repo.get("stargazers_count", 0),
                                     "html_url": repo.get("html_url", ""),
                                     "description": repo.get("description", ""),
                                     "updated_at": repo.get("updated_at", ""),
                                 }
                             )
                         except KeyError as e:
-                            logger.warning(
-                                f"Missing expected field in repo data: {e}"
-                            )
+                            logger.warning(f"Missing expected field in repo data: {e}")
                             continue
 
                 link = resp.headers.get("link", "")
